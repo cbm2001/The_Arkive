@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/navscreens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:first_app/models/side_nav_bar.dart';
 import '../screens/explore_screen.dart';
 import '../reusable_widgets/reusable_widgets.dart';
+import '../screens/user_profile.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -50,13 +52,37 @@ class _SearchPageState extends State<SearchPage> {
                     child: CircularProgressIndicator(),
                   );
                 }
+
                 return ListView.builder(
                   itemCount: (snapshot.data as dynamic).docs.length,
                   itemBuilder: (context, index) {
+                    if (FirebaseAuth.instance.currentUser ==
+                        (snapshot.data as dynamic).docs[index]['uid']) {
+                      return InkWell(
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ProfilePage(
+                              uid: (snapshot.data as dynamic).docs[index]
+                                  ['uid'],
+                            ),
+                          ),
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 16,
+                            backgroundImage: NetworkImage(
+                                'https://images.unsplash.com/photo-1667524751780-506526721f80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80'),
+                          ),
+                          title: Text(
+                            (snapshot.data as dynamic).docs[index]['username'],
+                          ),
+                        ),
+                      );
+                    }
                     return InkWell(
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => ProfilePage(
+                          builder: (context) => UserProfilePage(
                             uid: (snapshot.data as dynamic).docs[index]['uid'],
                           ),
                         ),

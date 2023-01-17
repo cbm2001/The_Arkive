@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/navscreens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../screens/user_profile.dart';
 
 class CommentCard extends StatelessWidget {
   final snap;
@@ -27,7 +30,10 @@ class CommentCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      /*FutureBuilder(
+                      FirebaseAuth.instance.currentUser.uid ==
+                              snap.data()['uid']
+
+                          /*FutureBuilder(
                           future: FirebaseFirestore.instance
                               .collection('users')
                               .get(),
@@ -39,20 +45,34 @@ class CommentCard extends StatelessWidget {
                               );
                             }
                           }),*/
-                      InkWell(
-                          onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => ProfilePage(
-                                    uid: snap.data()['uid'],
+                          ? InkWell(
+                              onTap: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ProfilePage(
+                                        uid: snap.data()['uid'],
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                          child: Text(snap.data()['name'],
-                              //text: 'username',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ))),
+                              child: Text(snap.data()['name'],
+                                  //text: 'username',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  )))
+                          : InkWell(
+                              onTap: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => UserProfilePage(
+                                        uid: snap.data()['uid'],
+                                      ),
+                                    ),
+                                  ),
+                              child: Text(snap.data()['name'],
+                                  //text: 'username',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ))),
                       RichText(
                         text: TextSpan(
                           children: [
