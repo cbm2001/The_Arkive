@@ -71,7 +71,8 @@ class _SearchPageState extends State<SearchPage> {
                           leading: CircleAvatar(
                             radius: 16,
                             backgroundImage: NetworkImage(
-                                'https://images.unsplash.com/photo-1667524751780-506526721f80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80'),
+                                (snapshot.data as dynamic).docs[index]
+                                    ['photoUrl']),
                           ),
                           title: Text(
                             (snapshot.data as dynamic).docs[index]['username'],
@@ -89,10 +90,10 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       child: ListTile(
                         leading: CircleAvatar(
-                          radius: 16,
-                          backgroundImage: NetworkImage(
-                              'https://images.unsplash.com/photo-1667524751780-506526721f80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80'),
-                        ),
+                            radius: 16,
+                            backgroundImage: NetworkImage(
+                                (snapshot.data as dynamic).docs[index]
+                                    ['photoUrl'])),
                         title: Text(
                           (snapshot.data as dynamic).docs[index]['username'],
                         ),

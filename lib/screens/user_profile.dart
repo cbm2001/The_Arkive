@@ -132,8 +132,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     Padding(
                       padding: EdgeInsets.only(left: 110, top: 50.0),
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            'https://pixel.nymag.com/imgs/daily/vulture/2017/06/14/14-tom-cruise.w700.h700.jpg'),
+                        backgroundImage: NetworkImage(userData['photoUrl']),
                         radius: 40.0,
                       ),
                     ),
@@ -189,6 +188,15 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   Text(
                     //'@urgalbarbz \n Only slays and sandwiches',
                     '@${userData['username']}',
+                    style: TextStyle(color: Colors.black, fontSize: 14.0),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Text(
+                    //'@urgalbarbz \n Only slays and sandwiches',
+                    userData['bio'],
                     style: TextStyle(
                         color: Color.fromRGBO(139, 134, 134, 1),
                         fontSize: 14.0),

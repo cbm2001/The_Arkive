@@ -62,38 +62,38 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     model.User user = Provider.of<UserProvider>(context).getUser;
-    upperTab = FirebaseAuth.instance.currentUser.uid == userData['uid']
-        ? TabBar(tabs: [
-            //if (FirebaseAuth.instance.currentUser.uid == user.uid)
-            Tab(
-              icon: new Icon(
-                Icons.post_add,
-                color: Colors.black,
-              ),
-              child: Text('posts',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
-            ),
-            Tab(
-              icon: new Icon(
-                Icons.folder_copy_sharp,
-                color: Colors.black,
-              ),
-              child: Text('folders',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
-            ),
-            Tab(
-              icon: new Icon(
-                Icons.drive_file_rename_outline_sharp,
-                color: Colors.black,
-              ),
-              child: Text('drafts',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
-            )
-          ])
-        : TabBar(tabs: [
+    upperTab = //FirebaseAuth.instance.currentUser.uid == userData['uid']
+        TabBar(tabs: [
+      //if (FirebaseAuth.instance.currentUser.uid == user.uid)
+      Tab(
+        icon: new Icon(
+          Icons.post_add,
+          color: Colors.black,
+        ),
+        child: Text('posts',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
+      ),
+      Tab(
+        icon: new Icon(
+          Icons.folder_copy_sharp,
+          color: Colors.black,
+        ),
+        child: Text('folders',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
+      ),
+      Tab(
+        icon: new Icon(
+          Icons.drive_file_rename_outline_sharp,
+          color: Colors.black,
+        ),
+        child: Text('drafts',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
+      )
+    ]);
+    /*: TabBar(tabs: [
             //if (FirebaseAuth.instance.currentUser.uid == user.uid)
             Tab(
               icon: new Icon(
@@ -115,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
 
             //else(FirebaseAuth.instance.currentUser.uid == user.uid)
-          ]);
+          ]);*/
     return isLoading
         ? const Center(
             child: CircularProgressIndicator(),
