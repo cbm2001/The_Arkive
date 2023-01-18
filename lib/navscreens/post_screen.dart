@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../providers/user_provider.dart';
 import '../resources/firestore_methods.dart';
-//import 'package:instagram_clone_flutter/utils/colors.dart';
 import '../reusable_widgets/reusable_widgets.dart';
 import '../utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -63,7 +62,7 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
-  void postImage(String uid, String username) async {
+  void postImage(String uid, String username, String profImage) async {
     setState(() {
       isLoading = true;
     });
@@ -77,7 +76,7 @@ class _PostPageState extends State<PostPage> {
         username,
         _locationController.text,
         _categoryController.text,
-        //profImage,
+        profImage,
       );
       if (res == "success") {
         setState(() {
@@ -143,6 +142,7 @@ class _PostPageState extends State<PostPage> {
                   onPressed: () => postImage(
                     userProvider.getUser.uid,
                     userProvider.getUser.username,
+                    userProvider.getUser.photoUrl,
                   ),
                   child: const Text(
                     "Post",
@@ -170,56 +170,12 @@ class _PostPageState extends State<PostPage> {
                           alignment: Alignment.topLeft,
                           child: CircleAvatar(
                             backgroundImage: NetworkImage(
-                                'https://i.stack.imgur.com/l60Hf.png'),
+                                // 'https://i.stack.imgur.com/l60Hf.png'
+                                userProvider.getUser.photoUrl),
                             radius: 30,
                           ),
                           height: 80),
                     ]),
-                /*SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.3,
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(
-                              height: 20,
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: reusableTextField(
-                                  "Write a caption",
-                                  Icons.description,
-                                  false,
-                                  _descriptionController),
-                              //maxLines: 8,
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(
-                              height: 20,
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: TextField(
-                                controller: _locationController,
-                                decoration: const InputDecoration(
-                                    hintText: "Tag a location...",
-                                    border: InputBorder.none),
-                                maxLines: 8,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(
-                              height: 20,
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: TextField(
-                                controller: _categoryController,
-                                decoration: const InputDecoration(
-                                    hintText: "Tag a category..",
-                                    border: InputBorder.none),
-                                maxLines: 8,
-                              ),
-                            ),
-                          ],
-                        )),*/
-
                 SizedBox(
                   height: 85.0,
                   width: 85.0,

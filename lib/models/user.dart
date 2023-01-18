@@ -6,12 +6,16 @@ class User {
   final String uid;
   final String username;
   final String name;
+  final String photoUrl;
+  final String bio;
 
   const User({
     @required this.username,
     @required this.uid,
     @required this.email,
     @required this.name,
+    @required this.photoUrl,
+    @required this.bio,
   });
 
   static User fromSnap(DocumentSnapshot snap) {
@@ -22,6 +26,8 @@ class User {
       uid: snapshot["uid"],
       email: snapshot["email"],
       name: snapshot['name'],
+      photoUrl: snapshot["photoUrl"],
+      bio: snapshot["bio"],
     );
   }
 
@@ -30,5 +36,7 @@ class User {
         "uid": uid,
         "email": email,
         "name": name,
+        "photoUrl": photoUrl,
+        "bio": bio,
       };
 }

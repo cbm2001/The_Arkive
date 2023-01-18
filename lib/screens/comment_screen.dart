@@ -20,16 +20,14 @@ class _CommentsScreenState extends State<CommentsScreen> {
   final TextEditingController commentEditingController =
       TextEditingController();
 
-  void postComment(
-    String uid,
-    String name,
-  ) async {
+  void postComment(String uid, String name, String profilePic) async {
     try {
       String res = await FireStoreMethods().postComment(
         widget.postId,
         commentEditingController.text,
         uid,
         name,
+        profilePic,
       );
 
       if (res != 'success') {
@@ -97,8 +95,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
           child: Row(
             children: [
               CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'https://images.unsplash.com/photo-1667524751780-506526721f80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80'),
+                backgroundImage: NetworkImage(user.photoUrl),
                 radius: 18,
               ),
               Expanded(
@@ -117,9 +114,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 onTap: () => postComment(
                   user.uid,
                   user.username,
-                  //user.photoUrl,
+                  user.photoUrl,
                 ),
-                //onTap: () {},
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 8),

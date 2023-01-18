@@ -27,10 +27,10 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
       ),
       labelText: text,
       //labelStyle: TextStyle(color: Colors.white.withOpacity(0.9)),
-      labelStyle: TextStyle(color: Colors.black.withOpacity(0.3)),
+      labelStyle: TextStyle(color: Colors.black.withOpacity(0.6)),
       filled: true,
       floatingLabelBehavior: FloatingLabelBehavior.never,
-      fillColor: Color.fromRGBO(211, 211, 211, 1),
+      fillColor: Colors.white,
       border: OutlineInputBorder(
           //borderRadius: BorderRadius.circular(30.0),
           borderSide: const BorderSide(

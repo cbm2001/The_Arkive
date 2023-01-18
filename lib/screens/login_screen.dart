@@ -66,17 +66,6 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-
-        /*decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          hexStringToColor("CB2B93"),
-          hexStringToColor("9546C4"),
-          hexStringToColor("5E61F4")
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-                20, MediaQuery.of(context).size.height * 0.2, 20, 0),*/
         child: Column(
           children: <Widget>[
             /*logoWidget("assets/images/logo1.png"),
@@ -94,7 +83,7 @@ class _SignInScreenState extends State<SignInScreen> {
             SizedBox(
                 height: 50,
                 width: 350,
-                child: reusableTextField("Enter UserName", Icons.person_outline,
+                child: reusableTextField("Enter Email ID", Icons.person_outline,
                     false, _emailTextController)),
             SizedBox(height: 20),
             SizedBox(

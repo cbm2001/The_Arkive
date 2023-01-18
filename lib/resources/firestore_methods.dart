@@ -9,8 +9,14 @@ import 'package:uuid/uuid.dart';
 class FireStoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String> uploadPost(String description, Uint8List file, String uid,
-      String username, String location, String category) async {
+  Future<String> uploadPost(
+      String description,
+      Uint8List file,
+      String uid,
+      String username,
+      String location,
+      String category,
+      String profImage) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
     try {
@@ -27,8 +33,7 @@ class FireStoreMethods {
         postUrl: photoUrl,
         location: location,
         category: category,
-
-        //profImage: profImage,
+        profImage: profImage,
       );
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
@@ -60,13 +65,8 @@ class FireStoreMethods {
   }
 
   // Post comment
-  Future<String> postComment(
-    String postId,
-    String text,
-    String uid,
-    String name,
-    // String profilePic
-  ) async {
+  Future<String> postComment(String postId, String text, String uid,
+      String name, String profilePic) async {
     String res = "Some error occurred";
     try {
       if (text.isNotEmpty) {
@@ -78,7 +78,7 @@ class FireStoreMethods {
             .collection('comments')
             .doc(commentId)
             .set({
-          // 'profilePic': profilePic,
+          'profilePic': profilePic,
           'name': name,
           'uid': uid,
           'text': text,

@@ -30,22 +30,25 @@ class AuthMethods {
     @required String password,
     @required String username,
     @required String name,
-    // Uint8List file,
+    @required String bio,
+    @required Uint8List file,
   }) async {
     String res = "Some error Occurred";
     try {
       if (email.isNotEmpty ||
           password.isNotEmpty ||
           username.isNotEmpty ||
-          name.isNotEmpty) {
+          name.isNotEmpty ||
+          bio.isNotEmpty ||
+          file != null) {
         // registering user in auth with email and password
         UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
 
-        /*String photoUrl = await StorageMethods()
-            .uploadImageToStorage('profilePics', file, false);*/
+        String photoUrl = await StorageMethods()
+            .uploadImageToStorage('profilePics', file, false);
 
         /*await _firestore.collection('Users').doc(cred.user.uid).set({
           'username': username,
@@ -60,6 +63,8 @@ class AuthMethods {
           uid: cred.user.uid,
           email: email,
           name: name,
+          photoUrl: photoUrl,
+          bio: bio,
         );
 
         // adding user in our database

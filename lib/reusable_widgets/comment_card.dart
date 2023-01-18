@@ -19,7 +19,8 @@ class CommentCard extends StatelessWidget {
           CircleAvatar(
             radius: 18,
             backgroundImage: NetworkImage(
-                'https://images.unsplash.com/photo-1667524751780-506526721f80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80'),
+              snap.data()['profilePic'],
+            ),
           ),
           Expanded(
             child: Padding(
@@ -32,19 +33,6 @@ class CommentCard extends StatelessWidget {
                     children: [
                       FirebaseAuth.instance.currentUser.uid ==
                               snap.data()['uid']
-
-                          /*FutureBuilder(
-                          future: FirebaseFirestore.instance
-                              .collection('users')
-                              .get(),
-                          // ignore: missing_return
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                          }),*/
                           ? InkWell(
                               onTap: () => Navigator.of(context).push(
                                     MaterialPageRoute(

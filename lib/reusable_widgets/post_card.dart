@@ -3,9 +3,7 @@ import 'package:first_app/providers/user_provider.dart';
 import 'package:first_app/reusable_widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -81,7 +79,8 @@ class _PostCardState extends State<PostCard> {
               CircleAvatar(
                 radius: 16,
                 backgroundImage: NetworkImage(
-                    'https://images.unsplash.com/photo-1667524751780-506526721f80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80'),
+                  widget.snap['profImage'].toString(),
+                ),
               ),
               Expanded(
                   child: Padding(
@@ -96,46 +95,78 @@ class _PostCardState extends State<PostCard> {
                           )
                         ],
                       ))),
-              IconButton(
-                onPressed: (() {
-                  showDialog(
-                    context: context,
-                    builder: (context) => Dialog(
-                        child: ListView(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shrinkWrap: true,
-                            children: [
-                              InkWell(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 16),
-                                    child: Text('Delete Post'),
-                                  ),
-                                  onTap: () {
-                                    deletePost(
-                                      widget.snap['postId'].toString(),
-                                    );
-                                    // remove the dialog box
-                                    Navigator.of(context).pop();
-                                  }),
-                              InkWell(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 16),
-                                    child: Text('Report Post'),
-                                  ),
-                                  onTap: () {
-                                    /*deletePost(
+              widget.snap['uid'].toString() == user.uid
+                  ? IconButton(
+                      onPressed: (() {
+                        showDialog(
+                          useRootNavigator: false,
+                          context: context,
+                          builder: (context) => Dialog(
+                              child: ListView(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  shrinkWrap: true,
+                                  children: [
+                                    InkWell(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12, horizontal: 16),
+                                          child: Text('Delete Post'),
+                                        ),
+                                        onTap: () {
+                                          deletePost(
+                                            widget.snap['postId'].toString(),
+                                          );
+                                          // remove the dialog box
+                                          Navigator.of(context).pop();
+                                        }),
+                                    /*InkWell(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12, horizontal: 16),
+                                          child: Text('Report Post'),
+                                        ),
+                                        onTap: () {
+                                          /*deletePost(
                                               widget.snap['postId'].toString(),
                                             );
                                             // remove the dialog box
                                             Navigator.of(context).pop();*/
-                                  }),
-                            ].toList())),
-                  );
-                }),
-                icon: Icon(Icons.more_vert),
-              ),
+                                        }),*/
+                                  ].toList())),
+                        );
+                      }),
+                      icon: Icon(Icons.more_vert),
+                    )
+                  : IconButton(
+                      onPressed: (() {
+                        showDialog(
+                          useRootNavigator: false,
+                          context: context,
+                          builder: (context) => Dialog(
+                              child: ListView(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  shrinkWrap: true,
+                                  children: [
+                                    InkWell(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12, horizontal: 16),
+                                          child: Text('Report Post'),
+                                        ),
+                                        onTap: () {
+                                          /*deletePost(
+                                              widget.snap['postId'].toString(),
+                                            );
+                                            // remove the dialog box
+                                            Navigator.of(context).pop();*/
+                                        }),
+                                  ].toList())),
+                        );
+                      }),
+                      icon: Icon(Icons.more_vert),
+                    )
             ]),
 
             //image section

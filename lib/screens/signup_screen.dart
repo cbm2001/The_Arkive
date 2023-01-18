@@ -24,6 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _emailTextController = TextEditingController();
   TextEditingController _userNameTextController = TextEditingController();
   TextEditingController _nameTextController = TextEditingController();
+  TextEditingController _bioTextController = TextEditingController();
   bool _isLoading = false;
   Uint8List _image;
 
@@ -35,11 +36,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (_passwordTextController.text == _confirmpasswordTextController.text) {
       // signup user using our authmethodds
       String res = await AuthMethods().signUpUser(
-        email: _emailTextController.text,
-        password: _passwordTextController.text,
-        username: _userNameTextController.text,
-        name: _nameTextController.text,
-      );
+          email: _emailTextController.text,
+          password: _passwordTextController.text,
+          username: _userNameTextController.text,
+          name: _nameTextController.text,
+          bio: _bioTextController.text,
+          file: _image);
       if (res == "success") {
         /*setState(() {
         _isLoading = true;
@@ -88,6 +90,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           iconTheme: IconThemeData.fallback(),
+          title: Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+            child: Text(
+              'Register',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.left,
+            ),
+          ),
+
           /*title: const Text(
             "Sign Up",
             style: TextStyle(
@@ -98,59 +113,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
         body: SafeArea(
             child: Container(
           width: double.infinity,
-          //width: MediaQuery.of(context).size.width,
-          //height: MediaQuery.of(context).size.height,
-          //width: 500,
-          //height: 700,
-          /*decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-            hexStringToColor("CB2B93"),
-            hexStringToColor("9546C4"),
-            hexStringToColor("5E61F4")
-          ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-          child: SingleChildScrollView(
-              child: Padding(
-            padding: EdgeInsets.fromLTRB(20, 120, 20, 0),*/
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Container(
-                alignment: Alignment.topLeft,
-                padding: EdgeInsets.only(left: 20.0),
-                child: Text(
-                  'Register',
-                  style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black),
-                  textAlign: TextAlign.left,
-                ),
-              ),
               SizedBox(height: 20),
-              /*Stack(
+              Stack(
                 children: [
                   _image != null
                       ? CircleAvatar(
-                          radius: 64,
+                          radius: 44,
                           backgroundImage: MemoryImage(_image),
-                          //backgroundColor: Colors.red,
+                          backgroundColor: Colors.red,
                         )
                       : const CircleAvatar(
-                          radius: 64,
+                          radius: 44,
                           backgroundImage: NetworkImage(
                               'https://i.stack.imgur.com/l60Hf.png'),
-                          //backgroundColor: Colors.red,
+                          backgroundColor: Colors.red,
                         ),
                   Positioned(
                     bottom: -10,
-                    left: 80,
+                    left: 50,
                     child: IconButton(
                       onPressed: selectImage,
                       icon: const Icon(Icons.add_a_photo),
                     ),
                   )
                 ],
-              ),*/
+              ),
               SizedBox(
                 height: 20,
               ),
@@ -183,12 +173,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               SizedBox(
                 height: 40,
+                child: reusableTextField(
+                    "Enter your bio", Icons.notes, false, _bioTextController),
+                width: 350,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 40,
                 child: reusableTextField("Enter Password", Icons.lock_outlined,
                     true, _passwordTextController),
                 width: 350,
               ),
               SizedBox(
-                height: 10,
+                height: 20,
               ),
               SizedBox(
                 height: 40,

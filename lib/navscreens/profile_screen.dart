@@ -59,17 +59,6 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  /*void initState() {
-    super.initState();
-    addData();
-  }
-
-  addData() async {
-    UserProvider _userProvider =
-        Provider.of<UserProvider>(context, listen: false);
-    await _userProvider.refreshUser();
-  }*/
-
   @override
   Widget build(BuildContext context) {
     model.User user = Provider.of<UserProvider>(context).getUser;
@@ -132,16 +121,6 @@ class _ProfilePageState extends State<ProfilePage> {
             child: CircularProgressIndicator(),
           )
         : Scaffold(
-            //extendBodyBehindAppBar: false,
-            //extendBody: false,
-            /*appBar: PreferredSize(
-          child: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            iconTheme: IconThemeData.fallback(),
-          ),
-          preferredSize: Size.fromHeight(50.0)),*/
-
             backgroundColor: Colors.white,
             body: Container(
               //Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) => new ProfilePage()));
@@ -151,20 +130,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   Row(children: <Widget>[
                     //SizedBox(width: 150, height: 20),
-                    IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        padding: EdgeInsets.only(bottom: 1.5),
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: Colors.black,
-                        )),
+
                     Padding(
-                      padding: EdgeInsets.only(left: 110, top: 50.0),
+                      padding: EdgeInsets.only(left: 155, top: 40.0),
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            'https://pixel.nymag.com/imgs/daily/vulture/2017/06/14/14-tom-cruise.w700.h700.jpg'),
+                        backgroundImage: NetworkImage(userData['photoUrl']),
                         radius: 40.0,
                       ),
                     ),
@@ -201,6 +171,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   Text(
                     //'@urgalbarbz \n Only slays and sandwiches',
                     '@${userData['username']}',
+                    style: TextStyle(color: Colors.black, fontSize: 14.0),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Text(
+                    //'@urgalbarbz \n Only slays and sandwiches',
+                    userData['bio'],
                     style: TextStyle(
                         color: Color.fromRGBO(139, 134, 134, 1),
                         fontSize: 14.0),
@@ -255,13 +234,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                         itemCount: (snapshot.data as dynamic)
                                             .docs
                                             .length,
-                                        /*gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 1.5,
-                          childAspectRatio: 1,
-                        ),*/
                                         itemBuilder: (ctx, index) => PostCard(
                                             snap: snapshot.data.docs[index]
                                                 .data()),
