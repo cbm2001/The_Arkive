@@ -8,14 +8,14 @@ import '../reusable_widgets/reusable_widgets.dart';
 import '../utils/utils.dart';
 import 'package:provider/provider.dart';
 
-class PostPage extends StatefulWidget {
-  const PostPage({Key key}) : super(key: key);
+class PostDraftPage extends StatefulWidget {
+  const PostDraftPage({Key key}) : super(key: key);
 
   @override
-  _PostPageState createState() => _PostPageState();
+  _PostDraftPageState createState() => _PostDraftPageState();
 }
 
-class _PostPageState extends State<PostPage> {
+class _PostDraftPageState extends State<PostDraftPage> {
   Uint8List _file;
   bool isLoading = false;
   final TextEditingController _descriptionController = TextEditingController();

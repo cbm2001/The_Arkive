@@ -4,6 +4,7 @@ import 'package:first_app/navscreens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:first_app/models/side_nav_bar.dart';
+import '../reusable_widgets/post_card.dart';
 import '../screens/explore_screen.dart';
 import '../reusable_widgets/reusable_widgets.dart';
 import '../screens/user_profile.dart';
@@ -21,93 +22,105 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Form(
-          child: TextFormField(
-            controller: searchController,
-            decoration:
-                const InputDecoration(labelText: 'Search for a user...'),
-            onFieldSubmitted: (String _) {
-              setState(() {
-                isShowUsers = true;
-              });
-              print(_);
-            },
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: Form(
+            child: TextFormField(
+              controller: searchController,
+              decoration: const InputDecoration(
+                labelText: 'Search for a user...',
+                prefixIcon: Icon(Icons.search),
+                prefixIconColor: Colors.black,
+              ),
+              onFieldSubmitted: (String _) {
+                setState(() {
+                  isShowUsers = true;
+                });
+                print(_);
+              },
+            ),
           ),
         ),
-      ),
-      body: isShowUsers
-          ? FutureBuilder(
-              future: FirebaseFirestore.instance
-                  .collection('Users')
-                  .where(
-                    'username',
-                    isGreaterThanOrEqualTo: searchController.text,
-                  )
-                  .get(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+        body: SearchNavBar(
+          text: searchController.text,
+          showUsers: isShowUsers,
+        ));
+  }
+/*isShowUsers
+                ? FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection('Users')
+                        .where(
+                          'username',
+                          isGreaterThanOrEqualTo: searchController.text,
+                        )
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
 
-                return ListView.builder(
-                  itemCount: (snapshot.data as dynamic).docs.length,
-                  itemBuilder: (context, index) {
-                    if (FirebaseAuth.instance.currentUser ==
-                        (snapshot.data as dynamic).docs[index]['uid']) {
-                      return InkWell(
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ProfilePage(
-                              uid: (snapshot.data as dynamic).docs[index]
-                                  ['uid'],
+                      return ListView.builder(
+                        itemCount: (snapshot.data as dynamic).docs.length,
+                        itemBuilder: (context, index) {
+                          if (FirebaseAuth.instance.currentUser ==
+                              (snapshot.data as dynamic).docs[index]['uid']) {
+                            return InkWell(
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ProfilePage(
+                                    uid: (snapshot.data as dynamic).docs[index]
+                                        ['uid'],
+                                  ),
+                                ),
+                              ),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  radius: 16,
+                                  backgroundImage: NetworkImage(
+                                      (snapshot.data as dynamic).docs[index]
+                                          ['photoUrl']),
+                                ),
+                                title: Text(
+                                  (snapshot.data as dynamic).docs[index]
+                                      ['username'],
+                                ),
+                              ),
+                            );
+                          }
+                          return InkWell(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => UserProfilePage(
+                                  uid: (snapshot.data as dynamic).docs[index]
+                                      ['uid'],
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 16,
-                            backgroundImage: NetworkImage(
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                  radius: 16,
+                                  backgroundImage: NetworkImage(
+                                      (snapshot.data as dynamic).docs[index]
+                                          ['photoUrl'])),
+                              title: Text(
                                 (snapshot.data as dynamic).docs[index]
-                                    ['photoUrl']),
-                          ),
-                          title: Text(
-                            (snapshot.data as dynamic).docs[index]['username'],
-                          ),
-                        ),
+                                    ['username'],
+                              ),
+                            ),
+                          );
+                        },
                       );
-                    }
-                    return InkWell(
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => UserProfilePage(
-                            uid: (snapshot.data as dynamic).docs[index]['uid'],
-                          ),
-                        ),
-                      ),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                            radius: 16,
-                            backgroundImage: NetworkImage(
-                                (snapshot.data as dynamic).docs[index]
-                                    ['photoUrl'])),
-                        title: Text(
-                          (snapshot.data as dynamic).docs[index]['username'],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            )
-          : SizedBox(
+                    },
+                  )
+                : Container()*/
+/*: SizedBox(
               child: SearchNavBar(),
               height: 600,
-            ),
-      /*FutureBuilder(
+            ),*/
+/*FutureBuilder(
               future: FirebaseFirestore.instance
                   .collection('posts')
                   .orderBy('datePublished')
@@ -138,17 +151,17 @@ class _SearchPageState extends State<SearchPage> {
                   crossAxisSpacing: 8.0,
                 );
               },
-            ),*/
-    );
-  }
-  /*Container(
+            ),
+        );
+  }*/
+/*Container(
           width: MediaQuery.of(context).size.width,
           //width: double.infinity,
           height: MediaQuery.of(context).size.height,
           color: Colors.white,
           child: Column(
             children: <Widget>[
-              /*SizedBox(height: 50),
+              SizedBox(height: 50),
               SizedBox(
                   height: 50,
                   width: 350,
@@ -157,16 +170,21 @@ class _SearchPageState extends State<SearchPage> {
               SizedBox(
                 child: SearchNavBar(),
                 height: 600,
-              ),*/
+              ),
             ],
           ),
-        )*/
+        )
 
+}*/
 }
 
 class SearchNavBar extends StatefulWidget {
   //NavigationBar({Key key}) : super(key: key);
+  final String text;
+  final bool showUsers;
 
+  const SearchNavBar({Key key, @required this.text, @required this.showUsers})
+      : super(key: key);
   @override
   _SearchNavBarState createState() => _SearchNavBarState();
 }
@@ -244,12 +262,82 @@ class _SearchNavBarState extends State<SearchNavBar> {
         ),
         body: TabBarView(
           children: [
-            Container(
+            widget.showUsers
+                ? FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('Users')
+                  .where(
+                'username',
+                isGreaterThanOrEqualTo: widget.text,
+              )
+                  .get(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                return ListView.builder(
+                  itemCount: (snapshot.data as dynamic).docs.length,
+                  itemBuilder: (context, index) {
+                    if (FirebaseAuth.instance.currentUser ==
+                        (snapshot.data as dynamic).docs[index]['uid']) {
+                      return InkWell(
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ProfilePage(
+                              uid: (snapshot.data as dynamic).docs[index]
+                              ['uid'],
+                            ),
+                          ),
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 16,
+                            backgroundImage: NetworkImage(
+                                (snapshot.data as dynamic).docs[index]
+                                ['photoUrl']),
+                          ),
+                          title: Text(
+                            (snapshot.data as dynamic).docs[index]
+                            ['username'],
+                          ),
+                        ),
+                      );
+                    }
+                    return InkWell(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => UserProfilePage(
+                            uid: (snapshot.data as dynamic).docs[index]
+                            ['uid'],
+                          ),
+                        ),
+                      ),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                            radius: 16,
+                            backgroundImage: NetworkImage(
+                                (snapshot.data as dynamic).docs[index]
+                                ['photoUrl'])),
+                        title: Text(
+                          (snapshot.data as dynamic).docs[index]
+                          ['username'],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            )
+                : Container(),
+            /*Container(
               height: MediaQuery.of(context).size.height,
               color: Colors.white,
               alignment: Alignment.center,
-              child: const Text('Page 1'),
-            ),
+              child: const Text('Page 2'),
+            ),*/
             Container(
               height: MediaQuery.of(context).size.height,
               color: Colors.white,
@@ -271,7 +359,38 @@ class _SearchNavBarState extends State<SearchNavBar> {
                             fontSize: 20, fontWeight: FontWeight.bold))),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: (() {}),
+                  onPressed: (() {
+                    //String newt = "sports";
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              searchCategory(context, "sports")),
+                    );
+                    /*FutureBuilder(
+                        future: FirebaseFirestore.instance
+                            .collection('posts')
+                            .where('category', isEqualTo: "sports")
+                            .get(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: (snapshot.data as dynamic).docs.length,
+                            itemBuilder: (context, index) => Image.network(
+                              (snapshot.data as dynamic).docs[index]['postUrl'],
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        });*/
+                  }),
                   child: Text(
                     'sports',
                     style: TextStyle(
@@ -290,7 +409,14 @@ class _SearchNavBarState extends State<SearchNavBar> {
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: (() {}),
+                  onPressed: (() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              searchCategory(context, "food")),
+                    );
+                  }),
                   child: Text(
                     'food',
                     style: TextStyle(
@@ -309,7 +435,13 @@ class _SearchNavBarState extends State<SearchNavBar> {
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: (() {}),
+                  onPressed: (() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => searchCategory(context, "art")),
+                    );
+                  }),
                   child: Text(
                     'art',
                     style: TextStyle(
@@ -328,7 +460,14 @@ class _SearchNavBarState extends State<SearchNavBar> {
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: (() {}),
+                  onPressed: (() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              searchCategory(context, "travel")),
+                    );
+                  }),
                   child: Text(
                     'travel',
                     style: TextStyle(
@@ -347,7 +486,14 @@ class _SearchNavBarState extends State<SearchNavBar> {
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: (() {}),
+                  onPressed: (() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              searchCategory(context, "lifestyle")),
+                    );
+                  }),
                   child: Text(
                     'lifestyle',
                     style: TextStyle(
@@ -368,6 +514,40 @@ class _SearchNavBarState extends State<SearchNavBar> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget searchCategory(BuildContext context, String category) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        iconTheme: IconThemeData.fallback(),
+        backgroundColor: Colors.white,
+        title: Text(category),
+        foregroundColor: Colors.black,
+      ),
+      body: Container(
+        padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
+        child: FutureBuilder(
+            future: FirebaseFirestore.instance
+                .collection('posts')
+                .where('category', isEqualTo: category)
+                .get(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: (snapshot.data as dynamic).docs.length,
+                  itemBuilder: (context, index) =>
+                      PostCard(snap: snapshot.data.docs[index].data()));
+              //fit: BoxFit.cover,
+            }),
       ),
     );
   }

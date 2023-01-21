@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../navscreens/post_screen.dart';
 import '../models/post.dart';
+import '../models/drafts.dart';
 import '/resources/storage_methods.dart';
 import 'package:uuid/uuid.dart';
 
@@ -36,6 +37,38 @@ class FireStoreMethods {
         profImage: profImage,
       );
       _firestore.collection('posts').doc(postId).set(post.toJson());
+      res = "success";
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+  Future<String> uploadDraft(
+      String description,
+      Uint8List file,
+      String uid,
+      String username,
+      String location,
+      String category,
+      String profImage) async {
+    // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
+    String res = "Some error occurred";
+    try {
+      String photoUrl =
+      await StorageMethods().uploadImageToStorage('drafts', file, true);
+      String postId = const Uuid().v1(); // creates unique id based on time
+      Draft draft = Draft(
+        description: description,
+        uid: uid,
+        username: username,
+        postId: postId,
+        datePublished: DateTime.now(),
+        postUrl: photoUrl,
+        location: location,
+        category: category,
+        profImage: profImage,
+      );
+      _firestore.collection('drafts').doc(postId).set(draft.toJson());
       res = "success";
     } catch (err) {
       res = err.toString();
@@ -100,6 +133,17 @@ class FireStoreMethods {
     String res = "Some error occurred";
     try {
       await _firestore.collection('posts').doc(postId).delete();
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+  // Delete Post
+  Future<String> deleteDraft(String postId) async {
+    String res = "Some error occurred";
+    try {
+      await _firestore.collection('drafts').doc(postId).delete();
       res = 'success';
     } catch (err) {
       res = err.toString();

@@ -11,6 +11,7 @@ import '../providers/user_provider.dart';
 import '../main.dart';
 import '../reusable_widgets/post_card.dart';
 import '../utils/utils.dart';
+import 'package:first_app/reusable_widgets/draft_card.dart';
 
 class ProfilePage extends StatefulWidget {
   final String uid;
@@ -33,7 +34,12 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     getData();
   }
-
+  void xyz(String newUserName){
+    final x = FirebaseFirestore.instance.collection("users").doc("username");
+    x.update({
+      "username":'$newUserName',
+    });
+  }
   getData() async {
     setState(() {
       isLoading = true;
@@ -156,16 +162,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     )
                   ]),
                   SizedBox(height: 5.0),
-                  Text(
-                    //'Barbie Slayer',
-                    userData['name'],
-                    //user.name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: 15.0,
+                  Center(
+                    child: Text(
+                      //'Barbie Slayer',
+                      userData['name'],
+                      //user.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 15.0,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 5.0),
                   Text(
@@ -186,7 +194,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   SizedBox(
                     height: 500,
@@ -252,12 +260,40 @@ class _ProfilePageState extends State<ProfilePage> {
                                 alignment: Alignment.center,
                                 child: const Text('Page 2'),
                               ),
-                              Container(
-                                height: MediaQuery.of(context).size.height,
-                                color: Color.fromRGBO(255, 248, 185, 1),
-                                alignment: Alignment.center,
-                                child: const Text('Page 3'),
-                              ),
+                              SizedBox(
+                                  height: 400,
+                                  width: 400,
+                                  child: FutureBuilder(
+                                    future: FirebaseFirestore.instance
+                                        .collection('drafts')
+                                        .where('uid',
+                                        isEqualTo: userData['uid'])
+                                        .get(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+
+                                      return ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: (snapshot.data as dynamic)
+                                            .docs
+                                            .length,
+                                        itemBuilder: (ctx, index) => DraftCard(
+                                            snap: snapshot.data.docs[index]
+                                                .data()),
+                                        /*return Container(
+                                child: Image(
+                                  image: NetworkImage(snap['postUrl']),
+                                  fit: BoxFit.cover,
+                                ),
+                              );*/
+                                      );
+                                    },
+                                  )),
                             ],
                           )),
                     ),
@@ -337,6 +373,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ));
   }
 }
+
 
 Widget accountSettings(BuildContext context) {
   return Scaffold(

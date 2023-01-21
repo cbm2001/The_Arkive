@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:first_app/navscreens/post_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './screens/login_screen.dart';
@@ -27,6 +28,9 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: 'App',
+          routes: {
+            '/xyz': (context) => PostPage(),
+          },
           //home: MyHomePage(),
           home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
