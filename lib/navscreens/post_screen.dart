@@ -118,127 +118,133 @@ class _PostPageState extends State<PostPage> {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
 
     return _file == null
-        ? Center(
-      child: IconButton(
-        icon: const Icon(
-          Icons.upload,
-        ),
-        onPressed: () => _selectImage(context),
-      ),
-    )
-        : Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: clearImage,
-        ),
-        title: const Text(
-          'Post to',
-        ),
-        centerTitle: false,
-        actions: <Widget>[
-          TextButton(
-            onPressed: () =>
-                postImage(
-                  userProvider.getUser.uid,
-                  userProvider.getUser.username,
-                  userProvider.getUser.photoUrl,
+        ? Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 310.0, top: 10.0),
+                child: IconButton(
+                  onPressed: (() {
+                    Navigator.of(context).pop();
+                  }),
+                  icon: Icon(Icons.arrow_back),
+                  color: Colors.black,
+                  alignment: Alignment.topLeft,
                 ),
-            child: const Text(
-              "Post",
-              style: TextStyle(
-                  color: Colors.blueAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0),
-            ),
-          ),
-          TextButton(
-            onPressed: () =>
-                draftImage(
-                  userProvider.getUser.uid,
-                  userProvider.getUser.username,
-                  userProvider.getUser.photoUrl,
-                ),
-            child: const Text(
-              "Save as draft",
-              style: TextStyle(
-                  color: Colors.blueAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0),
-            ),
-          ),
-        ],
-      ),
-      // POST FORM
-      body: Column(
-        children: <Widget>[
-          isLoading
-              ? const LinearProgressIndicator()
-              : const Padding(padding: EdgeInsets.only(top: 0.0)),
-          const Divider(),
-          Row(
-            //mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                    padding: EdgeInsets.only(left: 20.0),
-                    alignment: Alignment.topLeft,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        // 'https://i.stack.imgur.com/l60Hf.png'
-                          userProvider.getUser.photoUrl),
-                      radius: 30,
-                    ),
-                    height: 80),
-              ]),
-          SizedBox(
-            height: 85.0,
-            width: 85.0,
-            child: AspectRatio(
-              aspectRatio: 487 / 451,
-              child: Container(
-                alignment: Alignment.topCenter,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.fill,
-                      alignment: FractionalOffset.topCenter,
-                      image: MemoryImage(_file),
-                    )),
               ),
+              SizedBox(height: 280),
+              Center(
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.upload,
+                  ),
+                  onPressed: () => _selectImage(context),
+                ),
+              ),
+            ],
+          )
+        : Scaffold(
+            appBar: AppBar(
+              centerTitle: false,
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => postImage(
+                    userProvider.getUser.uid,
+                    userProvider.getUser.username,
+                    userProvider.getUser.photoUrl,
+                  ),
+                  child: const Text(
+                    "Post",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => draftImage(
+                    userProvider.getUser.uid,
+                    userProvider.getUser.username,
+                    userProvider.getUser.photoUrl,
+                  ),
+                  child: const Text(
+                    "Save as draft",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0),
+                  ),
+                ),
+              ],
             ),
-          ),
-          const Divider(),
-          SizedBox(
-            height: 40,
-            width: 350,
-            child: reusableTextField("Write a caption", Icons.description,
-                false, _descriptionController),
-            //maxLines: 8,
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          SizedBox(
-            height: 40,
-            width: 350,
-            child: reusableTextField("Tag location(s)",
-                Icons.share_location, false, _locationController),
-            //maxLines: 8,
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          SizedBox(
-            height: 40,
-            width: 350,
-            child: reusableTextField("Tag a category\s",
-                Icons.category_sharp, false, _categoryController),
-            //maxLines: 8,
-          ),
-        ],
-      ),
-    );
+            // POST FORM
+            body: Column(
+              children: <Widget>[
+                isLoading
+                    ? const LinearProgressIndicator()
+                    : const Padding(padding: EdgeInsets.only(top: 0.0)),
+                const Divider(),
+                Row(
+                    //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                          padding: EdgeInsets.only(left: 20.0),
+                          alignment: Alignment.topLeft,
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                // 'https://i.stack.imgur.com/l60Hf.png'
+                                userProvider.getUser.photoUrl),
+                            radius: 30,
+                          ),
+                          height: 80),
+                    ]),
+                SizedBox(
+                  height: 85.0,
+                  width: 85.0,
+                  child: AspectRatio(
+                    aspectRatio: 487 / 451,
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                        fit: BoxFit.fill,
+                        alignment: FractionalOffset.topCenter,
+                        image: MemoryImage(_file),
+                      )),
+                    ),
+                  ),
+                ),
+                const Divider(),
+                SizedBox(
+                  height: 40,
+                  width: 350,
+                  child: reusableTextField("Write a caption", Icons.description,
+                      false, _descriptionController),
+                  //maxLines: 8,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                SizedBox(
+                  height: 40,
+                  width: 350,
+                  child: reusableTextField("Tag location(s)",
+                      Icons.share_location, false, _locationController),
+                  //maxLines: 8,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                SizedBox(
+                  height: 40,
+                  width: 350,
+                  child: reusableTextField("Tag a category(s)",
+                      Icons.category_sharp, false, _categoryController),
+                  //maxLines: 8,
+                ),
+              ],
+            ),
+          );
   }
 
   void draftImage(String uid, String username, String profImage) async {
@@ -263,7 +269,7 @@ class _PostPageState extends State<PostPage> {
         });
         showSnackBar(
           context,
-          'drafted!',
+          'The post has been saved as a draft successfully!',
         );
         clearImage();
       } else {
