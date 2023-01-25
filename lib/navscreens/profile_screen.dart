@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/navscreens/post_screen.dart';
 import 'package:first_app/resources/auth_methods.dart';
 import 'package:first_app/screens/explore_screen.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import '../models/user.dart' as model;
 import '../providers/user_provider.dart';
 import '../main.dart';
 import '../reusable_widgets/post_card.dart';
+import '../reusable_widgets/reusable_widgets.dart';
 import '../utils/utils.dart';
 import 'package:first_app/reusable_widgets/draft_card.dart';
 
@@ -20,12 +22,15 @@ class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
+final TextEditingController _textController = TextEditingController();
+var userData = {};
 
 class _ProfilePageState extends State<ProfilePage> {
   //const SearchPage({Key key}) : super(key: key);
 
-  var userData = {};
+
   var upperTab;
+
 
   bool isLoading = false;
 
@@ -34,12 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     getData();
   }
-  void xyz(String newUserName){
-    final x = FirebaseFirestore.instance.collection("users").doc("username");
-    x.update({
-      "username":'$newUserName',
-    });
-  }
+
   getData() async {
     setState(() {
       isLoading = true;
@@ -400,7 +400,7 @@ Widget accountSettings(BuildContext context) {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                  MaterialPageRoute(builder: (context) => updateBio(context)),
                 );
               },
               child: Text(
@@ -442,7 +442,7 @@ Widget accountSettings(BuildContext context) {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                  MaterialPageRoute(builder: (context) => updateUsername(context)),
                 );
               },
               child: Text(
@@ -463,7 +463,7 @@ Widget accountSettings(BuildContext context) {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                  MaterialPageRoute(builder: (context) => updateEmail(context)),
                 );
               },
               child: Text(
@@ -484,7 +484,7 @@ Widget accountSettings(BuildContext context) {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                  MaterialPageRoute(builder: (context) => updatePassword(context)),
                 );
               },
               child: Text(
@@ -524,4 +524,211 @@ Widget accountSettings(BuildContext context) {
           ],
         ),
       ));
+
 }
+
+Widget updateBio(BuildContext context){
+  return
+    Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.white,
+      ),
+      body : Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+            children : <Widget>[
+          SizedBox(
+          height: 40,
+          width: 350,
+          child: reusableTextField("Write a bio", Icons.description,
+              false, _textController),
+
+          //maxLines: 8,
+        ),
+
+          ElevatedButton(
+          onPressed: (){
+            final x = FirebaseFirestore.instance.collection("Users").doc(userData["uid"]);
+            final y = FirebaseFirestore.instance.collection("Users").doc(x.id);
+
+            String ss = _textController.text;
+            y.update({
+              "bio":"$ss",
+            });
+            _textController.clear();
+            showSnackBar(
+              context,
+              'Bio Updated!',
+            );
+            Navigator.pop(context);
+
+
+          },
+          child: Text("Update bio")
+        ),
+    ],
+    ),
+      ),
+  );
+}
+Widget updateUsername(BuildContext context){
+  return
+    Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.white,
+      ),
+      body : Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children : <Widget>[
+            SizedBox(
+              height: 40,
+              width: 350,
+              child: reusableTextField("Enter new username", Icons.description,
+                  false, _textController),
+
+              //maxLines: 8,
+            ),
+
+            ElevatedButton(
+                onPressed: (){
+
+                  final x = FirebaseFirestore.instance.collection("Users").doc(userData["uid"]);
+
+                  final y = FirebaseFirestore.instance.collection("Users").doc(x.id);
+
+                  String ss = _textController.text;
+                  y.update({
+                    "username":"$ss",
+                  });
+                  _textController.clear();
+                  showSnackBar(
+                    context,
+                    'username Updated!',
+                  );
+                  Navigator.pop(context);
+
+
+                },
+                child: Text("Update username")
+            ),
+          ],
+        ),
+      ),
+    );
+}
+Widget updatePassword(BuildContext context){
+  return
+    Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.white,
+      ),
+      body : Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children : <Widget>[
+            SizedBox(
+              height: 40,
+              width: 350,
+              child: reusableTextField("Enter new password", Icons.description,
+                  false, _textController),
+
+              //maxLines: 8,
+            ),
+
+            ElevatedButton(
+                onPressed: () async{
+                  // CircularProgressIndicator;
+                  // await FirebaseAuth.instance.currentUser.reauthenticateWithCredential(credential);
+                  // final x = FirebaseFirestore.instance.collection("Users").doc(userData["uid"]);
+                  //
+                  // final y = FirebaseFirestore.instance.collection("Users").doc(x.id);
+                  //
+                  // String ss = _textController.text;
+                  //
+                  //
+                  // await FirebaseAuth.instance.currentUser.updatePassword(ss);
+                  // _textController.clear();
+                  // showSnackBar(
+                  //   context,
+                  //   'password Updated!',
+                  // );
+                  //
+                  // Navigator.pop(context);
+                  // FirebaseAuth.instance.signOut();
+                  //
+
+                },
+                child: Text("Update password")
+            ),
+          ],
+        ),
+      ),
+    );
+}
+Widget updateEmail(BuildContext context){
+  return
+    Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.white,
+      ),
+      body : Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children : <Widget>[
+            SizedBox(
+              height: 40,
+              width: 350,
+              child: reusableTextField("Enter new email", Icons.description,
+                  false, _textController),
+
+              //maxLines: 8,
+            ),
+
+            ElevatedButton(
+                onPressed: () async{
+                  final x = FirebaseFirestore.instance.collection("Users").doc(userData["uid"]);
+
+                  final y = FirebaseFirestore.instance.collection("Users").doc(x.id);
+
+                  String ss = _textController.text;
+                  y.update({
+                    "email":"$ss",
+                  });
+                  
+                  await FirebaseAuth.instance.currentUser.updateEmail(ss);
+                  _textController.clear();
+                  showSnackBar(
+                    context,
+                    'email Updated!',
+                  );
+
+                  Navigator.pop(context);
+
+
+                },
+                child: Text("Update email")
+            ),
+          ],
+        ),
+      ),
+    );
+}
+
+

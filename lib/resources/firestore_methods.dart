@@ -17,7 +17,9 @@ class FireStoreMethods {
       String username,
       String location,
       String category,
-      String profImage) async {
+      String profImage,
+      String latitude,
+  String longitude) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
     try {
@@ -35,6 +37,8 @@ class FireStoreMethods {
         location: location,
         category: category,
         profImage: profImage,
+        longitude: longitude,
+        latitude: latitude
       );
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
@@ -43,6 +47,43 @@ class FireStoreMethods {
     }
     return res;
   }
+  // Future<String> uploadDraftPost(String description,
+  //
+  //       String uid,
+  //       String username,
+  //       String location,
+  //       String category,
+  //       String profImage,
+  //   String postURL,
+  //   String description,
+  //   String location
+  //   String category,
+  //   String latitude,
+  //   String longitude,) async{
+  //   String res = "Some error occurred";
+  //   try {
+  //
+  //     String postId = const Uuid().v1(); // creates unique id based on time
+  //     Draft draft = Draft(
+  //       description: description,
+  //       uid: uid,
+  //       username: username,
+  //       postId: postId,
+  //       datePublished: DateTime.now(),
+  //       postUrl: PostURL,
+  //       location: location,
+  //       category: category,
+  //       profImage: profImage,
+  //     );
+  //     _firestore.collection('drafts').doc(postId).set(draft.toJson());
+  //     res = "success";
+  //   } catch (err) {
+  //     res = err.toString();
+  //   }
+  //   return res;
+  //
+  // }
+
   Future<String> uploadDraft(
       String description,
       Uint8List file,
@@ -50,7 +91,9 @@ class FireStoreMethods {
       String username,
       String location,
       String category,
-      String profImage) async {
+      String profImage,
+      String latitude,
+      String longitude) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
     try {

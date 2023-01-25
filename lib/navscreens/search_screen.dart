@@ -32,7 +32,7 @@ class _SearchPageState extends State<SearchPage> {
                 prefixIcon: Icon(Icons.search),
                 prefixIconColor: Colors.black,
               ),
-              onFieldSubmitted: (String _) {
+              onChanged: (String _) {
                 setState(() {
                   isShowUsers = true;
                 });
