@@ -12,6 +12,8 @@ class Post {
   final String location;
   final String category;
   final String profImage;
+  final String latitude;
+  final String longitude;
 
   const Post({
     @required this.description,
@@ -24,6 +26,8 @@ class Post {
     @required this.location,
     @required this.category,
     @required this.profImage,
+    @required this.latitude,
+    @required this.longitude,
   });
 
   static Post fromSnap(DocumentSnapshot snap) {
@@ -39,7 +43,10 @@ class Post {
         postUrl: snapshot['postUrl'],
         location: snapshot['location'],
         category: snapshot['category'],
-        profImage: snapshot['profImage']);
+        profImage: snapshot['profImage'],
+        latitude: snapshot['latitude'],
+        longitude: snapshot['longitude']
+    );
   }
 
   Map<String, dynamic> toJson() => {
@@ -53,5 +60,7 @@ class Post {
         'profImage': profImage,
         'location': location,
         'category': category,
+        'latitude': latitude,
+        'longitude':longitude,
       };
 }

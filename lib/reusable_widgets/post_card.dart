@@ -46,7 +46,7 @@ class _PostCardState extends State<PostCard> {
         err.toString(),
       );
     }
-    setState(() {});
+    // setState(() {});
   }
 
   deletePost(String postId) async {

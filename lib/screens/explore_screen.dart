@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import '../models/user.dart' as model;
 import '../reusable_widgets/post_card.dart';
 import '../providers/user_provider.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:first_app/resources/locationMethods.dart';
 
 class ExplorePage extends StatefulWidget {
   @override
@@ -28,6 +30,7 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     model.User user = Provider.of<UserProvider>(context).getUser;
+
     return Scaffold(
       //extendBodyBehindAppBar: false,
       backgroundColor: Colors.white,

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:first_app/navscreens/profile_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
+import 'package:first_app/navscreens/post_draft_screen.dart';
 import '../main.dart';
 import '../models/user.dart';
 import '../navscreens/post_draft_screen.dart';
