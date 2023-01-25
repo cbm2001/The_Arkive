@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'App',
           //home: MyHomePage(),
           home: StreamBuilder(

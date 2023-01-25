@@ -28,7 +28,7 @@ class _SearchPageState extends State<SearchPage> {
             child: TextFormField(
               controller: searchController,
               decoration: const InputDecoration(
-                labelText: 'Search for a user...',
+                labelText: 'Search...',
                 prefixIcon: Icon(Icons.search),
                 prefixIconColor: Colors.black,
               ),

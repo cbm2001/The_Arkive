@@ -1,10 +1,9 @@
 import 'dart:async';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/side_nav_bar.dart';
 import '../screens/explore_screen.dart';
-
 
 class MapPage extends StatefulWidget {
   const MapPage({Key key}) : super(key: key);
@@ -28,11 +27,21 @@ class MapSampleState extends State<MapPage> {
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
 
+  Marker _marker = Marker(
+    markerId: MarkerId('marker 1'),
+    position: LatLng(37.43296265331129, -122.08832357078792),
+    infoWindow: InfoWindow(
+      title: 'hi',
+      snippet: 'cool',
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GoogleMap(
-        mapType: MapType.hybrid,
+        markers: {_marker},
+        mapType: MapType.normal,
         initialCameraPosition: _kGooglePlex,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
@@ -51,6 +60,3 @@ class MapSampleState extends State<MapPage> {
     controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }
-
-
-
