@@ -1,57 +1,57 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:first_app/navscreens/post_screen.dart';
 import 'package:first_app/providers/user_provider.dart';
 import 'package:first_app/reusable_widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
 import 'package:flutter/material.dart';
-
+import 'package:first_app/navscreens/profile_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
+import 'package:first_app/navscreens/post_draft_screen.dart';
+import '../main.dart';
 import '../models/user.dart';
+import '../navscreens/post_draft_screen.dart';
+import '../resources/auth_methods.dart';
 import '../resources/firestore_methods.dart';
 import '../utils/utils.dart';
 
-class PostCard extends StatefulWidget {
+int i = 0;
+
+class DraftCard extends StatefulWidget {
   final snap;
-  const PostCard({
+  const DraftCard({
     Key key,
     @required this.snap,
   }) : super(key: key);
 
   @override
-  State<PostCard> createState() => _PostCardState();
+  State<DraftCard> createState() => _DraftCardState();
 }
 
-class _PostCardState extends State<PostCard> {
-  int commentLen = 0;
-  bool isLikeAnimating = false;
-
+class _DraftCardState extends State<DraftCard> {
   @override
   void initState() {
     super.initState();
-    fetchCommentLen();
   }
 
-  fetchCommentLen() async {
-    try {
-      QuerySnapshot snap = await FirebaseFirestore.instance
-          .collection('posts')
-          .doc(widget.snap['postId'])
-          .collection('comments')
-          .get();
-      commentLen = snap.docs.length;
-    } catch (err) {
-      showSnackBar(
-        context,
-        err.toString(),
-      );
-    }
-    // setState(() {});
+  Widget EditDraft(String postId) {
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: (() {
+                Navigator.of(context).pop();
+              }),
+              icon: Icon(Icons.arrow_back))
+        ],
+      ),
+      body: PostDraftPage(),
+    );
   }
 
-  deletePost(String postId) async {
+  deleteDraft(String postId) async {
     try {
-      await FireStoreMethods().deletePost(postId);
+      await FireStoreMethods().deleteDraft(postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -76,7 +76,7 @@ class _PostCardState extends State<PostCard> {
               /*SizedBox(
                 height: 70,
               ),*/
-              CircleAvatar(
+              /*CircleAvatar(
                 radius: 16,
                 backgroundImage: NetworkImage(
                   widget.snap['profImage'].toString(),
@@ -94,32 +94,46 @@ class _PostCardState extends State<PostCard> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           )
                         ],
-                      ))),
-              widget.snap['uid'].toString() == user.uid
-                  ? IconButton(
+                      ))),*/
+              /*IconButton(
+                padding: EdgeInsets.only(left: 300),
                 onPressed: (() {
                   showDialog(
                     useRootNavigator: false,
                     context: context,
                     builder: (context) => Dialog(
                         child: ListView(
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 16),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                             shrinkWrap: true,
                             children: [
                               InkWell(
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 12, horizontal: 16),
-                                    child: Text('Delete Post'),
+                                    child: Text('Delete Draft'),
                                   ),
                                   onTap: () {
-                                    deletePost(
+                                    deleteDraft(
                                       widget.snap['postId'].toString(),
                                     );
                                     // remove the dialog box
                                     Navigator.of(context).pop();
                                   }),
+                              InkWell(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 16),
+                                    child: Text('Edit Draft'),
+                                  ),
+                                  onTap: () {
+                                    print("hello");
+                                    return Scaffold();
+                                    // EditDraft(
+                                    //   widget.snap['postId'].toString(),
+                                    // );
+                                    // remove the dialog box
+                                    Navigator.of(context).pop();
+                                  })
                               /*InkWell(
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
@@ -137,36 +151,36 @@ class _PostCardState extends State<PostCard> {
                   );
                 }),
                 icon: Icon(Icons.more_vert),
-              )
-                  : IconButton(
-                onPressed: (() {
-                  showDialog(
-                    useRootNavigator: false,
-                    context: context,
-                    builder: (context) => Dialog(
-                        child: ListView(
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 16),
-                            shrinkWrap: true,
-                            children: [
-                              InkWell(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 16),
-                                    child: Text('Report Post'),
-                                  ),
-                                  onTap: () {
-                                    /*deletePost(
+              )*/
+              /* IconButton(
+                      onPressed: (() {
+                        showDialog(
+                          useRootNavigator: false,
+                          context: context,
+                          builder: (context) => Dialog(
+                              child: ListView(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  shrinkWrap: true,
+                                  children: [
+                                    InkWell(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12, horizontal: 16),
+                                          child: Text('Report Post'),
+                                        ),
+                                        onTap: () {
+                                          /*deletePost(
                                               widget.snap['postId'].toString(),
                                             );
                                             // remove the dialog box
                                             Navigator.of(context).pop();*/
-                                  }),
-                            ].toList())),
-                  );
-                }),
-                icon: Icon(Icons.more_vert),
-              )
+                                        }),
+                                  ].toList())),
+                        );
+                      }),
+                      icon: Icon(Icons.more_vert),
+                    )*/
             ]),
 
             //image section
@@ -180,62 +194,40 @@ class _PostCardState extends State<PostCard> {
                 fit: BoxFit.cover,
               )),
 
-          //LIKE COMMENT SECTION
+          //SECTION
           Row(
             children: [
-              LikeAnimation(
-                isAnimating: widget.snap['likes'].contains(user.uid),
-                child: IconButton(
-                  onPressed: (() async {
-                    await FireStoreMethods().likePost(
-                        widget.snap['postId'], user.uid, widget.snap['likes']);
-                  }),
-                  icon: widget.snap['likes'].contains(user.uid)
-                      ? const Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                  )
-                      : const Icon(
-                    Icons.favorite_border,
-                  ),
+              IconButton(
+                alignment: Alignment.center,
+                onPressed: () {
+                  //print("print");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => editDraft(context)),
+                  );
+                },
+                icon: const Icon(
+                  Icons.edit,
                 ),
               ),
               IconButton(
-                onPressed: (() => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        CommentsScreen(postId: widget.snap['postId'])))),
+                onPressed: () {
+                  //print("print");
+                  //showDialog(context: context, builder: builder)
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => deleteDraft(
+                          widget.snap['postId'].toString(),
+                        )),
+                  );
+                },
                 icon: const Icon(
-                  Icons.comment_outlined,
-                  color: Colors.black,
-                ),
-              ),
-              IconButton(
-                onPressed: (() {}),
-                icon: const Icon(
-                  Icons.send_outlined,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(
-                width: 150,
-              ),
-              IconButton(
-                onPressed: (() {}),
-                icon: const Icon(
-                  Icons.location_on_outlined,
-                  color: Colors.black,
-                ),
-              ),
-              IconButton(
-                onPressed: (() {}),
-                icon: const Icon(
-                  Icons.bookmark_border_outlined,
-                  color: Colors.black,
+                  Icons.delete_outline,
                 ),
               ),
             ],
           ),
-
           //Description
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16),
@@ -243,15 +235,6 @@ class _PostCardState extends State<PostCard> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                DefaultTextStyle(
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(fontWeight: FontWeight.w800),
-                  child: Text('${widget.snap['likes'].length} likes'
-                    //style: TextStyle(color: Colors.black),
-                  ),
-                ),
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.only(top: 8),
@@ -285,4 +268,10 @@ class _PostCardState extends State<PostCard> {
       ),
     );
   }
+}
+
+Widget editDraft(BuildContext context) {
+  return Scaffold(
+    body: PostDraftPage(),
+  );
 }

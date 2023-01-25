@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class Post {
+class Draft {
   final String description;
   final String uid;
   final String username;
-  final likes;
   final String postId;
   final DateTime datePublished;
   final String postUrl;
@@ -15,11 +14,10 @@ class Post {
   final String latitude;
   final String longitude;
 
-  const Post({
+  const Draft({
     @required this.description,
     @required this.uid,
     @required this.username,
-    @required this.likes,
     @required this.postId,
     @required this.datePublished,
     @required this.postUrl,
@@ -28,15 +26,15 @@ class Post {
     @required this.profImage,
     @required this.latitude,
     @required this.longitude,
+
   });
 
-  static Post fromSnap(DocumentSnapshot snap) {
+  static Draft fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
 
-    return Post(
+    return Draft(
         description: snapshot["description"],
         uid: snapshot["uid"],
-        likes: snapshot["likes"],
         postId: snapshot["postId"],
         datePublished: snapshot["datePublished"],
         username: snapshot["username"],
@@ -52,7 +50,6 @@ class Post {
   Map<String, dynamic> toJson() => {
     "description": description,
     "uid": uid,
-    "likes": likes,
     "username": username,
     "postId": postId,
     "datePublished": datePublished,

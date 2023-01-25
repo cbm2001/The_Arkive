@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../navscreens/post_screen.dart';
 import '../models/post.dart';
+import '../models/drafts.dart';
 import '/resources/storage_methods.dart';
 import 'package:uuid/uuid.dart';
 
@@ -16,18 +17,93 @@ class FireStoreMethods {
       String username,
       String location,
       String category,
-      String profImage) async {
+      String profImage,
+      String latitude,
+      String longitude) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
     try {
       String photoUrl =
-          await StorageMethods().uploadImageToStorage('posts', file, true);
+      await StorageMethods().uploadImageToStorage('posts', file, true);
       String postId = const Uuid().v1(); // creates unique id based on time
       Post post = Post(
+          description: description,
+          uid: uid,
+          username: username,
+          likes: [],
+          postId: postId,
+          datePublished: DateTime.now(),
+          postUrl: photoUrl,
+          location: location,
+          category: category,
+          profImage: profImage,
+          longitude: longitude,
+          latitude: latitude
+      );
+      _firestore.collection('posts').doc(postId).set(post.toJson());
+      res = "success";
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+  // Future<String> uploadDraftPost(String description,
+  //
+  //       String uid,
+  //       String username,
+  //       String location,
+  //       String category,
+  //       String profImage,
+  //   String postURL,
+  //   String description,
+  //   String location
+  //   String category,
+  //   String latitude,
+  //   String longitude,) async{
+  //   String res = "Some error occurred";
+  //   try {
+  //
+  //     String postId = const Uuid().v1(); // creates unique id based on time
+  //     Draft draft = Draft(
+  //       description: description,
+  //       uid: uid,
+  //       username: username,
+  //       postId: postId,
+  //       datePublished: DateTime.now(),
+  //       postUrl: PostURL,
+  //       location: location,
+  //       category: category,
+  //       profImage: profImage,
+  //     );
+  //     _firestore.collection('drafts').doc(postId).set(draft.toJson());
+  //     res = "success";
+  //   } catch (err) {
+  //     res = err.toString();
+  //   }
+  //   return res;
+  //
+  // }
+
+  Future<String> uploadDraft(
+      String description,
+      Uint8List file,
+      String uid,
+      String username,
+      String location,
+      String category,
+      String profImage,
+      String latitude,
+      String longitude) async {
+    // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
+    String res = "Some error occurred";
+    try {
+      String photoUrl =
+      await StorageMethods().uploadImageToStorage('drafts', file, true);
+      String postId = const Uuid().v1(); // creates unique id based on time
+      Draft draft = Draft(
         description: description,
         uid: uid,
         username: username,
-        likes: [],
         postId: postId,
         datePublished: DateTime.now(),
         postUrl: photoUrl,
@@ -35,7 +111,7 @@ class FireStoreMethods {
         category: category,
         profImage: profImage,
       );
-      _firestore.collection('posts').doc(postId).set(post.toJson());
+      _firestore.collection('drafts').doc(postId).set(draft.toJson());
       res = "success";
     } catch (err) {
       res = err.toString();
@@ -106,11 +182,22 @@ class FireStoreMethods {
     }
     return res;
   }
+  // Delete Post
+  Future<String> deleteDraft(String postId) async {
+    String res = "Some error occurred";
+    try {
+      await _firestore.collection('drafts').doc(postId).delete();
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
 
   Future<void> followUser(String uid, String followId) async {
     try {
       DocumentSnapshot snap =
-          await _firestore.collection('Users').doc(uid).get();
+      await _firestore.collection('Users').doc(uid).get();
       List following = (snap.data() as dynamic)['following'];
 
       if (following.contains(followId)) {

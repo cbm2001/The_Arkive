@@ -1,31 +1,34 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import '../providers/user_provider.dart';
 import '../resources/firestore_methods.dart';
 import '../reusable_widgets/reusable_widgets.dart';
 import '../utils/utils.dart';
 import 'package:provider/provider.dart';
-import 'package:first_app/resources/locationMethods.dart';
-
-class PostPage extends StatefulWidget {
-  const PostPage({Key key}) : super(key: key);
+String latitude;
+String longitude;
+class PostDraftPage extends StatefulWidget {
+  final String postURL;
+  const PostDraftPage({Key key,
+    // String postID,
+    @required this.postURL,
+    // String category,
+    // String description,
+    // String location,
+  }) : super(key: key);
 
   @override
-  _PostPageState createState() => _PostPageState();
+  _PostDraftPageState createState() => _PostDraftPageState();
 }
 
-class _PostPageState extends State<PostPage> {
+class _PostDraftPageState extends State<PostDraftPage> {
   Uint8List _file;
   bool isLoading = false;
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
-  String latitude;
-  String longitude;
-  String category='travel';
 
   _selectImage(BuildContext parentContext) async {
     return showDialog(
@@ -67,7 +70,15 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
-  void postImage(String uid, String username, String profImage) async {
+  void uploadDraftPost(String uid,
+      String username,
+      String profImage,
+      // String postID,
+      // String postURL,
+      // String category,
+      // String description,
+      // String location,
+      ) async {
     setState(() {
       isLoading = true;
     });
@@ -80,7 +91,7 @@ class _PostPageState extends State<PostPage> {
           uid,
           username,
           _locationController.text,
-          category,
+          _categoryController.text,
           profImage,
           latitude,
           longitude
@@ -123,7 +134,7 @@ class _PostPageState extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
-
+    _descriptionController;
     return _file == null
         ? Center(
       child: IconButton(
@@ -147,7 +158,7 @@ class _PostPageState extends State<PostPage> {
         actions: <Widget>[
           TextButton(
             onPressed: () =>
-                postImage(
+                uploadDraftPost(
                   userProvider.getUser.uid,
                   userProvider.getUser.username,
                   userProvider.getUser.photoUrl,
@@ -233,52 +244,15 @@ class _PostPageState extends State<PostPage> {
                 Icons.share_location, false, _locationController),
             //maxLines: 8,
           ),
-          ElevatedButton(onPressed: () async {
-            setState((){
-              isLoading=true;
-            });
-
-
-            Position pos =  await determinePosition();
-
-            setState(() {
-              isLoading=false;
-              latitude = pos.latitude.toString();
-              longitude = pos.longitude.toString();
-              if(!isLoading){
-                showSnackBar(context, "location received!");
-              }
-            }
-
-
-            );
-          }, child: Text("Get location")),
-
           SizedBox(
             height: 5,
           ),
-
-          Container(
+          SizedBox(
             height: 40,
             width: 350,
-
-            child: Row(
-              children: [
-                Text("Select Category:   "),
-                DropdownButton<String>(value: category ,items: ['travel','sports','food','art','lifestyle'].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  );
-                }).toList(), onChanged: (String newValue) {setState(() {
-                  category = newValue;
-
-                });},),
-              ],
-            ),
+            child: reusableTextField("Tag a category\s",
+                Icons.category_sharp, false, _categoryController),
+            //maxLines: 8,
           ),
         ],
       ),
@@ -293,15 +267,15 @@ class _PostPageState extends State<PostPage> {
     try {
       // upload to storage and db
       String res = await FireStoreMethods().uploadDraft(
-          _descriptionController.text,
-          _file,
-          uid,
-          username,
-          _locationController.text,
-          category,
-          profImage,
-          latitude,
-          longitude
+        _descriptionController.text,
+        _file,
+        uid,
+        username,
+        _locationController.text,
+        _categoryController.text,
+        profImage,
+        latitude,
+        longitude,
       );
       if (res == "success") {
         setState(() {
