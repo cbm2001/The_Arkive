@@ -203,7 +203,7 @@ class _DraftCardState extends State<DraftCard> {
                   //print("print");
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => editDraft(context)),
+                    MaterialPageRoute(builder: (context) => editDraft(context,widget.snap['postUrl'],widget.snap['category'],widget.snap['description'])),
                   );
                 },
                 icon: const Icon(
@@ -270,8 +270,8 @@ class _DraftCardState extends State<DraftCard> {
   }
 }
 
-Widget editDraft(BuildContext context) {
+Widget editDraft(BuildContext context,String PostURL,String category, String Description) {
   return Scaffold(
-    body: PostDraftPage(),
+    body: PostDraftPage(postURL: PostURL,category: category,description: Description,),
   );
 }

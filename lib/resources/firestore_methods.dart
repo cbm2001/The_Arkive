@@ -221,4 +221,40 @@ class FireStoreMethods {
       print(e.toString());
     }
   }
+
+  uploadDraftPost(String description,
+      String postURL,
+      String uid,
+      String username,
+      String location,
+      String category,
+      String profImage,
+      String latitude,
+      String longitude) async{
+    String res = "Some error occurred";
+    try {
+
+      String postId = const Uuid().v1(); // creates unique id based on time
+      Post post = Post(
+          description: description,
+          uid: uid,
+          username: username,
+          likes: [],
+          postId: postId,
+          datePublished: DateTime.now(),
+          postUrl: postURL,
+          location: location,
+          category: category,
+          profImage: profImage,
+          longitude: longitude,
+          latitude: latitude
+      );
+      _firestore.collection('posts').doc(postId).set(post.toJson());
+      res = "success";
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+
+  }
 }
