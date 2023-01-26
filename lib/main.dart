@@ -1,4 +1,4 @@
-import 'firebase_options.dart';
+import 'resources/firebase_options.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,12 +8,12 @@ import './screens/login_screen.dart';
 import './screens/signup_screen.dart';
 //import './screens/explore_screen.dart';
 //import './models/nav_bar.dart';
-import './models/new_nav_bar.dart';
+import 'models/nav_bar.dart';
 import 'providers/user_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 

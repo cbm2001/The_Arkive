@@ -5,7 +5,7 @@ import '/providers/user_provider.dart';
 import '/resources/firestore_methods.dart';
 //import 'package:instagram_clone_flutte/utils/colors.dart';
 import '/utils/utils.dart';
-import 'package:first_app/reusable_widgets/comment_card.dart';
+import 'package:first_app/widgets/comment_card.dart';
 import 'package:provider/provider.dart';
 
 class CommentsScreen extends StatefulWidget {

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../resources/auth_methods.dart';
-import '../reusable_widgets/reusable_widgets.dart';
+import '../widgets/reusable_widgets.dart';
 //import '../screens/login_screen.dart';
 import '../utils/utils.dart';
 import 'age_form_check.dart';

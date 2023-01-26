@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:first_app/navscreens/post_screen.dart';
+import 'package:first_app/screens/post_screen.dart';
 import 'package:first_app/providers/user_provider.dart';
-import 'package:first_app/reusable_widgets/like_animation.dart';
+import 'package:first_app/widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:first_app/navscreens/profile_screen.dart';
+import 'package:first_app/screens/profile_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:first_app/navscreens/post_draft_screen.dart';
+import 'package:first_app/screens/post_draft_screen.dart';
 import '../main.dart';
 import '../models/user.dart';
-import '../navscreens/post_draft_screen.dart';
+import '../screens/post_draft_screen.dart';
 import '../resources/auth_methods.dart';
 import '../resources/firestore_methods.dart';
 import '../utils/utils.dart';
@@ -186,13 +186,13 @@ class _DraftCardState extends State<DraftCard> {
             //image section
           ),
           SizedBox(
-            //height: MediaQuery.of(context).size.height,
-            //width: double.infinity,
+              //height: MediaQuery.of(context).size.height,
+              //width: double.infinity,
               child: Image.network(
-                //'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfw8zy3G7-GYrDilkANhTaVIKEwEuVycOGsj7k4wtXsrasmJ03ZV9AUMsntAOugN26NLg&usqp=CAU',
-                widget.snap['postUrl'],
-                fit: BoxFit.cover,
-              )),
+            //'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfw8zy3G7-GYrDilkANhTaVIKEwEuVycOGsj7k4wtXsrasmJ03ZV9AUMsntAOugN26NLg&usqp=CAU',
+            widget.snap['postUrl'],
+            fit: BoxFit.cover,
+          )),
 
           //SECTION
           Row(
@@ -218,8 +218,8 @@ class _DraftCardState extends State<DraftCard> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => deleteDraft(
-                          widget.snap['postId'].toString(),
-                        )),
+                              widget.snap['postId'].toString(),
+                            )),
                   );
                 },
                 icon: const Icon(
@@ -244,14 +244,14 @@ class _DraftCardState extends State<DraftCard> {
                             color: Colors.black,
                           ),
                           children: [
-                            TextSpan(
-                              text: widget.snap['username'],
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text: '  ${widget.snap['description']}',
-                            )
-                          ])),
+                        TextSpan(
+                          text: widget.snap['username'],
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: '  ${widget.snap['description']}',
+                        )
+                      ])),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 10),

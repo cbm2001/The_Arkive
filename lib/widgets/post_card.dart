@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_app/providers/user_provider.dart';
-import 'package:first_app/reusable_widgets/like_animation.dart';
+import 'package:first_app/widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -97,30 +97,30 @@ class _PostCardState extends State<PostCard> {
                       ))),
               widget.snap['uid'].toString() == user.uid
                   ? IconButton(
-                onPressed: (() {
-                  showDialog(
-                    useRootNavigator: false,
-                    context: context,
-                    builder: (context) => Dialog(
-                        child: ListView(
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 16),
-                            shrinkWrap: true,
-                            children: [
-                              InkWell(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 16),
-                                    child: Text('Delete Post'),
-                                  ),
-                                  onTap: () {
-                                    deletePost(
-                                      widget.snap['postId'].toString(),
-                                    );
-                                    // remove the dialog box
-                                    Navigator.of(context).pop();
-                                  }),
-                              /*InkWell(
+                      onPressed: (() {
+                        showDialog(
+                          useRootNavigator: false,
+                          context: context,
+                          builder: (context) => Dialog(
+                              child: ListView(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  shrinkWrap: true,
+                                  children: [
+                                    InkWell(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12, horizontal: 16),
+                                          child: Text('Delete Post'),
+                                        ),
+                                        onTap: () {
+                                          deletePost(
+                                            widget.snap['postId'].toString(),
+                                          );
+                                          // remove the dialog box
+                                          Navigator.of(context).pop();
+                                        }),
+                                    /*InkWell(
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 12, horizontal: 16),
@@ -133,52 +133,52 @@ class _PostCardState extends State<PostCard> {
                                             // remove the dialog box
                                             Navigator.of(context).pop();*/
                                         }),*/
-                            ].toList())),
-                  );
-                }),
-                icon: Icon(Icons.more_vert),
-              )
+                                  ].toList())),
+                        );
+                      }),
+                      icon: Icon(Icons.more_vert),
+                    )
                   : IconButton(
-                onPressed: (() {
-                  showDialog(
-                    useRootNavigator: false,
-                    context: context,
-                    builder: (context) => Dialog(
-                        child: ListView(
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 16),
-                            shrinkWrap: true,
-                            children: [
-                              InkWell(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 16),
-                                    child: Text('Report Post'),
-                                  ),
-                                  onTap: () {
-                                    /*deletePost(
+                      onPressed: (() {
+                        showDialog(
+                          useRootNavigator: false,
+                          context: context,
+                          builder: (context) => Dialog(
+                              child: ListView(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  shrinkWrap: true,
+                                  children: [
+                                    InkWell(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12, horizontal: 16),
+                                          child: Text('Report Post'),
+                                        ),
+                                        onTap: () {
+                                          /*deletePost(
                                               widget.snap['postId'].toString(),
                                             );
                                             // remove the dialog box
                                             Navigator.of(context).pop();*/
-                                  }),
-                            ].toList())),
-                  );
-                }),
-                icon: Icon(Icons.more_vert),
-              )
+                                        }),
+                                  ].toList())),
+                        );
+                      }),
+                      icon: Icon(Icons.more_vert),
+                    )
             ]),
 
             //image section
           ),
           SizedBox(
-            //height: MediaQuery.of(context).size.height,
-            //width: double.infinity,
+              //height: MediaQuery.of(context).size.height,
+              //width: double.infinity,
               child: Image.network(
-                //'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfw8zy3G7-GYrDilkANhTaVIKEwEuVycOGsj7k4wtXsrasmJ03ZV9AUMsntAOugN26NLg&usqp=CAU',
-                widget.snap['postUrl'],
-                fit: BoxFit.cover,
-              )),
+            //'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfw8zy3G7-GYrDilkANhTaVIKEwEuVycOGsj7k4wtXsrasmJ03ZV9AUMsntAOugN26NLg&usqp=CAU',
+            widget.snap['postUrl'],
+            fit: BoxFit.cover,
+          )),
 
           //LIKE COMMENT SECTION
           Row(
@@ -192,12 +192,12 @@ class _PostCardState extends State<PostCard> {
                   }),
                   icon: widget.snap['likes'].contains(user.uid)
                       ? const Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                  )
+                          Icons.favorite,
+                          color: Colors.red,
+                        )
                       : const Icon(
-                    Icons.favorite_border,
-                  ),
+                          Icons.favorite_border,
+                        ),
                 ),
               ),
               IconButton(
@@ -249,8 +249,8 @@ class _PostCardState extends State<PostCard> {
                       .subtitle2
                       .copyWith(fontWeight: FontWeight.w800),
                   child: Text('${widget.snap['likes'].length} likes'
-                    //style: TextStyle(color: Colors.black),
-                  ),
+                      //style: TextStyle(color: Colors.black),
+                      ),
                 ),
                 Container(
                   width: double.infinity,
@@ -261,14 +261,14 @@ class _PostCardState extends State<PostCard> {
                             color: Colors.black,
                           ),
                           children: [
-                            TextSpan(
-                              text: widget.snap['username'],
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text: '  ${widget.snap['description']}',
-                            )
-                          ])),
+                        TextSpan(
+                          text: widget.snap['username'],
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: '  ${widget.snap['description']}',
+                        )
+                      ])),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 10),

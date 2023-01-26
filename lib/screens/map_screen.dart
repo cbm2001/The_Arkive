@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:first_app/reusable_widgets/position_services.dart';
+import 'package:first_app/widgets/position_services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/side_nav_bar.dart';
-import '../screens/explore_screen.dart';
+import 'explore_screen.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key key}) : super(key: key);

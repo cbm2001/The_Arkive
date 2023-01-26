@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../navscreens/post_screen.dart';
+import '../screens/post_screen.dart';
 import '../models/post.dart';
 import '../models/drafts.dart';
 import '/resources/storage_methods.dart';
@@ -24,7 +24,7 @@ class FireStoreMethods {
     String res = "Some error occurred";
     try {
       String photoUrl =
-      await StorageMethods().uploadImageToStorage('posts', file, true);
+          await StorageMethods().uploadImageToStorage('posts', file, true);
       String postId = const Uuid().v1(); // creates unique id based on time
       Post post = Post(
           description: description,
@@ -38,8 +38,7 @@ class FireStoreMethods {
           category: category,
           profImage: profImage,
           longitude: longitude,
-          latitude: latitude
-      );
+          latitude: latitude);
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
     } catch (err) {
@@ -98,7 +97,7 @@ class FireStoreMethods {
     String res = "Some error occurred";
     try {
       String photoUrl =
-      await StorageMethods().uploadImageToStorage('drafts', file, true);
+          await StorageMethods().uploadImageToStorage('drafts', file, true);
       String postId = const Uuid().v1(); // creates unique id based on time
       Draft draft = Draft(
         description: description,
@@ -182,6 +181,7 @@ class FireStoreMethods {
     }
     return res;
   }
+
   // Delete Post
   Future<String> deleteDraft(String postId) async {
     String res = "Some error occurred";
@@ -197,7 +197,7 @@ class FireStoreMethods {
   Future<void> followUser(String uid, String followId) async {
     try {
       DocumentSnapshot snap =
-      await _firestore.collection('Users').doc(uid).get();
+          await _firestore.collection('Users').doc(uid).get();
       List following = (snap.data() as dynamic)['following'];
 
       if (following.contains(followId)) {
