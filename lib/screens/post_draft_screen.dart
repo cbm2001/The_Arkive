@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -10,8 +11,8 @@ import '../widgets/reusable_widgets.dart';
 import '../utils/utils.dart';
 import 'package:provider/provider.dart';
 
-String latitude;
-String longitude;
+double latitude;
+double longitude;
 String Category='travel';
 class PostDraftPage extends StatefulWidget {
   final String postURL;
@@ -103,7 +104,7 @@ class _PostDraftPageState extends State<PostDraftPage> {
           _locationController.text,
           (_categoryController.text == '')? widget.category:_categoryController.text ,
           profImage,
-          latitude,
+          latitude ,
           longitude
       );
       if (res == "success") {
@@ -257,8 +258,8 @@ class _PostDraftPageState extends State<PostDraftPage> {
 
             setState(() {
               isLoading=false;
-              latitude = pos.latitude.toString();
-              longitude = pos.longitude.toString();
+              latitude = pos.latitude;
+              longitude = pos.longitude;
               if(!isLoading){
                 showSnackBar(context, "location received!");
               }
@@ -314,8 +315,8 @@ class _PostDraftPageState extends State<PostDraftPage> {
         _locationController.text,
         _categoryController.text,
         profImage,
-        latitude,
-        longitude,
+        latitude ,
+        longitude ,
       );
       if (res == "success") {
         setState(() {

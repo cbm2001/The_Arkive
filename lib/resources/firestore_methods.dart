@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,8 +19,8 @@ class FireStoreMethods {
       String location,
       String category,
       String profImage,
-      String latitude,
-      String longitude) async {
+      double latitude,
+      double longitude) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
     try {
@@ -92,8 +93,8 @@ class FireStoreMethods {
       String location,
       String category,
       String profImage,
-      String latitude,
-      String longitude) async {
+      double latitude,
+      double longitude) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
     try {
@@ -229,8 +230,8 @@ class FireStoreMethods {
       String location,
       String category,
       String profImage,
-      String latitude,
-      String longitude) async{
+      double latitude,
+      double longitude) async{
     String res = "Some error occurred";
     try {
 

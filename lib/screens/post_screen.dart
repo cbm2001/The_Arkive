@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -23,9 +24,9 @@ class _PostPageState extends State<PostPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
-  String latitude;
-  String longitude;
-  String category = 'travel';
+  double latitude;
+  double longitude;
+  String category = '';
 
   _selectImage(BuildContext parentContext) async {
     return showDialog(
@@ -240,8 +241,10 @@ class _PostPageState extends State<PostPage> {
 
                       setState(() {
                         isLoading = false;
-                        latitude = pos.latitude.toString();
-                        longitude = pos.longitude.toString();
+                        String x = '123';
+
+                        latitude = pos.latitude ;
+                        longitude = pos.longitude ;
                         if (!isLoading) {
                           showSnackBar(context, "location received!");
                         }
@@ -259,7 +262,7 @@ class _PostPageState extends State<PostPage> {
                       Text("Select Category:   "),
                       DropdownButton<String>(
                         value: category,
-                        items: ['travel', 'sports', 'food', 'art', 'lifestyle']
+                        items: ['','travel', 'sports', 'food', 'art', 'lifestyle']
                             .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -298,8 +301,8 @@ class _PostPageState extends State<PostPage> {
           _locationController.text,
           category,
           profImage,
-          latitude,
-          longitude);
+          latitude ,
+          longitude );
       if (res == "success") {
         setState(() {
           isLoading = false;

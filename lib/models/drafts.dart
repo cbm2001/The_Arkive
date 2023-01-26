@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -11,8 +13,8 @@ class Draft {
   final String location;
   final String category;
   final String profImage;
-  final String latitude;
-  final String longitude;
+  final double latitude;
+  final double longitude;
 
   const Draft({
     @required this.description,
