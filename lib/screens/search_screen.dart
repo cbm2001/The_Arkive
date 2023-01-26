@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:first_app/navscreens/profile_screen.dart';
+import 'package:first_app/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:first_app/models/side_nav_bar.dart';
-import '../reusable_widgets/post_card.dart';
-import '../screens/explore_screen.dart';
-import '../reusable_widgets/reusable_widgets.dart';
-import '../screens/user_profile.dart';
+import '../widgets/post_card.dart';
+import 'explore_screen.dart';
+import '../widgets/reusable_widgets.dart';
+import 'user_profile.dart';
 
 class SearchPage extends StatefulWidget {
   @override

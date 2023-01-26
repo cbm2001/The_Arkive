@@ -5,11 +5,11 @@ import 'package:first_app/screens/explore_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/side_nav_bar.dart';
-import '../models/new_nav_bar.dart';
+import '../models/nav_bar.dart';
 import '../models/user.dart' as model;
 import '../providers/user_provider.dart';
 import '../main.dart';
-import '../reusable_widgets/post_card.dart';
+import '../widgets/post_card.dart';
 import '../utils/utils.dart';
 
 class UserProfilePage extends StatefulWidget {

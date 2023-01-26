@@ -2,12 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:first_app/screens/age_form_check.dart';
 import 'package:flutter/material.dart';
 import '../resources/auth_methods.dart';
-import '../reusable_widgets/reusable_widgets.dart';
+import '../widgets/reusable_widgets.dart';
 import '../utils/utils.dart';
 import './signup_screen.dart';
 import '../screens/explore_screen.dart';
 import 'reset_pw.dart';
-import '../models/new_nav_bar.dart';
+import '../models/nav_bar.dart';
 
 class SignInScreen extends StatefulWidget {
   //const SignInScreen({Key? key}) : super(key: key);
