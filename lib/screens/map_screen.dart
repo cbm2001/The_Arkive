@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_app/resources/locationMethods.dart';
+import 'package:first_app/screens/ScrapBook.dart';
 import 'package:first_app/screens/post_draft_screen.dart';
 import 'package:first_app/screens/profile_screen.dart';
 import 'package:first_app/widgets/position_services.dart';
@@ -29,11 +30,20 @@ class MapSampleState extends State<MapPage> {
     zoom: 14.4746,
   );
 
+   prompt(Map<String, dynamic> data){
+    print("helo");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => scrapbook(snap: data,),
+      ),
+    );
+  }
 
   Set<Marker> _listMarkers={};
   int i=0;
 
-  Set<Marker> addMarker(String username,double lat , double long){
+  Set<Marker> addMarker(String username,double lat , double long, Map<String, dynamic> data){
 
     setState(() {
       i++;
@@ -41,10 +51,10 @@ class MapSampleState extends State<MapPage> {
         markerId: MarkerId('marker ' + i.toString()),
         position: LatLng(lat, long),
         infoWindow: InfoWindow(
-            title: "$username 's scrapbook",
-            snippet: 'cool',
+            title: (username=='Current Location')?"$username ":"$username 's scrapbook",
+            snippet: 'Tap to view',
             onTap: (){
-              return Scaffold();
+              return prompt(data);
 
             }
         ),
@@ -117,7 +127,7 @@ class MapSampleState extends State<MapPage> {
   }
 
   Future<void> _goToPlace(double lat, double lng) async {
-    addMarker("Current Location",lat,lng);
+    addMarker("Current Location",lat,lng,null);
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: LatLng(lat, lng), zoom: 15)))
@@ -126,7 +136,7 @@ class MapSampleState extends State<MapPage> {
 
   }
   Future<void> _getScrapBooks(double lat, double lng) async {
-    addMarker("Current Location",lat,lng);
+    addMarker("Current Location",lat,lng,null);
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: LatLng(lat, lng), zoom: 15)))
@@ -139,7 +149,8 @@ class MapSampleState extends State<MapPage> {
           if(docs.docs[i].data()['geoLoc']!=null) {
             addMarker(docs.docs[i].data()['username'],
                 docs.docs[i].data()['geoLoc'].latitude as double,
-                docs.docs[i].data()['geoLoc'].longitude as double);
+                docs.docs[i].data()['geoLoc'].longitude as double,
+                docs.docs[i].data());
           }
         }
       }
@@ -150,3 +161,4 @@ class MapSampleState extends State<MapPage> {
 
   }
 }
+
