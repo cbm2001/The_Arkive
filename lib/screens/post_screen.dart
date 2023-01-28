@@ -1,6 +1,9 @@
 import 'dart:ffi';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:first_app/screens/map_screen.dart';
+import 'package:first_app/screens/search_location.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,8 +27,9 @@ class _PostPageState extends State<PostPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
-  double latitude;
-  double longitude;
+  // double latitude;
+  // double longitude;
+  GeoPoint geoLoc;
   String category = '';
 
   _selectImage(BuildContext parentContext) async {
@@ -68,7 +72,7 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
-  void postImage(String uid, String username, String profImage) async {
+  Future<bool> postImage(String uid, String username, String profImage) async {
     setState(() {
       isLoading = true;
     });
@@ -83,8 +87,9 @@ class _PostPageState extends State<PostPage> {
           _locationController.text,
           category,
           profImage,
-          latitude,
-          longitude);
+          // latitude,
+          // longitude
+          geoLoc);
       if (res == "success") {
         setState(() {
           isLoading = false;
@@ -106,6 +111,7 @@ class _PostPageState extends State<PostPage> {
         err.toString(),
       );
     }
+    return true;
   }
 
   void clearImage() {
@@ -232,25 +238,48 @@ class _PostPageState extends State<PostPage> {
                   //maxLines: 8,
                 ),
                 ElevatedButton(
+                    onPressed: ()  {
+                      print("here");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MapSearchPage(gpVal: (value){
+                            print("and here");
+                            setState(() {
+                              geoLoc = value;
+                            });
+                            showSnackBar(context, "location tagged!");
+                          }) ,
+                        ),
+                      );
+                      }
+
+                    ,
+                    child: Text("Search for location")),
+                SizedBox(
+                  height: 5,
+                ),
+                Center(child: Text("Or")),
+                ElevatedButton(
                     onPressed: () async {
                       setState(() {
                         isLoading = true;
                       });
 
-                      Position pos = await determinePosition();
+                      GeoPoint pos = await determinePosition();
 
                       setState(() {
                         isLoading = false;
                         String x = '123';
 
-                        latitude = pos.latitude ;
-                        longitude = pos.longitude ;
+                        geoLoc = pos;
                         if (!isLoading) {
                           showSnackBar(context, "location received!");
                         }
                       });
                     },
-                    child: Text("Get location")),
+                    child: Text("Get Current location")),
+
                 SizedBox(
                   height: 5,
                 ),
@@ -286,7 +315,7 @@ class _PostPageState extends State<PostPage> {
           );
   }
 
-  void draftImage(String uid, String username, String profImage) async {
+  Future<bool> draftImage(String uid, String username, String profImage) async {
     setState(() {
       isLoading = true;
     });
@@ -301,8 +330,9 @@ class _PostPageState extends State<PostPage> {
           _locationController.text,
           category,
           profImage,
-          latitude ,
-          longitude );
+          // latitude ,
+          // longitude
+          geoLoc);
       if (res == "success") {
         setState(() {
           isLoading = false;
@@ -324,5 +354,6 @@ class _PostPageState extends State<PostPage> {
         err.toString(),
       );
     }
+    return true;
   }
 }

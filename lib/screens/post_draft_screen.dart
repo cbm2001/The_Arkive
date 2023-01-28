@@ -1,6 +1,8 @@
 import 'dart:ffi';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:first_app/screens/search_location.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,6 +15,7 @@ import 'package:provider/provider.dart';
 
 double latitude;
 double longitude;
+GeoPoint geoLoc;
 String Category='travel';
 class PostDraftPage extends StatefulWidget {
   final String postURL;
@@ -104,8 +107,9 @@ class _PostDraftPageState extends State<PostDraftPage> {
           _locationController.text,
           (_categoryController.text == '')? widget.category:_categoryController.text ,
           profImage,
-          latitude ,
-          longitude
+          // latitude ,
+          // longitude
+        geoLoc
       );
       if (res == "success") {
         setState(() {
@@ -248,18 +252,44 @@ class _PostDraftPageState extends State<PostDraftPage> {
                 Icons.share_location, false, _locationController),
             //maxLines: 8,
           ),
+          SizedBox(
+            height: 5,
+          ),
+          ElevatedButton(
+              onPressed: ()  {
+                print("here");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MapSearchPage(gpVal: (value){
+                      print("and here");
+                      setState(() {
+                        geoLoc = value;
+                      });
+                      showSnackBar(context, "location tagged!");
+                    }) ,
+                  ),
+                );
+              }
+
+              ,
+              child: Text("Search for location")),
+          SizedBox(
+            height: 5,
+          ),
+          Center(child: Text("Or")),
+
           ElevatedButton(onPressed: () async {
             setState((){
               isLoading=true;
             });
 
 
-            Position pos =  await determinePosition();
+            GeoPoint pos =  await determinePosition();
 
             setState(() {
               isLoading=false;
-              latitude = pos.latitude;
-              longitude = pos.longitude;
+              geoLoc = pos;
               if(!isLoading){
                 showSnackBar(context, "location received!");
               }
@@ -315,8 +345,9 @@ class _PostDraftPageState extends State<PostDraftPage> {
         _locationController.text,
         _categoryController.text,
         profImage,
-        latitude ,
-        longitude ,
+        // latitude ,
+        // longitude ,
+        geoLoc
       );
       if (res == "success") {
         setState(() {

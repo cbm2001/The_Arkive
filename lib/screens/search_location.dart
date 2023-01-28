@@ -11,17 +11,18 @@ import '../models/side_nav_bar.dart';
 import 'explore_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class MapPage extends StatefulWidget {
-  const MapPage({Key key}) : super(key: key);
-
+class MapSearchPage extends StatefulWidget {
+  GeoPoint gp;
+  MapSearchPage({Key key,this.gpVal}) : super(key: key);
+  Function (GeoPoint val) gpVal;
 
   @override
-  State<MapPage> createState() => MapSampleState();
+  State<MapSearchPage> createState() => MapSampleState();
 }
 
-class MapSampleState extends State<MapPage> {
+class MapSampleState extends State<MapSearchPage> {
   final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  Completer<GoogleMapController>();
   TextEditingController _originController = TextEditingController();
 
   static const CameraPosition _kGooglePlex = CameraPosition(
@@ -103,14 +104,12 @@ class MapSampleState extends State<MapPage> {
             ),
 
           ),
-          ElevatedButton(onPressed: () async{
-            final currPoss = await determinePosition();
-            _goToPlace(currPoss.latitude,currPoss.longitude);
-          }, child: Text("Go to current location"),),
-          ElevatedButton(onPressed: () async{
-            final currPoss = await determinePosition();
-            _getScrapBooks(currPoss.latitude,currPoss.longitude);
-          }, child: Text("get nearby scrapbooks"),),
+          ElevatedButton(
+              onPressed: ()  {
+                Navigator.pop(context);
+              },
+              child: Text('Select Tag'))
+
         ],
       ),
     );
@@ -122,27 +121,19 @@ class MapSampleState extends State<MapPage> {
     controller.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: LatLng(lat, lng), zoom: 15)))
     ;
-
-
-  }
-  Future<void> _getScrapBooks(double lat, double lng) async {
-    addMarker("Current Location",lat,lng);
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(lat, lng), zoom: 15)))
-    ;
-    FirebaseFirestore.instance.collection("posts").get().then((docs) {
-      if(docs.docs.isNotEmpty){
-        for (int i =0 ; i< docs.docs.length;i++){
-          print("see this");
-          print(docs.docs[i].data()['geoLoc']);
-          addMarker(docs.docs[i].data()['username'] ,docs.docs[i].data()['geoLoc'].latitude as double, docs.docs[i].data()['geoLoc'].longitude as double);
-        }
-      }
-    });
+     ;
+    widget.gpVal(new GeoPoint(lat, lng));
 
 
 
 
   }
+
+
+
+
+
+
+
+
 }

@@ -19,8 +19,9 @@ class FireStoreMethods {
       String location,
       String category,
       String profImage,
-      double latitude,
-      double longitude) async {
+      // double latitude,
+      // double longitude
+      GeoPoint geoLoc) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
     try {
@@ -38,8 +39,9 @@ class FireStoreMethods {
           location: location,
           category: category,
           profImage: profImage,
-          longitude: longitude,
-          latitude: latitude
+          // longitude: longitude,
+          // latitude: latitude
+        geoLoc: geoLoc
       );
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
@@ -93,8 +95,9 @@ class FireStoreMethods {
       String location,
       String category,
       String profImage,
-      double latitude,
-      double longitude) async {
+      // double latitude,
+      // double longitude
+  GeoPoint geoLoc) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
     try {
@@ -230,8 +233,9 @@ class FireStoreMethods {
       String location,
       String category,
       String profImage,
-      double latitude,
-      double longitude) async{
+      // double latitude,
+      // double longitude
+      GeoPoint geoLoc) async{
     String res = "Some error occurred";
     try {
 
@@ -247,8 +251,9 @@ class FireStoreMethods {
           location: location,
           category: category,
           profImage: profImage,
-          longitude: longitude,
-          latitude: latitude
+          // longitude: longitude,
+          // latitude: latitude
+        geoLoc: geoLoc
       );
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";

@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-Future<Position> determinePosition() async {
+Future<GeoPoint> determinePosition() async {
   bool serviceEnabled;
   LocationPermission permission;
 
@@ -36,10 +37,14 @@ Future<Position> determinePosition() async {
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
   Position x =await Geolocator.getCurrentPosition();
+  GeoPoint y = new GeoPoint(x.latitude, x.longitude);
 
   print("long:" + (x.longitude).toString());
   print("lat:" + (x.latitude).toString());
+  print("pos:" + x.toString());
+  print("gplg" + y.longitude.toString());
+  print("gplt" + y.latitude.toString());
 
 
-  return x;
+  return y;
 }

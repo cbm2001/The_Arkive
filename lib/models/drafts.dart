@@ -13,8 +13,9 @@ class Draft {
   final String location;
   final String category;
   final String profImage;
-  final double latitude;
-  final double longitude;
+  // final double latitude;
+  // final double longitude;
+  final GeoPoint geoLoc;
 
   const Draft({
     @required this.description,
@@ -26,8 +27,9 @@ class Draft {
     @required this.location,
     @required this.category,
     @required this.profImage,
-    @required this.latitude,
-    @required this.longitude,
+    // @required this.latitude,
+    // @required this.longitude,
+    @required this.geoLoc
 
   });
 
@@ -44,8 +46,10 @@ class Draft {
         location: snapshot['location'],
         category: snapshot['category'],
         profImage: snapshot['profImage'],
-        latitude: snapshot['latitude'],
-        longitude: snapshot['longitude']
+        // latitude: snapshot['latitude'],
+        // longitude: snapshot['longitude']
+      geoLoc: snapshot['geoLoc'],
+
     );
   }
 
@@ -59,7 +63,8 @@ class Draft {
     'profImage': profImage,
     'location': location,
     'category': category,
-    'latitude': latitude,
-    'longitude':longitude,
+    // 'latitude': latitude,
+    // 'longitude':longitude,
+    'geoLoc': geoLoc
   };
 }
