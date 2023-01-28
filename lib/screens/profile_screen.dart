@@ -1,15 +1,19 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/screens/post_screen.dart';
 import 'package:first_app/resources/auth_methods.dart';
 import 'package:first_app/screens/explore_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../models/side_nav_bar.dart';
 import '../models/nav_bar.dart';
 import '../models/user.dart' as model;
 import '../providers/user_provider.dart';
 import '../main.dart';
+import '../resources/storage_methods.dart';
 import '../widgets/post_card.dart';
 import '../widgets/reusable_widgets.dart';
 import '../utils/utils.dart';
@@ -419,7 +423,7 @@ Widget accountSettings(BuildContext context) {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                  MaterialPageRoute(builder: (context) => updatePfp(context)),
                 );
               },
               child: Text(
@@ -524,6 +528,67 @@ Widget accountSettings(BuildContext context) {
           ],
         ),
       ));
+}
+
+
+
+Widget updatePfp(BuildContext context) {
+  final UserProvider userProvider = Provider.of<UserProvider>(context);
+  final x = FirebaseFirestore.instance
+      .collection("Users")
+      .doc(userData["uid"]);
+  final y =
+  FirebaseFirestore.instance.collection("Users").doc(x.id);
+  final pfp = userProvider.getUser.photoUrl;
+  return Scaffold(
+    appBar: AppBar(
+      iconTheme: IconThemeData(
+        color: Colors.black,
+      ),
+      backgroundColor: Colors.white,
+    ),
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 400,
+            width: 350,
+            child: CircleAvatar(
+              radius: 500,
+              backgroundImage: NetworkImage(
+                  pfp),
+              backgroundColor: Colors.red,
+            ),
+
+            //maxLines: 8,
+          ),
+          ElevatedButton(
+              onPressed: () async {
+
+                Uint8List im = await pickImage(ImageSource.gallery);
+                // set state because we need to display the image we selected on the circle avatar
+                String photoUrl = await StorageMethods()
+                    .uploadImageToStorage('profilePics', im, false);
+                y.update({
+                  "photoUrl": "$photoUrl",
+                });
+
+
+                showSnackBar(
+                  context,
+                  'Profile Picture Updated!',
+                );
+                Navigator.pop(context);
+              },
+              child: Text("Update Profile Picture")),
+        ],
+      ),
+    ),
+  );
+
+
 }
 
 Widget updateBio(BuildContext context) {
@@ -644,7 +709,7 @@ Widget updatePassword(BuildContext context) {
           ),
           ElevatedButton(
               onPressed: () async {
-                
+
                 final currUser = FirebaseAuth.instance.currentUser;
                 try {
                   await currUser.updatePassword(_textController.text);
@@ -654,12 +719,12 @@ Widget updatePassword(BuildContext context) {
                 showSnackBar(
                   context,
                   'Password Updated!',
-                  
+
                 );
                 _textController.clear();
                 FirebaseAuth.instance.signOut();
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
-                
+
               },
               child: Text("Update password")),
         ],
