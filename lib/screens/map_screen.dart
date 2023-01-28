@@ -136,7 +136,11 @@ class MapSampleState extends State<MapPage> {
         for (int i =0 ; i< docs.docs.length;i++){
           print("see this");
           print(docs.docs[i].data()['geoLoc']);
-          addMarker(docs.docs[i].data()['username'] ,docs.docs[i].data()['geoLoc'].latitude as double, docs.docs[i].data()['geoLoc'].longitude as double);
+          if(docs.docs[i].data()['geoLoc']!=null) {
+            addMarker(docs.docs[i].data()['username'],
+                docs.docs[i].data()['geoLoc'].latitude as double,
+                docs.docs[i].data()['geoLoc'].longitude as double);
+          }
         }
       }
     });
