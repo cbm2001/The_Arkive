@@ -638,31 +638,28 @@ Widget updatePassword(BuildContext context) {
             height: 40,
             width: 350,
             child: reusableTextField("Enter new password", Icons.description,
-                false, _textController),
+                true, _textController),
 
             //maxLines: 8,
           ),
           ElevatedButton(
               onPressed: () async {
-                // CircularProgressIndicator;
-                // await FirebaseAuth.instance.currentUser.reauthenticateWithCredential(credential);
-                // final x = FirebaseFirestore.instance.collection("Users").doc(userData["uid"]);
-                //
-                // final y = FirebaseFirestore.instance.collection("Users").doc(x.id);
-                //
-                // String ss = _textController.text;
-                //
-                //
-                // await FirebaseAuth.instance.currentUser.updatePassword(ss);
-                // _textController.clear();
-                // showSnackBar(
-                //   context,
-                //   'password Updated!',
-                // );
-                //
-                // Navigator.pop(context);
-                // FirebaseAuth.instance.signOut();
-                //
+                
+                final currUser = FirebaseAuth.instance.currentUser;
+                try {
+                  await currUser.updatePassword(_textController.text);
+                }catch (e) {
+                  // TODO
+                }
+                showSnackBar(
+                  context,
+                  'Password Updated!',
+                  
+                );
+                _textController.clear();
+                FirebaseAuth.instance.signOut();
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
+                
               },
               child: Text("Update password")),
         ],
@@ -700,20 +697,27 @@ Widget updateEmail(BuildContext context) {
 
                 final y =
                     FirebaseFirestore.instance.collection("Users").doc(x.id);
+                final Curruser = FirebaseAuth.instance.currentUser;
+                _textController.text;
+                try{
+                  await Curruser.updateEmail(_textController.text);
 
-                String ss = _textController.text;
+                }
+                catch(error){
+
+                }
                 y.update({
-                  "email": "$ss",
+                  "email": "$_textController.text",
                 });
 
-                await FirebaseAuth.instance.currentUser.updateEmail(ss);
+
                 _textController.clear();
                 showSnackBar(
                   context,
                   'email Updated!',
                 );
-
-                Navigator.pop(context);
+                FirebaseAuth.instance.signOut();
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
               },
               child: Text("Update email")),
         ],
