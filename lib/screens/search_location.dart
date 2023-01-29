@@ -135,6 +135,7 @@ class MapSampleState extends State<MapSearchPage> {
     controller.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: LatLng(lat, lng), zoom: 15)))
     ;
+    _setMarker(LatLng(lat, lng));
 
 
 

@@ -140,179 +140,183 @@ class _PostPageState extends State<PostPage> {
             ),
           )
         : Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: clearImage,
-              ),
-              title: const Text(
-                'Post to',
-              ),
-              centerTitle: false,
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => postImage(
-                    userProvider.getUser.uid,
-                    userProvider.getUser.username,
-                    userProvider.getUser.photoUrl,
-                  ),
-                  child: const Text(
-                    "Post",
-                    style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0),
-                  ),
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: clearImage,
                 ),
-                TextButton(
-                  onPressed: () => draftImage(
-                    userProvider.getUser.uid,
-                    userProvider.getUser.username,
-                    userProvider.getUser.photoUrl,
-                  ),
-                  child: const Text(
-                    "Save as draft",
-                    style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0),
-                  ),
+                title: const Text(
+                  'Post to',
                 ),
-              ],
-            ),
-            // POST FORM
-            body: Column(
-              children: <Widget>[
-                isLoading
-                    ? const LinearProgressIndicator()
-                    : const Padding(padding: EdgeInsets.only(top: 0.0)),
-                const Divider(),
-                Row(
-                    //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    //crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                          padding: EdgeInsets.only(left: 20.0),
-                          alignment: Alignment.topLeft,
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                // 'https://i.stack.imgur.com/l60Hf.png'
-                                userProvider.getUser.photoUrl),
-                            radius: 30,
-                          ),
-                          height: 80),
-                    ]),
-                SizedBox(
-                  height: 85.0,
-                  width: 85.0,
-                  child: AspectRatio(
-                    aspectRatio: 487 / 451,
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                        fit: BoxFit.fill,
-                        alignment: FractionalOffset.topCenter,
-                        image: MemoryImage(_file),
-                      )),
+                centerTitle: false,
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => postImage(
+                      userProvider.getUser.uid,
+                      userProvider.getUser.username,
+                      userProvider.getUser.photoUrl,
+                    ),
+                    child: const Text(
+                      "Post",
+                      style: TextStyle(
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0),
                     ),
                   ),
-                ),
-                const Divider(),
-                SizedBox(
-                  height: 40,
-                  width: 350,
-                  child: reusableTextField("Write a caption", Icons.description,
-                      false, _descriptionController),
-                  //maxLines: 8,
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                SizedBox(
-                  height: 40,
-                  width: 350,
-                  child: reusableTextField("Tag location(s)",
-                      Icons.share_location, false, _locationController),
-                  //maxLines: 8,
-                ),
-                ElevatedButton(
-                    onPressed: ()  {
-                      print("here");
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MapSearchPage(gpVal: (value){
-                            print("and here");
-                            setState(() {
-                              geoLoc = value;
-                            });
-
-                          }) ,
+                  TextButton(
+                    onPressed: () => draftImage(
+                      userProvider.getUser.uid,
+                      userProvider.getUser.username,
+                      userProvider.getUser.photoUrl,
+                    ),
+                    child: const Text(
+                      "Save as draft",
+                      style: TextStyle(
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0),
+                    ),
+                  ),
+                ],
+              ),
+              // POST FORM
+              body: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    isLoading
+                        ? const LinearProgressIndicator()
+                        : const Padding(padding: EdgeInsets.only(top: 0.0)),
+                    const Divider(),
+                     Row(
+                          //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          //crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                                padding: EdgeInsets.only(left: 20.0),
+                                alignment: Alignment.topLeft,
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      // 'https://i.stack.imgur.com/l60Hf.png'
+                                      userProvider.getUser.photoUrl),
+                                  radius: 30,
+                                ),
+                                height: 80),
+                          ]),
+                    
+                    SizedBox(
+                      height: 85.0,
+                      width: 85.0,
+                      child: AspectRatio(
+                        aspectRatio: 487 / 451,
+                        child: Container(
+                          alignment: Alignment.topCenter,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                            fit: BoxFit.fill,
+                            alignment: FractionalOffset.topCenter,
+                            image: MemoryImage(_file),
+                          )),
                         ),
-                      );
-                      }
+                      ),
+                    ),
+                    const Divider(),
+                    SizedBox(
+                      height: 40,
+                      width: 350,
+                      child: reusableTextField("Write a caption", Icons.description,
+                          false, _descriptionController),
+                      //maxLines: 8,
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    SizedBox(
+                      height: 40,
+                      width: 350,
+                      child: reusableTextField("Enter Location",
+                          Icons.share_location, false, _locationController),
+                      //maxLines: 8,
+                    ),
+                    ElevatedButton(
+                        onPressed: ()  {
+                          print("here");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MapSearchPage(gpVal: (value){
+                                print("and here");
+                                setState(() {
+                                  geoLoc = value;
+                                });
 
-                    ,
-                    child: Text("Search for location")),
-                SizedBox(
-                  height: 5,
-                ),
-                Center(child: Text("Or")),
-                ElevatedButton(
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-
-                      GeoPoint pos = await determinePosition();
-
-                      setState(() {
-                        isLoading = false;
-                        String x = '123';
-
-                        geoLoc = pos;
-                        if (!isLoading) {
-                          showSnackBar(context, "location received!");
-                        }
-                      });
-                    },
-                    child: Text("Get Current location")),
-
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                  height: 40,
-                  width: 350,
-                  child: Row(
-                    children: [
-                      Text("Select Category:   "),
-                      DropdownButton<String>(
-                        value: category,
-                        items: ['','travel', 'sports', 'food', 'art', 'lifestyle']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(fontSize: 18),
+                              }) ,
                             ),
                           );
-                        }).toList(),
-                        onChanged: (String newValue) {
+                          }
+
+                        ,
+                        child: Text("Search for location")),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Center(child: Text("Or")),
+                    ElevatedButton(
+                        onPressed: () async {
                           setState(() {
-                            category = newValue;
+                            isLoading = true;
+                          });
+
+                          GeoPoint pos = await determinePosition();
+
+                          setState(() {
+                            isLoading = false;
+                            String x = '123';
+
+                            geoLoc = pos;
+                            if (!isLoading) {
+                              showSnackBar(context, "location received!");
+                            }
                           });
                         },
+                        child: Text("Get Current location")),
+
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      height: 40,
+                      width: 350,
+                      child: Row(
+                        children: [
+                          Text("Select Category:   "),
+                          DropdownButton<String>(
+                            value: category,
+                            items: ['','travel', 'sports', 'food', 'art', 'lifestyle']
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String newValue) {
+                              setState(() {
+                                category = newValue;
+                              });
+                            },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
+              ),
+            
+        );
   }
 
   Future<bool> draftImage(String uid, String username, String profImage) async {
