@@ -21,6 +21,7 @@ class PostDraftPage extends StatefulWidget {
   final String postURL;
   final String category;
   final String description;
+  final String location;
   final GeoPoint geoLoc;
   const PostDraftPage({Key key,
     // String postID,
@@ -30,6 +31,7 @@ class PostDraftPage extends StatefulWidget {
     // String category,
     // String description,
     // String location,
+    @required this.location,
     @required this.geoLoc,
   }) : super(key: key);
 
@@ -106,7 +108,7 @@ class _PostDraftPageState extends State<PostDraftPage> {
           widget.postURL,
           uid,
           username,
-          _locationController.text,
+          (_locationController.text== '')? widget.location:_locationController.text,
           (_categoryController.text == '')? widget.category:_categoryController.text ,
           profImage,
           // latitude ,
