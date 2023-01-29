@@ -11,7 +11,7 @@ import '../utils/utils.dart';
 import 'age_form_check.dart';
 
 class SignUpScreen extends StatefulWidget {
-  //const SignUpScreen({Key? key}) : super(key: key);
+  SignUpScreen({Key key}) : super(key: key);
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -224,7 +224,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 onTap: (() {}),
               ),*/
               ElevatedButton(
-                onPressed: (() => signUpUser()),
+                onPressed: (() {
+                  // if(_image==null){
+                  //   showSnackBar(context, "Upload Profile Picture");
+                  // }
+                  // else {
+                    signUpUser();
+                  // }
+                } ),
                 child: !_isLoading
                     ? const Text(
                         'Sign up',

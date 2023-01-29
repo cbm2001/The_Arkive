@@ -46,9 +46,16 @@ class AuthMethods {
           email: email,
           password: password,
         );
+        String photoUrl;
+        if(file==null){
+          photoUrl = 'https://i.stack.imgur.com/l60Hf.png';
+        }
+        else{
+          photoUrl= await StorageMethods()
+              .uploadImageToStorage('profilePics', file, false);
+        }
 
-        String photoUrl = await StorageMethods()
-            .uploadImageToStorage('profilePics', file, false);
+
 
         /*await _firestore.collection('Users').doc(cred.user.uid).set({
           'username': username,
