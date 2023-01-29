@@ -21,6 +21,7 @@ class PostDraftPage extends StatefulWidget {
   final String postURL;
   final String category;
   final String description;
+  final GeoPoint geoLoc;
   const PostDraftPage({Key key,
     // String postID,
     @required this.postURL,
@@ -29,6 +30,7 @@ class PostDraftPage extends StatefulWidget {
     // String category,
     // String description,
     // String location,
+    @required this.geoLoc,
   }) : super(key: key);
 
   @override
@@ -109,7 +111,7 @@ class _PostDraftPageState extends State<PostDraftPage> {
           profImage,
           // latitude ,
           // longitude
-        geoLoc
+          (geoLoc == null)? widget.geoLoc:geoLoc
       );
       if (res == "success") {
         setState(() {

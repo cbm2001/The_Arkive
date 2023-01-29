@@ -52,9 +52,12 @@ class MapSampleState extends State<MapPage> {
         position: LatLng(lat, long),
         infoWindow: InfoWindow(
             title: (username=='Current Location')?"$username ":"$username 's scrapbook",
-            snippet: 'Tap to view',
+            snippet: (username=='Current Location')?"":"Tap to View",
             onTap: (){
-              return prompt(data);
+              if(username!='Current Location'){
+                return prompt(data);
+              }
+
 
             }
         ),
@@ -64,6 +67,7 @@ class MapSampleState extends State<MapPage> {
   }
   @override
   Widget build(BuildContext context) {
+    GeoPoint currPoss = null;
     return Scaffold(
       appBar: AppBar(
         title: Text('Google Maps'),
@@ -94,6 +98,8 @@ class MapSampleState extends State<MapPage> {
                         //update camera position
                         _goToPlace(place['geometry']['location']['lat'],
                             place['geometry']['location']['lng']);
+                        _getScrapBooks(place['geometry']['location']['lat'],
+                            place['geometry']['location']['lng']);
                       },
                       child: Text('Search Place...'))
                 ],
@@ -113,14 +119,16 @@ class MapSampleState extends State<MapPage> {
             ),
 
           ),
+
+
           ElevatedButton(onPressed: () async{
-            final currPoss = await determinePosition();
-            _goToPlace(currPoss.latitude,currPoss.longitude);
-          }, child: Text("Go to current location"),),
-          ElevatedButton(onPressed: () async{
-            final currPoss = await determinePosition();
+
+            if(currPoss==null){
+              currPoss = await determinePosition();
+            }
+
             _getScrapBooks(currPoss.latitude,currPoss.longitude);
-          }, child: Text("get nearby scrapbooks"),),
+          }, child: Text("Get Scrapbooks Near Me"),),
         ],
       ),
     );

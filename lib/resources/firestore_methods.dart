@@ -114,6 +114,7 @@ class FireStoreMethods {
         location: location,
         category: category,
         profImage: profImage,
+        geoLoc: geoLoc,
       );
       _firestore.collection('drafts').doc(postId).set(draft.toJson());
       res = "success";

@@ -248,7 +248,7 @@ class _PostPageState extends State<PostPage> {
                             setState(() {
                               geoLoc = value;
                             });
-                            showSnackBar(context, "location tagged!");
+
                           }) ,
                         ),
                       );

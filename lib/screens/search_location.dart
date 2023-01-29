@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/side_nav_bar.dart';
+import '../utils/utils.dart';
 import 'explore_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -100,13 +101,15 @@ class MapSampleState extends State<MapSearchPage> {
                 _controller.complete(controller);
 
               },
-
+              onTap: _setMarker,
             ),
 
           ),
           ElevatedButton(
               onPressed: ()  {
+
                 Navigator.pop(context);
+                showSnackBar(context, "location tagged!");
               },
               child: Text('Select Tag'))
 
@@ -114,15 +117,26 @@ class MapSampleState extends State<MapSearchPage> {
       ),
     );
   }
+  _setMarker(LatLng currPoint){
+    setState(() {
+      _listMarkers = {};
+      _listMarkers.add(
+        Marker(markerId: MarkerId("Marker"),
+        position: currPoint,));
+      widget.gpVal(new GeoPoint(currPoint.latitude, currPoint.longitude));
 
+    });
+    print("this-----");
+    print(currPoint);
+  }
   Future<void> _goToPlace(double lat, double lng) async {
     addMarker("Current Location",lat,lng);
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: LatLng(lat, lng), zoom: 15)))
     ;
-     ;
-    widget.gpVal(new GeoPoint(lat, lng));
+
+
 
 
 
