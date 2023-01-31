@@ -74,8 +74,8 @@ class _MyNavigationState extends State<MyNavigationBar> {
             backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.location_on_outlined, color: Colors.black),
-            label: 'Map',
+            icon: Icon(Icons.remove_red_eye, color: Colors.black),
+            label: 'View',
             backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(

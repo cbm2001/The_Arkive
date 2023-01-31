@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -159,10 +158,7 @@ class _PostPageState extends State<PostPage> {
                   ),
                   child: const Text(
                     "Post",
-                    style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0),
+                    style: TextStyle(color: Colors.black, fontSize: 16.0),
                   ),
                 ),
                 TextButton(
@@ -173,10 +169,7 @@ class _PostPageState extends State<PostPage> {
                   ),
                   child: const Text(
                     "Save as draft",
-                    style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0),
+                    style: TextStyle(color: Colors.black, fontSize: 16.0),
                   ),
                 ),
               ],
@@ -189,7 +182,7 @@ class _PostPageState extends State<PostPage> {
                       ? const LinearProgressIndicator()
                       : const Padding(padding: EdgeInsets.only(top: 0.0)),
                   const Divider(),
-                  Row(
+                  /*Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceAround,
                       //crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -203,12 +196,12 @@ class _PostPageState extends State<PostPage> {
                               radius: 30,
                             ),
                             height: 80),
-                      ]),
+                      ]),*/
                   SizedBox(
-                    height: 85.0,
-                    width: 85.0,
+                    height: 200,
+                    width: 200,
                     child: AspectRatio(
-                      aspectRatio: 487 / 451,
+                      aspectRatio: 687 / 651,
                       child: Container(
                         alignment: Alignment.topCenter,
                         decoration: BoxDecoration(
@@ -224,43 +217,89 @@ class _PostPageState extends State<PostPage> {
                   SizedBox(
                     height: 40,
                     width: 350,
-                    child: reusableTextField("Write a caption", Icons.description,
-                        false, _descriptionController),
+                    child: reusableTextField("Write a caption",
+                        Icons.description, false, _descriptionController),
                     //maxLines: 8,
                   ),
                   SizedBox(
                     height: 5,
                   ),
+                  Container(
+                    height: 40,
+                    width: 350,
+                    child: Row(
+                      children: [
+                        Text(
+                          "Select Category :   ",
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        DropdownButton<String>(
+                          value: category,
+                          items: [
+                            '',
+                            'travel',
+                            'sports',
+                            'food',
+                            'art',
+                            'lifestyle'
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              category = newValue;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                   SizedBox(
+                    height: 5,
+                  ),
+                  /*SizedBox(
                     height: 40,
                     width: 350,
                     child: reusableTextField("Tag location(s)",
                         Icons.share_location, false, _locationController),
                     //maxLines: 8,
-                  ),
+                  ),*/
                   ElevatedButton(
-                      onPressed: ()  {
+                      onPressed: () {
                         print("here");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MapSearchPage(gpVal: (value){
+                            builder: (context) => MapSearchPage(gpVal: (value) {
                               print("and here");
                               setState(() {
                                 geoLoc = value;
                               });
-
-                            }) ,
+                            }),
                           ),
                         );
-                        }
-
-                      ,
-                      child: Text("Search for location")),
+                      },
+                      child: Text("Search for location"),
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size(200, 50),
+                        backgroundColor: Color.fromRGBO(255, 248, 185, 1),
+                        foregroundColor: Color.fromRGBO(139, 134, 134, 1),
+                      )),
                   SizedBox(
                     height: 5,
                   ),
                   Center(child: Text("Or")),
+                  SizedBox(
+                    height: 5,
+                  ),
                   ElevatedButton(
                       onPressed: () async {
                         setState(() {
@@ -279,37 +318,14 @@ class _PostPageState extends State<PostPage> {
                           }
                         });
                       },
-                      child: Text("Get Current location")),
-
+                      child: Text("Get Current location"),
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size(200, 50),
+                        backgroundColor: Color.fromRGBO(192, 234, 240, 1),
+                        foregroundColor: Color.fromRGBO(139, 134, 134, 1),
+                      )),
                   SizedBox(
                     height: 5,
-                  ),
-                  Container(
-                    height: 40,
-                    width: 350,
-                    child: Row(
-                      children: [
-                        Text("Select Category:   "),
-                        DropdownButton<String>(
-                          value: category,
-                          items: ['','travel', 'sports', 'food', 'art', 'lifestyle']
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(
-                                value,
-                                style: TextStyle(fontSize: 18),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (String newValue) {
-                            setState(() {
-                              category = newValue;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
                   ),
                 ],
               ),
