@@ -11,6 +11,7 @@ void main() {
     expect(1+1, 2);
   });
 
+
   group('FireStoreMethods test', () {
     TestWidgetsFlutterBinding.ensureInitialized();
     FireStoreMethods fireStoreMethods;
