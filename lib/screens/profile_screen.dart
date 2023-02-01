@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -530,65 +531,81 @@ Widget accountSettings(BuildContext context) {
       ));
 }
 
-
-
 Widget updatePfp(BuildContext context) {
   final UserProvider userProvider = Provider.of<UserProvider>(context);
-  final x = FirebaseFirestore.instance
-      .collection("Users")
-      .doc(userData["uid"]);
-  final y =
-  FirebaseFirestore.instance.collection("Users").doc(x.id);
+  final x = FirebaseFirestore.instance.collection("Users").doc(userData["uid"]);
+  final y = FirebaseFirestore.instance.collection("Users").doc(x.id);
   final pfp = userProvider.getUser.photoUrl;
   return Scaffold(
-    appBar: AppBar(
-      iconTheme: IconThemeData(
-        color: Colors.black,
+      appBar: AppBar(
+        iconTheme: IconThemeData.fallback(),
+        title: Text("Profile Picture"),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
       ),
-      backgroundColor: Colors.white,
-    ),
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            height: 400,
-            width: 350,
-            child: CircleAvatar(
-              radius: 500,
-              backgroundImage: NetworkImage(
-                  pfp),
-              backgroundColor: Colors.red,
+      body: Container(
+        color: Color.fromRGBO(192, 234, 240, 1),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 70,
             ),
+            Text(
+              "Your current profile picture",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            SizedBox(height: 40),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 180,
+                    width: 180,
+                    child: CircleAvatar(
+                      radius: 400,
+                      backgroundImage: NetworkImage(pfp),
+                      backgroundColor: Colors.red,
+                    ),
+                    //maxLines: 8,
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  ElevatedButton(
+                      onPressed: () async {
+                        Uint8List im = await pickImage(ImageSource.gallery);
+                        // set state because we need to display the image we selected on the circle avatar
+                        String photoUrl = await StorageMethods()
+                            .uploadImageToStorage('profilePics', im, false);
+                        y.update({
+                          "photoUrl": "$photoUrl",
+                        });
 
-            //maxLines: 8,
-          ),
-          ElevatedButton(
-              onPressed: () async {
-
-                Uint8List im = await pickImage(ImageSource.gallery);
-                // set state because we need to display the image we selected on the circle avatar
-                String photoUrl = await StorageMethods()
-                    .uploadImageToStorage('profilePics', im, false);
-                y.update({
-                  "photoUrl": "$photoUrl",
-                });
-
-
-                showSnackBar(
-                  context,
-                  'Profile Picture Updated!',
-                );
-                Navigator.pop(context);
-              },
-              child: Text("Update Profile Picture")),
-        ],
-      ),
-    ),
-  );
-
-
+                        showSnackBar(
+                          context,
+                          'Profile Picture Updated!',
+                        );
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Edit Profile Picture",
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size(200, 50),
+                        backgroundColor: Color.fromRGBO(255, 248, 185, 1),
+                        foregroundColor: Color.fromRGBO(139, 134, 134, 1),
+                      )),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ));
 }
 
 Widget updateBio(BuildContext context) {
@@ -598,40 +615,110 @@ Widget updateBio(BuildContext context) {
         color: Colors.black,
       ),
       backgroundColor: Colors.white,
+      title: Text(
+        "Edit Bio",
+        style: TextStyle(color: Colors.black),
+      ),
     ),
-    body: Center(
+    body: Container(
+      color: Color.fromRGBO(192, 234, 240, 1),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            height: 40,
-            width: 350,
-            child: reusableTextField(
-                "Write a bio", Icons.description, false, _textController),
-
-            //maxLines: 8,
+        children: [
+          SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.only(right: 250.0, top: 10.0),
+            child: Text(
+              "Current bio",
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
           ),
-          ElevatedButton(
-              onPressed: () {
-                final x = FirebaseFirestore.instance
-                    .collection("Users")
-                    .doc(userData["uid"]);
-                final y =
-                    FirebaseFirestore.instance.collection("Users").doc(x.id);
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: Container(
+              padding: EdgeInsets.only(
+                  right: 30.0, left: 30.0, top: 15.0, bottom: 15.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 2),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(35),
+                ),
+                color: Colors.white,
+              ),
+              child: Text(
+                //'@urgalbarbz \n Only slays and sandwiches',
+                userData['bio'],
+                style: TextStyle(
+                  color: Color.fromRGBO(139, 134, 134, 1),
+                  fontSize: 16.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 80,
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 200.0),
+                  child: Text(
+                    "Edit current bio",
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  height: 40,
+                  width: 350,
+                  child: reusableTextField(
+                      "Write a bio", Icons.edit, false, _textController),
 
-                String ss = _textController.text;
-                y.update({
-                  "bio": "$ss",
-                });
-                _textController.clear();
-                showSnackBar(
-                  context,
-                  'Bio Updated!',
-                );
-                Navigator.pop(context);
-              },
-              child: Text("Update bio")),
+                  //maxLines: 8,
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    final x = FirebaseFirestore.instance
+                        .collection("Users")
+                        .doc(userData["uid"]);
+                    final y = FirebaseFirestore.instance
+                        .collection("Users")
+                        .doc(x.id);
+
+                    String ss = _textController.text;
+                    y.update({
+                      "bio": "$ss",
+                    });
+                    _textController.clear();
+                    showSnackBar(
+                      context,
+                      'Bio Updated!',
+                    );
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    "Update bio",
+                    style: TextStyle(
+                      color: Color.fromRGBO(139, 134, 134, 1),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(255, 203, 200, 1),
+                    fixedSize: Size(150, 30),
+                    alignment: Alignment.center,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7.0)),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     ),
@@ -645,41 +732,113 @@ Widget updateUsername(BuildContext context) {
         color: Colors.black,
       ),
       backgroundColor: Colors.white,
+      title: Text(
+        "Edit Username",
+        style: TextStyle(color: Colors.black),
+      ),
     ),
-    body: Center(
+    body: Container(
+      color: Color.fromRGBO(192, 234, 240, 1),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            height: 40,
-            width: 350,
-            child: reusableTextField("Enter new username", Icons.description,
-                false, _textController),
-
-            //maxLines: 8,
+        children: [
+          SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.only(right: 200.0, top: 10.0),
+            child: Text(
+              "Current Username",
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
           ),
-          ElevatedButton(
-              onPressed: () {
-                final x = FirebaseFirestore.instance
-                    .collection("Users")
-                    .doc(userData["uid"]);
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: Container(
+              padding: EdgeInsets.only(
+                  right: 30.0, left: 30.0, top: 15.0, bottom: 15.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 2),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(35),
+                ),
+                color: Colors.white,
+              ),
+              child: Text(
+                //'@urgalbarbz \n Only slays and sandwiches',
+                '@${userData['username']}',
+                style: TextStyle(
+                  color: Color.fromRGBO(139, 134, 134, 1),
+                  fontSize: 16.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 100,
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 160.0),
+                  child: Text(
+                    "Edit current username",
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 40,
+                  width: 350,
+                  child: reusableTextField(
+                      "Enter new username", Icons.edit, false, _textController),
 
-                final y =
-                    FirebaseFirestore.instance.collection("Users").doc(x.id);
+                  //maxLines: 8,
+                ),
+                SizedBox(height: 15),
+                ElevatedButton(
+                  onPressed: () {
+                    final x = FirebaseFirestore.instance
+                        .collection("Users")
+                        .doc(userData["uid"]);
 
-                String ss = _textController.text;
-                y.update({
-                  "username": "$ss",
-                });
-                _textController.clear();
-                showSnackBar(
-                  context,
-                  'username Updated!',
-                );
-                Navigator.pop(context);
-              },
-              child: Text("Update username")),
+                    final y = FirebaseFirestore.instance
+                        .collection("Users")
+                        .doc(x.id);
+
+                    String ss = _textController.text;
+                    y.update({
+                      "username": "$ss",
+                    });
+                    _textController.clear();
+                    showSnackBar(
+                      context,
+                      'username Updated!',
+                    );
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    "Update username",
+                    style: TextStyle(
+                      color: Color.fromRGBO(139, 134, 134, 1),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(255, 203, 200, 1),
+                    fixedSize: Size(150, 30),
+                    alignment: Alignment.center,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7.0)),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     ),
@@ -693,40 +852,75 @@ Widget updatePassword(BuildContext context) {
         color: Colors.black,
       ),
       backgroundColor: Colors.white,
+      title: Text(
+        "Edit Password",
+        style: TextStyle(color: Colors.black),
+      ),
     ),
-    body: Center(
+    body: Container(
+      color: Color.fromRGBO(192, 234, 240, 1),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            height: 40,
-            width: 350,
-            child: reusableTextField("Enter new password", Icons.description,
-                true, _textController),
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 160.0, top: 50.0),
+                  child: Text(
+                    "Edit current password",
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                SizedBox(
+                  height: 40,
+                  width: 350,
+                  child: reusableTextField(
+                      "Enter new password", Icons.edit, true, _textController),
 
-            //maxLines: 8,
+                  //maxLines: 8,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    final currUser = FirebaseAuth.instance.currentUser;
+                    try {
+                      await currUser.updatePassword(_textController.text);
+                    } catch (e) {
+                      // TODO
+                    }
+                    showSnackBar(
+                      context,
+                      'Password Updated!',
+                    );
+                    _textController.clear();
+                    FirebaseAuth.instance.signOut();
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => MyHomePage()));
+                  },
+                  child: Text(
+                    "Update password",
+                    style: TextStyle(
+                      color: Color.fromRGBO(139, 134, 134, 1),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(255, 203, 200, 1),
+                    fixedSize: Size(150, 30),
+                    alignment: Alignment.center,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7.0)),
+                  ),
+                ),
+              ],
+            ),
           ),
-          ElevatedButton(
-              onPressed: () async {
-
-                final currUser = FirebaseAuth.instance.currentUser;
-                try {
-                  await currUser.updatePassword(_textController.text);
-                }catch (e) {
-                  // TODO
-                }
-                showSnackBar(
-                  context,
-                  'Password Updated!',
-
-                );
-                _textController.clear();
-                FirebaseAuth.instance.signOut();
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
-
-              },
-              child: Text("Update password")),
         ],
       ),
     ),
@@ -740,51 +934,119 @@ Widget updateEmail(BuildContext context) {
         color: Colors.black,
       ),
       backgroundColor: Colors.white,
+      title: Text(
+        "Edit Email Address",
+        style: TextStyle(color: Colors.black),
+      ),
     ),
-    body: Center(
+    body: Container(
+      color: Color.fromRGBO(192, 234, 240, 1),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            height: 40,
-            width: 350,
-            child: reusableTextField(
-                "Enter new email", Icons.description, false, _textController),
-
-            //maxLines: 8,
+        children: [
+          SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.only(right: 160.0, top: 10.0),
+            child: Text(
+              "Current Email Address",
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
           ),
-          ElevatedButton(
-              onPressed: () async {
-                final x = FirebaseFirestore.instance
-                    .collection("Users")
-                    .doc(userData["uid"]);
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: Container(
+              padding: EdgeInsets.only(
+                  right: 30.0, left: 30.0, top: 15.0, bottom: 15.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 2),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(35),
+                ),
+                color: Colors.white,
+              ),
+              child: Text(
+                //'@urgalbarbz \n Only slays and sandwiches',
+                userData['email'],
+                style: TextStyle(
+                  color: Color.fromRGBO(139, 134, 134, 1),
+                  fontSize: 16.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          SizedBox(height: 80),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 100.0),
+                  child: Text(
+                    "Edit registered email address",
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                SizedBox(
+                  height: 40,
+                  width: 350,
+                  child: reusableTextField("Enter a new email address",
+                      Icons.edit, false, _textController),
 
-                final y =
-                    FirebaseFirestore.instance.collection("Users").doc(x.id);
-                final Curruser = FirebaseAuth.instance.currentUser;
-                _textController.text;
-                try{
-                  await Curruser.updateEmail(_textController.text);
+                  //maxLines: 8,
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    final x = FirebaseFirestore.instance
+                        .collection("Users")
+                        .doc(userData["uid"]);
 
-                }
-                catch(error){
+                    final y = FirebaseFirestore.instance
+                        .collection("Users")
+                        .doc(x.id);
+                    final Curruser = FirebaseAuth.instance.currentUser;
+                    _textController.text;
+                    try {
+                      await Curruser.updateEmail(_textController.text);
+                    } catch (error) {}
+                    y.update({
+                      "email": "$_textController.text",
+                    });
 
-                }
-                y.update({
-                  "email": "$_textController.text",
-                });
-
-
-                _textController.clear();
-                showSnackBar(
-                  context,
-                  'email Updated!',
-                );
-                FirebaseAuth.instance.signOut();
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
-              },
-              child: Text("Update email")),
+                    _textController.clear();
+                    showSnackBar(
+                      context,
+                      'Email Updated!',
+                    );
+                    FirebaseAuth.instance.signOut();
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => MyHomePage()));
+                  },
+                  child: Text(
+                    "Update email",
+                    style: TextStyle(
+                      color: Color.fromRGBO(139, 134, 134, 1),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(255, 203, 200, 1),
+                    fixedSize: Size(150, 30),
+                    alignment: Alignment.center,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7.0)),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     ),
