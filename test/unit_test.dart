@@ -33,7 +33,7 @@ void main() {
     String res = await auth.resetPassword('password');
     expect(res, 'success');
   });
-  
+
   test('Update password', () async {
     final auth = MockAuthService();
     String res = await auth.updatePassword('password');
