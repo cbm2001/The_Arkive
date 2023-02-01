@@ -90,7 +90,8 @@ class _ExplorePageState extends State<ExplorePage> {
           return ListView.builder(
             itemCount: snapshot.data.docs.length,
             itemBuilder: (ctx, index) =>
-                PostCard(snap: snapshot.data.docs[index].data()),
+                Card(child: PostCard(snap: snapshot.data.docs[index].data()),
+                elevation: 10,),
           );
         },
       ),

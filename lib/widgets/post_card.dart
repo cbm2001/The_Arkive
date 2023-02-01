@@ -217,7 +217,7 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               SizedBox(
-                width: 150,
+                width: 140,
               ),
               IconButton(
                 onPressed: (() {}),

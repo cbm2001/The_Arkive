@@ -128,7 +128,9 @@ class MapSampleState extends State<MapPage> {
             }
 
             _getScrapBooks(currPoss.latitude,currPoss.longitude);
-          }, child: Text("Get Scrapbooks Near Me"),),
+          }, child: Text("Get Scrapbooks Near Me"),
+            style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))))
+          ),
         ],
       ),
     );
