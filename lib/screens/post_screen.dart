@@ -130,13 +130,38 @@ class _PostPageState extends State<PostPage> {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
 
     return _file == null
-        ? Center(
-            child: IconButton(
-              icon: const Icon(
-                Icons.upload,
+        ? Column(
+            children: [
+              SizedBox(height: 300),
+              Center(
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.upload,
+                  ),
+                  iconSize: 45,
+                  onPressed: () => _selectImage(context),
+                ),
               ),
-              onPressed: () => _selectImage(context),
-            ),
+              SizedBox(
+                height: 5,
+              ),
+              ElevatedButton(
+                onPressed: () => _selectImage(context),
+                child: Text(
+                  'Upload ScrapBook',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Color.fromRGBO(139, 134, 134, 1), fontSize: 14),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(192, 234, 240, 1),
+                  fixedSize: Size(150, 40),
+                  alignment: Alignment.center,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7.0)),
+                ),
+              ),
+            ],
           )
         : Scaffold(
             appBar: AppBar(
