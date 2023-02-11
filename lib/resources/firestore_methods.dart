@@ -310,13 +310,13 @@ class FireStoreMethods {
     return res;
   }
 
-  Future<String> addUsersToFolder(
-      String folderId, List<dynamic> users, int userCount) async {
+  Future<String> addUserToFolder(
+      String folderId, String uid, String username) async {
     String res = "Some error occurred";
     try {
       _firestore.collection('folders').doc(folderId).update({
-        'users': FieldValue.arrayUnion(users),
-        'userCount': userCount
+        'users': FieldValue.arrayUnion([uid]),
+        'userCount': FieldValue.increment(1)
       });
       res = "success";
     } catch (err) {
@@ -325,13 +325,13 @@ class FireStoreMethods {
     return res;
   }
 
-  Future<String> removeUsersFromFolder(
-      String folderId, List<dynamic> users, int userCount) async {
+  Future<String> removeUserFromFolder(
+      String folderId, String uid, String username) async {
     String res = "Some error occurred";
     try {
       _firestore.collection('folders').doc(folderId).update({
-        'users': FieldValue.arrayRemove(users),
-        'userCount': userCount
+        'users': FieldValue.arrayRemove([uid]),
+        'userCount': FieldValue.increment(-1)
       });
       res = "success";
     } catch (err) {
@@ -345,6 +345,20 @@ class FireStoreMethods {
     try {
       await _firestore.collection('folders').doc(folderId).delete();
       res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> requestToJoinFolder(
+      String folderId, String uid, String username) async {
+    String res = "Some error occurred";
+    try {
+      _firestore.collection('folders').doc(folderId).update({
+        'requests': FieldValue.arrayUnion([uid])
+      });
+      res = "success";
     } catch (err) {
       res = err.toString();
     }
