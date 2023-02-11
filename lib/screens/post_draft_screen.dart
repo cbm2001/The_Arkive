@@ -16,14 +16,16 @@ import 'package:provider/provider.dart';
 double latitude;
 double longitude;
 GeoPoint geoLoc;
-String Category='travel';
+String Category = 'travel';
+
 class PostDraftPage extends StatefulWidget {
   final String postURL;
   final String category;
   final String description;
   final String location;
   final GeoPoint geoLoc;
-  const PostDraftPage({Key key,
+  const PostDraftPage({
+    Key key,
     // String postID,
     @required this.postURL,
     @required this.category,
@@ -45,8 +47,6 @@ class _PostDraftPageState extends State<PostDraftPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
-
-
 
   _selectImage(BuildContext parentContext) async {
     return showDialog(
@@ -88,15 +88,16 @@ class _PostDraftPageState extends State<PostDraftPage> {
     );
   }
 
-  void uploadDraftPost(String uid,
-      String username,
-      String profImage,
-      // String postID,
-      // String postURL,
-      // String category,
-      // String description,
-      // String location,
-      ) async {
+  void uploadDraftPost(
+    String uid,
+    String username,
+    String profImage,
+    // String postID,
+    // String postURL,
+    // String category,
+    // String description,
+    // String location,
+  ) async {
     setState(() {
       isLoading = true;
     });
@@ -104,17 +105,22 @@ class _PostDraftPageState extends State<PostDraftPage> {
     try {
       // upload to storage and db
       String res = await FireStoreMethods().uploadDraftPost(
-          (_descriptionController.text == '')? widget.description:_descriptionController.text ,
+          (_descriptionController.text == '')
+              ? widget.description
+              : _descriptionController.text,
           widget.postURL,
           uid,
           username,
-          (_locationController.text== '')? widget.location:_locationController.text,
-          (_categoryController.text == '')? widget.category:_categoryController.text ,
+          (_locationController.text == '')
+              ? widget.location
+              : _locationController.text,
+          (_categoryController.text == '')
+              ? widget.category
+              : _categoryController.text,
           profImage,
           // latitude ,
           // longitude
-          (geoLoc == null)? widget.geoLoc:geoLoc
-      );
+          (geoLoc == null) ? widget.geoLoc : geoLoc);
       if (res == "success") {
         setState(() {
           isLoading = false;
@@ -208,15 +214,15 @@ class _PostDraftPageState extends State<PostDraftPage> {
               : const Padding(padding: EdgeInsets.only(top: 0.0)),
           const Divider(),
           Row(
-            //mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //crossAxisAlignment: CrossAxisAlignment.start,
+              //mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
                     padding: EdgeInsets.only(left: 20.0),
                     alignment: Alignment.topLeft,
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(
-                        // 'https://i.stack.imgur.com/l60Hf.png'
+                          // 'https://i.stack.imgur.com/l60Hf.png'
                           userProvider.getUser.photoUrl),
                       radius: 30,
                     ),
@@ -231,10 +237,10 @@ class _PostDraftPageState extends State<PostDraftPage> {
                 alignment: Alignment.topCenter,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                      fit: BoxFit.fill,
-                      alignment: FractionalOffset.topCenter,
-                      image: NetworkImage(widget.postURL),
-                    )),
+                  fit: BoxFit.fill,
+                  alignment: FractionalOffset.topCenter,
+                  image: NetworkImage(widget.postURL),
+                )),
               ),
             ),
           ),
@@ -252,80 +258,78 @@ class _PostDraftPageState extends State<PostDraftPage> {
           SizedBox(
             height: 40,
             width: 350,
-            child: reusableTextField("Tag location(s)",
-                Icons.share_location, false, _locationController),
+            child: reusableTextField("Tag location(s)", Icons.share_location,
+                false, _locationController),
             //maxLines: 8,
           ),
           SizedBox(
             height: 5,
           ),
           ElevatedButton(
-              onPressed: ()  {
+              onPressed: () {
                 print("here");
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MapSearchPage(gpVal: (value){
+                    builder: (context) => MapSearchPage(gpVal: (value) {
                       print("and here");
                       setState(() {
                         geoLoc = value;
                       });
                       showSnackBar(context, "location tagged!");
-                    }) ,
+                    }),
                   ),
                 );
-              }
-
-              ,
+              },
               child: Text("Search for location")),
           SizedBox(
             height: 5,
           ),
           Center(child: Text("Or")),
+          ElevatedButton(
+              onPressed: () async {
+                setState(() {
+                  isLoading = true;
+                });
 
-          ElevatedButton(onPressed: () async {
-            setState((){
-              isLoading=true;
-            });
+                GeoPoint pos = await determinePosition();
 
-
-            GeoPoint pos =  await determinePosition();
-
-            setState(() {
-              isLoading=false;
-              geoLoc = pos;
-              if(!isLoading){
-                showSnackBar(context, "location received!");
-              }
-            }
-
-
-            );
-          }, child: Text("Get location")),
-
+                setState(() {
+                  isLoading = false;
+                  geoLoc = pos;
+                  if (!isLoading) {
+                    showSnackBar(context, "location received!");
+                  }
+                });
+              },
+              child: Text("Get location")),
           SizedBox(
             height: 5,
           ),
-
           Container(
             height: 40,
             width: 350,
-
             child: Row(
               children: [
                 Text("Select Category:   "),
-                DropdownButton<String>(value: Category ,items: ['travel','sports','food','art','lifestyle'].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  );
-                }).toList(), onChanged: (String newValue) {setState(() {
-                  Category = newValue;
-
-                });},),
+                DropdownButton<String>(
+                  value: Category,
+                  items: ['travel', 'sports', 'food', 'art', 'lifestyle']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      Category = newValue;
+                    });
+                  },
+                ),
               ],
             ),
           ),
@@ -342,17 +346,16 @@ class _PostDraftPageState extends State<PostDraftPage> {
     try {
       // upload to storage and db
       String res = await FireStoreMethods().uploadDraft(
-        _descriptionController.text,
-        _file,
-        uid,
-        username,
-        _locationController.text,
-        _categoryController.text,
-        profImage,
-        // latitude ,
-        // longitude ,
-        geoLoc
-      );
+          _descriptionController.text,
+          _file,
+          uid,
+          username,
+          _locationController.text,
+          _categoryController.text,
+          profImage,
+          // latitude ,
+          // longitude ,
+          geoLoc);
       if (res == "success") {
         setState(() {
           isLoading = false;

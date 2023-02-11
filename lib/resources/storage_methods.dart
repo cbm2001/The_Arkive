@@ -16,7 +16,7 @@ class StorageMethods {
     // creating location to our firebase storage
 
     Reference ref =
-    _storage.ref().child(childName).child(_auth.currentUser.uid);
+        _storage.ref().child(childName).child(_auth.currentUser.uid);
 
     if (isPost) {
       //creating a unique id for each post under a user
@@ -31,7 +31,7 @@ class StorageMethods {
     String downloadUrl = await snapshot.ref.getDownloadURL();
     return downloadUrl;
   }
-  Future shiftDraftToPost(String childName, String PostURL, bool isPost) async{
 
-  }
+  Future shiftDraftToPost(
+      String childName, String PostURL, bool isPost) async {}
 }

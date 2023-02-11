@@ -15,7 +15,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class MapPage extends StatefulWidget {
   const MapPage({Key key}) : super(key: key);
 
-
   @override
   State<MapPage> createState() => MapSampleState();
 }
@@ -30,41 +29,43 @@ class MapSampleState extends State<MapPage> {
     zoom: 14.4746,
   );
 
-   prompt(Map<String, dynamic> data){
+  prompt(Map<String, dynamic> data) {
     print("helo");
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => scrapbook(snap: data,),
+        builder: (context) => scrapbook(
+          snap: data,
+        ),
       ),
     );
   }
 
-  Set<Marker> _listMarkers={};
-  int i=0;
+  Set<Marker> _listMarkers = {};
+  int i = 0;
 
-  Set<Marker> addMarker(String username,double lat , double long, Map<String, dynamic> data){
-
+  Set<Marker> addMarker(
+      String username, double lat, double long, Map<String, dynamic> data) {
     setState(() {
       i++;
       _listMarkers.add(Marker(
         markerId: MarkerId('marker ' + i.toString()),
         position: LatLng(lat, long),
         infoWindow: InfoWindow(
-            title: (username=='Current Location')?"$username ":"$username 's scrapbook",
-            snippet: (username=='Current Location')?"":"Tap to View",
-            onTap: (){
-              if(username!='Current Location'){
+            title: (username == 'Current Location')
+                ? "$username "
+                : "$username 's scrapbook",
+            snippet: (username == 'Current Location') ? "" : "Tap to View",
+            onTap: () {
+              if (username != 'Current Location') {
                 return prompt(data);
               }
-
-
-            }
-        ),
+            }),
       ));
     });
     return _listMarkers;
   }
+
   @override
   Widget build(BuildContext context) {
     GeoPoint currPoss = null;
@@ -94,7 +95,6 @@ class MapSampleState extends State<MapPage> {
                         final place = await PositionServices()
                             .getPlaceDetails(_originController.text);
 
-
                         //update camera position
                         _goToPlace(place['geometry']['location']['lat'],
                             place['geometry']['location']['lng']);
@@ -113,51 +113,46 @@ class MapSampleState extends State<MapPage> {
               initialCameraPosition: _kGooglePlex,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
-
               },
-
             ),
-
           ),
+          ElevatedButton(
+              onPressed: () async {
+                if (currPoss == null) {
+                  currPoss = await determinePosition();
+                }
 
-
-          ElevatedButton(onPressed: () async{
-
-            if(currPoss==null){
-              currPoss = await determinePosition();
-            }
-
-            _getScrapBooks(currPoss.latitude,currPoss.longitude);
-          }, child: Text("Get Scrapbooks Near Me"),
-            style: ElevatedButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))))
-          ),
+                _getScrapBooks(currPoss.latitude, currPoss.longitude);
+              },
+              child: Text("Get Scrapbooks Near Me"),
+              style: ElevatedButton.styleFrom(
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(50))))),
         ],
       ),
     );
   }
 
   Future<void> _goToPlace(double lat, double lng) async {
-    addMarker("Current Location",lat,lng,null);
+    addMarker("Current Location", lat, lng, null);
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(lat, lng), zoom: 15)))
-    ;
-
-
+        CameraPosition(target: LatLng(lat, lng), zoom: 15)));
   }
+
   Future<void> _getScrapBooks(double lat, double lng) async {
-    addMarker("Current Location",lat,lng,null);
+    addMarker("Current Location", lat, lng, null);
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(lat, lng), zoom: 15)))
-    ;
+        CameraPosition(target: LatLng(lat, lng), zoom: 15)));
     FirebaseFirestore.instance.collection("posts").get().then((docs) {
-      if(docs.docs.isNotEmpty){
-        for (int i =0 ; i< docs.docs.length;i++){
+      if (docs.docs.isNotEmpty) {
+        for (int i = 0; i < docs.docs.length; i++) {
           print("see this");
           print(docs.docs[i].data()['geoLoc']);
-          if(docs.docs[i].data()['geoLoc']!=null) {
-            addMarker(docs.docs[i].data()['username'],
+          if (docs.docs[i].data()['geoLoc'] != null) {
+            addMarker(
+                docs.docs[i].data()['username'],
                 docs.docs[i].data()['geoLoc'].latitude as double,
                 docs.docs[i].data()['geoLoc'].longitude as double,
                 docs.docs[i].data());
@@ -165,10 +160,5 @@ class MapSampleState extends State<MapPage> {
         }
       }
     });
-
-
-
-
   }
 }
-

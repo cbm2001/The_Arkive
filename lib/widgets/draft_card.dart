@@ -203,7 +203,15 @@ class _DraftCardState extends State<DraftCard> {
                   //print("print");
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => editDraft(context,widget.snap['postUrl'],widget.snap['category'],widget.snap['description'],widget.snap['geoLoc'],widget.snap['location'],)),
+                    MaterialPageRoute(
+                        builder: (context) => editDraft(
+                              context,
+                              widget.snap['postUrl'],
+                              widget.snap['category'],
+                              widget.snap['description'],
+                              widget.snap['geoLoc'],
+                              widget.snap['location'],
+                            )),
                   );
                 },
                 icon: const Icon(
@@ -270,8 +278,15 @@ class _DraftCardState extends State<DraftCard> {
   }
 }
 
-Widget editDraft(BuildContext context,String PostURL,String category, String Description, GeoPoint geoLoc,String Location) {
+Widget editDraft(BuildContext context, String PostURL, String category,
+    String Description, GeoPoint geoLoc, String Location) {
   return Scaffold(
-    body: PostDraftPage(postURL: PostURL,category: category,description: Description,location: Location, geoLoc: geoLoc,),
+    body: PostDraftPage(
+      postURL: PostURL,
+      category: category,
+      description: Description,
+      location: Location,
+      geoLoc: geoLoc,
+    ),
   );
 }

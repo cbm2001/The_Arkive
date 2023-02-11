@@ -14,8 +14,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MapSearchPage extends StatefulWidget {
   GeoPoint gp;
-  MapSearchPage({Key key,this.gpVal}) : super(key: key);
-  Function (GeoPoint val) gpVal;
+  MapSearchPage({Key key, this.gpVal}) : super(key: key);
+  Function(GeoPoint val) gpVal;
 
   @override
   State<MapSearchPage> createState() => MapSampleState();
@@ -23,7 +23,7 @@ class MapSearchPage extends StatefulWidget {
 
 class MapSampleState extends State<MapSearchPage> {
   final Completer<GoogleMapController> _controller =
-  Completer<GoogleMapController>();
+      Completer<GoogleMapController>();
   TextEditingController _originController = TextEditingController();
 
   static const CameraPosition _kGooglePlex = CameraPosition(
@@ -31,12 +31,10 @@ class MapSampleState extends State<MapSearchPage> {
     zoom: 14.4746,
   );
 
+  Set<Marker> _listMarkers = {};
+  int i = 0;
 
-  Set<Marker> _listMarkers={};
-  int i=0;
-
-  Set<Marker> addMarker(String username,double lat , double long){
-
+  Set<Marker> addMarker(String username, double lat, double long) {
     setState(() {
       i++;
       _listMarkers.add(Marker(
@@ -45,15 +43,14 @@ class MapSampleState extends State<MapSearchPage> {
         infoWindow: InfoWindow(
             title: "$username 's scrapbook",
             snippet: 'cool',
-            onTap: (){
+            onTap: () {
               return Scaffold();
-
-            }
-        ),
+            }),
       ));
     });
     return _listMarkers;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +79,6 @@ class MapSampleState extends State<MapSearchPage> {
                         final place = await PositionServices()
                             .getPlaceDetails(_originController.text);
 
-
                         //update camera position
                         _goToPlace(place['geometry']['location']['lat'],
                             place['geometry']['location']['lng']);
@@ -99,55 +95,38 @@ class MapSampleState extends State<MapSearchPage> {
               initialCameraPosition: _kGooglePlex,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
-
               },
               onTap: _setMarker,
             ),
-
           ),
           ElevatedButton(
-              onPressed: ()  {
-
+              onPressed: () {
                 Navigator.pop(context);
                 showSnackBar(context, "location tagged!");
               },
               child: Text('Select Tag'))
-
         ],
       ),
     );
   }
-  _setMarker(LatLng currPoint){
+
+  _setMarker(LatLng currPoint) {
     setState(() {
       _listMarkers = {};
-      _listMarkers.add(
-        Marker(markerId: MarkerId("Marker"),
-        position: currPoint,));
+      _listMarkers.add(Marker(
+        markerId: MarkerId("Marker"),
+        position: currPoint,
+      ));
       widget.gpVal(new GeoPoint(currPoint.latitude, currPoint.longitude));
-
     });
     print("this-----");
     print(currPoint);
   }
+
   Future<void> _goToPlace(double lat, double lng) async {
-    addMarker("Current Location",lat,lng);
+    addMarker("Current Location", lat, lng);
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(lat, lng), zoom: 15)))
-    ;
-
-
-
-
-
-
+        CameraPosition(target: LatLng(lat, lng), zoom: 15)));
   }
-
-
-
-
-
-
-
-
 }

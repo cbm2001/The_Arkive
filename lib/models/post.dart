@@ -18,55 +18,54 @@ class Post {
   // final double longitude;
   final GeoPoint geoLoc;
 
-  const Post({
-    @required this.description,
-    @required this.uid,
-    @required this.username,
-    @required this.likes,
-    @required this.postId,
-    @required this.datePublished,
-    @required this.postUrl,
-    @required this.location,
-    @required this.category,
-    @required this.profImage,
-    // @required this.latitude,
-    // @required this.longitude,
-    @required this.geoLoc
-  });
+  const Post(
+      {@required this.description,
+      @required this.uid,
+      @required this.username,
+      @required this.likes,
+      @required this.postId,
+      @required this.datePublished,
+      @required this.postUrl,
+      @required this.location,
+      @required this.category,
+      @required this.profImage,
+      // @required this.latitude,
+      // @required this.longitude,
+      @required this.geoLoc});
 
   static Post fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
 
     return Post(
-        description: snapshot["description"],
-        uid: snapshot["uid"],
-        likes: snapshot["likes"],
-        postId: snapshot["postId"],
-        datePublished: snapshot["datePublished"],
-        username: snapshot["username"],
-        postUrl: snapshot['postUrl'],
-        location: snapshot['location'],
-        category: snapshot['category'],
-        profImage: snapshot['profImage'],
-        // latitude: snapshot['latitude'],
-        // longitude: snapshot['longitude']
-        geoLoc: snapshot['geoLoc'],
+      description: snapshot["description"],
+      uid: snapshot["uid"],
+      likes: snapshot["likes"],
+      postId: snapshot["postId"],
+      datePublished: snapshot["datePublished"],
+      username: snapshot["username"],
+      postUrl: snapshot['postUrl'],
+      location: snapshot['location'],
+      category: snapshot['category'],
+      profImage: snapshot['profImage'],
+      // latitude: snapshot['latitude'],
+      // longitude: snapshot['longitude']
+      geoLoc: snapshot['geoLoc'],
     );
   }
 
   Map<String, dynamic> toJson() => {
-    "description": description,
-    "uid": uid,
-    "likes": likes,
-    "username": username,
-    "postId": postId,
-    "datePublished": datePublished,
-    'postUrl': postUrl,
-    'profImage': profImage,
-    'location': location,
-    'category': category,
-    // 'latitude': latitude,
-    // 'longitude':longitude,
-    'geoLoc': geoLoc
-  };
+        "description": description,
+        "uid": uid,
+        "likes": likes,
+        "username": username,
+        "postId": postId,
+        "datePublished": datePublished,
+        'postUrl': postUrl,
+        'profImage': profImage,
+        'location': location,
+        'category': category,
+        // 'latitude': latitude,
+        // 'longitude':longitude,
+        'geoLoc': geoLoc
+      };
 }

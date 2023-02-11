@@ -36,7 +36,7 @@ Future<GeoPoint> determinePosition() async {
 
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
-  Position x =await Geolocator.getCurrentPosition();
+  Position x = await Geolocator.getCurrentPosition();
   GeoPoint y = new GeoPoint(x.latitude, x.longitude);
 
   print("long:" + (x.longitude).toString());
@@ -44,7 +44,6 @@ Future<GeoPoint> determinePosition() async {
   print("pos:" + x.toString());
   print("gplg" + y.longitude.toString());
   print("gplt" + y.latitude.toString());
-
 
   return y;
 }

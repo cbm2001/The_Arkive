@@ -229,9 +229,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   //   showSnackBar(context, "Upload Profile Picture");
                   // }
                   // else {
-                    signUpUser();
+                  signUpUser();
                   // }
-                } ),
+                }),
                 child: !_isLoading
                     ? const Text(
                         'Sign up',
