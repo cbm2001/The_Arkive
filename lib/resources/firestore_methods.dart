@@ -364,4 +364,17 @@ class FireStoreMethods {
     }
     return res;
   }
+
+  Future<String> favoriteFolder(String folderId, String uid) async {
+    String res = "Some error occurred";
+    try {
+      _firestore.collection('folders').doc(folderId).update({
+        'favorites': FieldValue.arrayUnion([uid])
+      });
+      res = "success";
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
 }
