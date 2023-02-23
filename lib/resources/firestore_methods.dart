@@ -265,7 +265,7 @@ class FireStoreMethods {
   }
 
   Future<String> createFolder(String folderName, String uid, String username,
-      List<dynamic> posts, List<dynamic> users, int userCount) async {
+      List<dynamic> posts, List<dynamic> users, int userCount, List<dynamic> requests) async {
     String res = "Some error occurred";
     try {
       String folderId = const Uuid().v1();
@@ -276,7 +276,8 @@ class FireStoreMethods {
           username: username,
           users: users,
           posts: posts,
-          userCount: userCount);
+          userCount: userCount,
+          requests: requests,);
       _firestore.collection('folders').doc(folderId).set(folder.toJson());
       res = "success";
     } catch (err) {
