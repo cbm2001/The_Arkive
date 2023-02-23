@@ -9,6 +9,8 @@ class Folder {
   final String folderName;
   final String folderId;
   final List<dynamic> users;
+  final List<dynamic> posts;
+  final List<dynamic> requests;
   final int userCount;
 
   const Folder({
@@ -18,6 +20,8 @@ class Folder {
     @required this.folderId,
     @required this.users,
     @required this.userCount,
+    @required this.posts,
+    @required this.requests,
   });
 
   static Folder fromSnap(DocumentSnapshot snap) {
@@ -30,6 +34,8 @@ class Folder {
       folderId: snapshot["folderId"],
       users: snapshot["users"],
       userCount: snapshot["userCount"],
+      posts: snapshot["posts"],
+      requests: snapshot["requests"],
     );
   }
 
@@ -40,5 +46,7 @@ class Folder {
         "folderId": folderId,
         "users": users,
         "userCount": userCount,
+        "posts": posts,
+        "requests": requests,
       };
 }

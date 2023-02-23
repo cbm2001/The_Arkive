@@ -275,6 +275,7 @@ class FireStoreMethods {
           uid: uid,
           username: username,
           users: users,
+          posts: posts,
           userCount: userCount);
       _firestore.collection('folders').doc(folderId).set(folder.toJson());
       res = "success";
