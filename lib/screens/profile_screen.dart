@@ -258,11 +258,34 @@ class _ProfilePageState extends State<ProfilePage> {
                                       );
                                     },
                                   )),
-                              Container(
-                                height: MediaQuery.of(context).size.height,
-                                color: Color.fromRGBO(192, 234, 240, 1),
-                                alignment: Alignment.center,
-                                child: const Text('Page 2'),
+                              SizedBox(
+                                height: 400,
+                                width: 400,
+                                child:FutureBuilder(
+                                    future: FirebaseFirestore.instance
+                                        .collection('folders')
+                                        .where('uid',
+                                            isEqualTo: userData['uid'])
+                                        .get(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+
+                                      return ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: (snapshot.data as dynamic)
+                                            .docs
+                                            .length,
+                                        itemBuilder: (ctx, index) => DraftCard(
+                                            snap: snapshot.data.docs[index]
+                                                .data()),
+                                        );
+                                    },
+                                  )
                               ),
                               SizedBox(
                                   height: 400,
