@@ -3,9 +3,11 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/models/folders.dart';
 import 'package:first_app/screens/post_screen.dart';
 import 'package:first_app/resources/auth_methods.dart';
 import 'package:first_app/screens/explore_screen.dart';
+import 'package:first_app/widgets/folder_card.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -259,34 +261,35 @@ class _ProfilePageState extends State<ProfilePage> {
                                     },
                                   )),
                               SizedBox(
-                                height: 400,
-                                width: 400,
-                                child:FutureBuilder(
+                                  height: 400,
+                                  width: 400,
+                                  child: FutureBuilder(
                                     future: FirebaseFirestore.instance
                                         .collection('folders')
-                                        .where('uid',
-                                            isEqualTo: userData['uid'])
+                                        .where('users',
+                                            arrayContains: userData['uid'])
                                         .get(),
                                     builder: (context, snapshot) {
+                                      print(snapshot);
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
                                         return const Center(
                                           child: CircularProgressIndicator(),
                                         );
                                       }
-
+                                      // show all folders as grid view
                                       return ListView.builder(
                                         shrinkWrap: true,
                                         itemCount: (snapshot.data as dynamic)
                                             .docs
                                             .length,
-                                        itemBuilder: (ctx, index) => DraftCard(
-                                            snap: snapshot.data.docs[index]
+                                        itemBuilder: (ctx, index) => FolderCard(
+                                            snap: (snapshot.data as dynamic)
+                                                .docs[index]
                                                 .data()),
-                                        );
+                                      );
                                     },
-                                  )
-                              ),
+                                  )),
                               SizedBox(
                                   height: 400,
                                   width: 400,

@@ -71,6 +71,11 @@ class AuthMethods {
           bio: bio,
         );
 
+        // await _firestore
+        //     .collection("folders")
+        //     .doc(cred.folderId)
+        //     .set(_user.toJson());
+
         // adding user in our database
         await _firestore
             .collection("Users")

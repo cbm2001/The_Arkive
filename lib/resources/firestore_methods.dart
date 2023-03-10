@@ -379,4 +379,36 @@ class FireStoreMethods {
     }
     return res;
   }
+
+  // folders has an attribute called users which is a list of uids, getfolder returns list of folders that can be accessed by the user
+Stream<List<Folder>> getFolders(String uid) {
+  return FirebaseFirestore.instance
+      .collection('folders')
+      .where('users', arrayContains: uid)
+      .snapshots()
+      .map((snapshot) => snapshot.docs
+          .map((doc) => Folder.fromJson(doc.data(), doc.id))
+          .toList());
+  }
+
+  getUsersInFolder(folderId) {
+    return FirebaseFirestore.instance
+        .collection('folders')
+        .doc(folderId)
+        .get()
+        .then((value) => value.data()['users']);
+  }
+
+  getPostsInFolder(folderId) {
+    return FirebaseFirestore.instance
+        .collection('folders')
+        .doc(folderId)
+        .get()
+        .then((value) => value.data()['posts']);
+  }
 }
+
+
+  
+
+  

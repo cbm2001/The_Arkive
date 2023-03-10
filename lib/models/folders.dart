@@ -49,4 +49,17 @@ class Folder {
         "posts": posts,
         "requests": requests,
       };
+
+  static fromJson(Map<String, dynamic> data, String id) {
+    return Folder(
+      uid: data["uid"],
+      username: data["username"],
+      folderName: data["folderName"],
+      folderId: data["folderId"],
+      users: data["users"],
+      userCount: data["userCount"],
+      posts: data["posts"],
+      requests: data["requests"],
+    );
+  }
 }
