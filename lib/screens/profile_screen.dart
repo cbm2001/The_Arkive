@@ -16,6 +16,7 @@ import '../models/nav_bar.dart';
 import '../models/user.dart' as model;
 import '../providers/user_provider.dart';
 import '../main.dart';
+import '../resources/firestore_methods.dart';
 import '../resources/storage_methods.dart';
 import '../widgets/post_card.dart';
 import '../widgets/reusable_widgets.dart';
@@ -73,6 +74,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    String folderName;
     model.User user = Provider.of<UserProvider>(context).getUser;
     upperTab = //FirebaseAuth.instance.currentUser.uid == userData['uid']
         TabBar(tabs: [
@@ -228,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               SizedBox(
                                   height: 400,
-                                  width: 400,
+                                  width: 600,
                                   child: FutureBuilder(
                                     future: FirebaseFirestore.instance
                                         .collection('posts')
@@ -261,35 +263,101 @@ class _ProfilePageState extends State<ProfilePage> {
                                     },
                                   )),
                               SizedBox(
-                                  height: 400,
-                                  width: 400,
-                                  child: FutureBuilder(
-                                    future: FirebaseFirestore.instance
-                                        .collection('folders')
-                                        .where('users',
-                                            arrayContains: userData['uid'])
-                                        .get(),
-                                    builder: (context, snapshot) {
-                                      print(snapshot);
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                      // show all folders as grid view
-                                      return ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: (snapshot.data as dynamic)
-                                            .docs
-                                            .length,
-                                        itemBuilder: (ctx, index) => FolderCard(
-                                            snap: (snapshot.data as dynamic)
-                                                .docs[index]
-                                                .data()),
-                                      );
-                                    },
-                                  )),
+                                height: 400,
+                                width: 400,
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: FutureBuilder(
+                                        future: FirebaseFirestore.instance
+                                            .collection('folders')
+                                            .where('users',
+                                                arrayContains: userData['uid'])
+                                            .get(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            );
+                                          }
+                                          // show all folders as grid view
+                                          return ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount:
+                                                (snapshot.data as dynamic)
+                                                    .docs
+                                                    .length,
+                                            itemBuilder: (ctx, index) =>
+                                                FolderCard(
+                                              snap: snapshot.data.docs[index]
+                                                  .data(),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    // create a button to create a new folder
+                                    
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title:
+                                                    Text("Create a new folder"),
+                                                content: TextField(
+                                                  decoration: InputDecoration(
+                                                      hintText: "Folder name"),
+                                                  onChanged: (value) {
+                                                    folderName = value;
+                                                  },
+                                                ),
+                                                actions: <Widget>[
+                                                  ElevatedButton(
+                                                    child: Text("Create"),
+                                                    onPressed: () {
+                                                      FireStoreMethods()
+                                                          .createFolder(
+                                                        folderName,
+                                                        Provider.of<UserProvider>(
+                                                                context,
+                                                                listen: false)
+                                                            .getUser
+                                                            .uid,
+                                                        Provider.of<UserProvider>(
+                                                                context,
+                                                                listen: false)
+                                                            .getUser
+                                                            .username,
+                                                        // create an empty list for posts
+                                                        [],
+                                                        // create an list with uid
+                                                        [
+                                                          Provider.of<UserProvider>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .getUser
+                                                              .uid
+                                                        ],
+                                                        1,
+                                                        // create an empty list for requests
+                                                        [],
+                                                      );
+                                                      Navigator.pop(context);
+                                                    },
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                      },
+                                      child: Text('Create Folder'),
+                                    ),
+                                  ],
+                                ),
+                              ),
                               SizedBox(
                                   height: 400,
                                   width: 400,
@@ -333,6 +401,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           );
   }
+
+  
 
   Widget menuBar(BuildContext context) {
     return Scaffold(
@@ -1077,4 +1147,5 @@ Widget updateEmail(BuildContext context) {
       ),
     ),
   );
+
 }

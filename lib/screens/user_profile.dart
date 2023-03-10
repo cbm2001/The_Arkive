@@ -9,6 +9,7 @@ import '../models/nav_bar.dart';
 import '../models/user.dart' as model;
 import '../providers/user_provider.dart';
 import '../main.dart';
+import '../widgets/folder_card.dart';
 import '../widgets/post_card.dart';
 import '../utils/utils.dart';
 
@@ -251,30 +252,37 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                         itemCount: (snapshot.data as dynamic)
                                             .docs
                                             .length,
-                                        /*gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 1.5,
-                          childAspectRatio: 1,
-                        ),*/
                                         itemBuilder: (ctx, index) => PostCard(
                                             snap: snapshot.data.docs[index]
                                                 .data()),
-                                        /*return Container(
-                                child: Image(
-                                  image: NetworkImage(snap['postUrl']),
-                                  fit: BoxFit.cover,
-                                ),
-                              );*/
+                                  
                                       );
                                     },
                                   )),
                               Container(
-                                height: MediaQuery.of(context).size.height,
-                                color: Color.fromRGBO(192, 234, 240, 1),
-                                alignment: Alignment.center,
-                                child: const Text('Page 2'),
+                                  child: FutureBuilder(
+                                future: FirebaseFirestore.instance
+                                    .collection('folders')
+                                    .where('uid', isEqualTo: userData['uid'])
+                                    .get(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: (snapshot.data as dynamic)
+                                        .docs
+                                        .length,
+                                    itemBuilder: (ctx, index) => FolderCard(
+                                        snap: snapshot.data.docs[index].data()),
+                                  );
+                                },
+                              )
                               ),
                             ],
                           )),

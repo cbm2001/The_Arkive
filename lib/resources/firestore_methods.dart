@@ -399,6 +399,14 @@ Stream<List<Folder>> getFolders(String uid) {
         .then((value) => value.data()['users']);
   }
 
+  getUidFromUsername(String username) {
+    return FirebaseFirestore.instance
+        .collection('Users')
+        .where('username', isEqualTo: username)
+        .get()
+        .then((value) => value.docs[0].id);
+  }
+
   getPostsInFolder(folderId) {
     return FirebaseFirestore.instance
         .collection('folders')
