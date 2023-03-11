@@ -342,8 +342,15 @@ class FireStoreMethods {
     try {
       _firestore.collection('folders').doc(folderId).update({
         'users': FieldValue.arrayRemove([uid]),
-        'userCount': FieldValue.increment(-1)
+        'userCount': FieldValue.increment(-1),
       });
+      // if count is 0, delete folder
+      DocumentSnapshot snap =
+          await _firestore.collection('folders').doc(folderId).get();
+      int count = (snap.data() as dynamic)['userCount'];
+      if (count == 0) {
+        await _firestore.collection('folders').doc(folderId).delete();
+      }
       res = "success";
     } catch (err) {
       res = err.toString();

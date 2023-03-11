@@ -213,11 +213,8 @@ class _FolderCardState extends State<FolderCard> {
                       child: Text("Remove user"),
                       onPressed: () {
                         Navigator.pop(context);
-                        if (widget.snap["users"].length > 1) {
+                        if (widget.snap["users"].length > 0) {
                           // show list of users with a checkbox next to each one and a button to remove them
-                          List<bool> _checkboxStates = List.generate(
-                              widget.snap["users"].length, (index) => false);
-
                           showDialog(
                             context: context,
                             builder: (context) {
