@@ -40,6 +40,21 @@ class _FolderCardState extends State<FolderCard> {
 
   adduser(String folderId, String uid, String username) async {
     try {
+      if (uid ==
+          Provider.of<UserProvider>(context, listen: false).getUser.uid) {
+        showSnackBar(
+          context,
+          "You can't add yourself to a folder",
+        );
+        return;
+      }
+      if (widget.snap["users"].contains(uid)) {
+        showSnackBar(
+          context,
+          "This user is already in the folder",
+        );
+        return;
+      }
       await FireStoreMethods().addUserToFolder(folderId, uid, username);
     } catch (err) {
       showSnackBar(
@@ -71,8 +86,6 @@ class _FolderCardState extends State<FolderCard> {
     }
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -97,15 +110,16 @@ class _FolderCardState extends State<FolderCard> {
           // if (widget.snap["users"] is in Provider.of<UserProvider>(context, listen: false).getUser.username then show delete button)
           if (widget.snap["users"].contains(
               Provider.of<UserProvider>(context, listen: false).getUser.uid)) {
+            // show 3 options: delete folder, add user, remove user
             showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text("Delete folder"),
-                  content: Text("Are you sure you want to delete this folder?"),
+                  title: Text("Folder options"),
+                  content: Text("What would you like to do?"),
                   actions: <Widget>[
                     ElevatedButton(
-                      child: Text("Yes"),
+                      child: Text("Delete folder"),
                       onPressed: () {
                         FireStoreMethods()
                             .deleteFolder(widget.snap["folderId"]);
@@ -113,7 +127,172 @@ class _FolderCardState extends State<FolderCard> {
                       },
                     ),
                     ElevatedButton(
-                      child: Text("No"),
+                      child: Text("Add user"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        if (widget.snap["requests"].length > 0) {
+                          // show list of requests with a checkbox next to each one and a button to add them
+                          List<bool> _checkboxStates = List.generate(
+                              widget.snap["requests"].length, (index) => false);
+
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text("Add user"),
+                                content: Container(
+                                  height: 300,
+                                  width: 300,
+                                  child: ListView.builder(
+                                    itemCount: widget.snap["requests"].length,
+                                    itemBuilder: (context, index) {
+                                      return FutureBuilder(
+                                        future: FireStoreMethods().getUser(
+                                            widget.snap["requests"][index]),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            return ListTile(
+                                              title: Text(
+                                                  snapshot.data["username"]),
+                                              trailing: ElevatedButton(
+                                                child: Text("Add"),
+                                                onPressed: () {
+                                                  FireStoreMethods()
+                                                      .addUserToFolder(
+                                                    widget.snap["folderId"],
+                                                    snapshot.data["uid"],
+                                                    snapshot.data["username"],
+                                                  );
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            );
+                                          } else {
+                                            return Container();
+                                          }
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    child: Text("Cancel"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text("Add user"),
+                                content: Text(
+                                    "There are no requests to add to this folder"),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    child: Text("Cancel"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                    // remove user
+                    ElevatedButton(
+                      child: Text("Remove user"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        if (widget.snap["users"].length > 1) {
+                          // show list of users with a checkbox next to each one and a button to remove them
+                          List<bool> _checkboxStates = List.generate(
+                              widget.snap["users"].length, (index) => false);
+
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text("Remove user"),
+                                content: Container(
+                                  height: 300,
+                                  width: 300,
+                                  child: ListView.builder(
+                                    itemCount: widget.snap["users"].length,
+                                    itemBuilder: (context, index) {
+                                      return FutureBuilder(
+                                        future: FireStoreMethods().getUser(
+                                            widget.snap["users"][index]),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            return ListTile(
+                                              title: Text(
+                                                  snapshot.data["username"]),
+                                              trailing: ElevatedButton(
+                                                child: Text("Remove"),
+                                                onPressed: () {
+                                                  FireStoreMethods()
+                                                      .removeUserFromFolder(
+                                                    widget.snap["folderId"],
+                                                    snapshot.data["uid"],
+                                                    snapshot.data["username"],
+                                                  );
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            );
+                                          } else {
+                                            return Container();
+                                          }
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    child: Text("Cancel"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text("Remove user"),
+                                content: Text(
+                                    "There are no users to remove from this folder"),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    child: Text("Cancel"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                    ElevatedButton(
+                      child: Text("Cancel"),
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -126,13 +305,13 @@ class _FolderCardState extends State<FolderCard> {
           // else show request to join button if not already requested
           else if (widget.snap["requests"].contains(
               Provider.of<UserProvider>(context, listen: false).getUser.uid)) {
-              showDialog(
+            showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
                   title: Text("Request to join"),
-                  content: Text(
-                      "You have already requested to join this folder"),
+                  content:
+                      Text("You have already requested to join this folder"),
                   actions: <Widget>[
                     ElevatedButton(
                       child: Text("Ok"),
@@ -144,10 +323,8 @@ class _FolderCardState extends State<FolderCard> {
                 );
               },
             );
-          }
-          else {
-            
-          showDialog(
+          } else {
+            showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(

@@ -255,7 +255,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                         itemBuilder: (ctx, index) => PostCard(
                                             snap: snapshot.data.docs[index]
                                                 .data()),
-                                  
                                       );
                                     },
                                   )),
@@ -275,15 +274,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
                                   return ListView.builder(
                                     shrinkWrap: true,
-                                    itemCount: (snapshot.data as dynamic)
-                                        .docs
-                                        .length,
+                                    itemCount:
+                                        (snapshot.data as dynamic).docs.length,
                                     itemBuilder: (ctx, index) => FolderCard(
                                         snap: snapshot.data.docs[index].data()),
                                   );
                                 },
-                              )
-                              ),
+                              )),
                             ],
                           )),
                     ),

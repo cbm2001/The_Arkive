@@ -298,8 +298,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                         },
                                       ),
                                     ),
-                                    // create a button to create a new folder
-                                    
                                     ElevatedButton(
                                       onPressed: () {
                                         showDialog(
@@ -401,8 +399,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           );
   }
-
-  
 
   Widget menuBar(BuildContext context) {
     return Scaffold(
@@ -1147,5 +1143,4 @@ Widget updateEmail(BuildContext context) {
       ),
     ),
   );
-
 }

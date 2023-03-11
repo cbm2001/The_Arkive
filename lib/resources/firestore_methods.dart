@@ -264,20 +264,27 @@ class FireStoreMethods {
     return res;
   }
 
-  Future<String> createFolder(String folderName, String uid, String username,
-      List<dynamic> posts, List<dynamic> users, int userCount, List<dynamic> requests) async {
+  Future<String> createFolder(
+      String folderName,
+      String uid,
+      String username,
+      List<dynamic> posts,
+      List<dynamic> users,
+      int userCount,
+      List<dynamic> requests) async {
     String res = "Some error occurred";
     try {
       String folderId = const Uuid().v1();
       Folder folder = Folder(
-          folderName: folderName,
-          folderId: folderId,
-          uid: uid,
-          username: username,
-          users: users,
-          posts: posts,
-          userCount: userCount,
-          requests: requests,);
+        folderName: folderName,
+        folderId: folderId,
+        uid: uid,
+        username: username,
+        users: users,
+        posts: posts,
+        userCount: userCount,
+        requests: requests,
+      );
       _firestore.collection('folders').doc(folderId).set(folder.toJson());
       res = "success";
     } catch (err) {
@@ -318,7 +325,9 @@ class FireStoreMethods {
     try {
       _firestore.collection('folders').doc(folderId).update({
         'users': FieldValue.arrayUnion([uid]),
-        'userCount': FieldValue.increment(1)
+        'userCount': FieldValue.increment(1),
+        // remove from requests
+        'requests': FieldValue.arrayRemove([uid])
       });
       res = "success";
     } catch (err) {
@@ -381,14 +390,14 @@ class FireStoreMethods {
   }
 
   // folders has an attribute called users which is a list of uids, getfolder returns list of folders that can be accessed by the user
-Stream<List<Folder>> getFolders(String uid) {
-  return FirebaseFirestore.instance
-      .collection('folders')
-      .where('users', arrayContains: uid)
-      .snapshots()
-      .map((snapshot) => snapshot.docs
-          .map((doc) => Folder.fromJson(doc.data(), doc.id))
-          .toList());
+  Stream<List<Folder>> getFolders(String uid) {
+    return FirebaseFirestore.instance
+        .collection('folders')
+        .where('users', arrayContains: uid)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Folder.fromJson(doc.data(), doc.id))
+            .toList());
   }
 
   getUsersInFolder(folderId) {
@@ -414,9 +423,12 @@ Stream<List<Folder>> getFolders(String uid) {
         .get()
         .then((value) => value.data()['posts']);
   }
+
+  getUser(snap) {
+    return FirebaseFirestore.instance
+        .collection('Users')
+        .doc(snap)
+        .get()
+        .then((value) => value.data());
+  }
 }
-
-
-  
-
-  
