@@ -42,7 +42,7 @@ dependencies:
   get: ^4.6.5
   # ar_flutter_plugin: ^0.7.3
   arkit_plugin: ^1.0.5
-  vector_math: ^2.1.4
+  vector_math:
   location: ^4.4.0
   camera: ^0.10.3+2
 
@@ -52,7 +52,7 @@ dev_dependencies:
     sdk: flutter
   mockito: ^5.3.2
   rxdart: ^0.27.7
-  test: ^1.22.0
+  test:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
