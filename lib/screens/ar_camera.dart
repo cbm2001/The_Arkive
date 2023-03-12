@@ -65,12 +65,12 @@ class _ARPageState extends State<ARPage> {
   }
 
   void _onARKitViewCreated(ARKitController controller) {
-    // _arKitController = controller;
-    // _addMarkers();
-    this._arKitController = _arKitController;
-    final node = ARKitNode(
-        geometry: ARKitSphere(radius: 0.1), position: vector.Vector3(0, 0, -0.5));
-    this._arKitController.add(node);
+    _arKitController = controller;
+    _addMarkers();
+    // this._arKitController = _arKitController;
+    // final node = ARKitNode(
+    //     geometry: ARKitSphere(radius: 0.1), position: vector.Vector3(0, 0, -0.5));
+    // this._arKitController.add(node);
   }
 
   void _addMarkers() {
