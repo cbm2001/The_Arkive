@@ -40,6 +40,13 @@ dependencies:
   geolocator: ^9.0.2
   search_map_place_updated: ^0.0.4
   get: ^4.6.5
+  firebase_messaging: ^14.2.3
+  flutter_local_notifications: ^13.0.0
+  cached_network_image: ^3.2.3
+  timeago: ^3.3.0
+
+dependency_overrides: 
+  test_api: 0.4.17
 
 dev_dependencies:
   flutter_test:

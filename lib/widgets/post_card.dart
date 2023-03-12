@@ -25,6 +25,7 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   int commentLen = 0;
   bool isLikeAnimating = false;
+  //final notifRef = FirebaseFirestore.instance.collection('notifications');
 
   @override
   void initState() {
@@ -46,7 +47,6 @@ class _PostCardState extends State<PostCard> {
         err.toString(),
       );
     }
-    // setState(() {});
   }
 
   deletePost(String postId) async {
@@ -59,6 +59,29 @@ class _PostCardState extends State<PostCard> {
       );
     }
   }
+
+  /*addLikeNotif(String postId) async {
+    try {
+      await FireStoreMethods().addLiketoNotif(postId, widget.snap['uid'],
+          widget.snap['username'], widget.snap['postUrl']);
+    } catch (err) {
+      showSnackBar(
+        context,
+        err.toString(),
+      );
+    }
+  }*/
+
+  /*commentNotif(String postId) async {
+    try {
+      await FireStoreMethods().removeLikefromNotif(postId, widget.snap['uid']);
+    } catch (err) {
+      showSnackBar(
+        context,
+        err.toString(),
+      );
+    }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -186,10 +209,33 @@ class _PostCardState extends State<PostCard> {
               LikeAnimation(
                 isAnimating: widget.snap['likes'].contains(user.uid),
                 child: IconButton(
-                  onPressed: (() async {
-                    await FireStoreMethods().likePost(
-                        widget.snap['postId'], user.uid, widget.snap['likes']);
-                  }),
+                  onPressed: widget.snap['likes'].contains(user.uid)
+                      ? (() async {
+                          await FireStoreMethods().unlikePost(
+                              widget.snap['postId'],
+                              user.uid,
+                              widget.snap['likes']);
+                          await FireStoreMethods().removeLikefromNotif(
+                            widget.snap['postId'],
+                            widget.snap['uid'],
+                          );
+
+                          // addLikeNotif(widget.snap['postId']);
+                        })
+                      : (() async {
+                          await FireStoreMethods().likePost(
+                              widget.snap['postId'],
+                              user.uid,
+                              widget.snap['likes']);
+                          await FireStoreMethods().addLiketoNotif(
+                              widget.snap['postId'],
+                              widget.snap['uid'],
+                              user.username,
+                              widget.snap['postUrl'],
+                              user.photoUrl.toString());
+
+                          // addLikeNotif(widget.snap['postId']);
+                        }),
                   icon: widget.snap['likes'].contains(user.uid)
                       ? const Icon(
                           Icons.favorite,
@@ -201,9 +247,13 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               IconButton(
-                onPressed: (() => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        CommentsScreen(postId: widget.snap['postId'])))),
+                onPressed: (() {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CommentsScreen(
+                          postId: widget.snap['postId'],
+                          postUrl: widget.snap['postUrl'],
+                          uid: widget.snap['uid'])));
+                }),
                 icon: const Icon(
                   Icons.comment_outlined,
                   color: Colors.black,

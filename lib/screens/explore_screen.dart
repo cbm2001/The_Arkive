@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../models/user.dart' as model;
 import '../widgets/post_card.dart';
 import '../providers/user_provider.dart';
+import 'notification.dart';
 
 class ExplorePage extends StatefulWidget {
   @override
@@ -57,7 +58,7 @@ class _ExplorePageState extends State<ExplorePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Notifications(),
+                  builder: (context) => NewNotification(),
                 ),
               );
             }),
@@ -89,9 +90,10 @@ class _ExplorePageState extends State<ExplorePage> {
           }
           return ListView.builder(
             itemCount: snapshot.data.docs.length,
-            itemBuilder: (ctx, index) =>
-                Card(child: PostCard(snap: snapshot.data.docs[index].data()),
-                elevation: 10,),
+            itemBuilder: (ctx, index) => Card(
+              child: PostCard(snap: snapshot.data.docs[index].data()),
+              elevation: 10,
+            ),
           );
         },
       ),
@@ -99,59 +101,6 @@ class _ExplorePageState extends State<ExplorePage> {
                   height: 600,
                   width: MediaQuery.of(context).size.width,
                   child: MyNavigation()),*/
-    );
-  }
-}
-
-class Notifications extends StatefulWidget {
-  Notifications({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _NavitionState createState() => _NavitionState();
-}
-
-class _NavitionState extends State<Notifications> {
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        Navigator.of(context).pop();
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          title: Text(
-            "Notification",
-            style: TextStyle(
-                color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600),
-          ),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 18.0,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          centerTitle: true,
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Container(
-                child: Text("Notification Body"),
-              ),
-            )
-          ],
-        ),
-      ),
     );
   }
 }
