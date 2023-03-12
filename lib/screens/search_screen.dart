@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/screens/map_screen.dart';
 import 'package:first_app/screens/profile_screen.dart';
+import 'package:first_app/screens/search_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:first_app/models/side_nav_bar.dart';
@@ -338,11 +340,8 @@ class _SearchNavBarState extends State<SearchNavBar> {
               alignment: Alignment.center,
               child: const Text('Page 2'),
             ),*/
-            Container(
-              height: MediaQuery.of(context).size.height,
-              color: Colors.white,
-              alignment: Alignment.center,
-              child: const Text('Page 2'),
+            Scaffold(
+              body: MapPage(),
             ),
             Container(
               height: 500,

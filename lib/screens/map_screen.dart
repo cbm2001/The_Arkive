@@ -70,9 +70,6 @@ class MapSampleState extends State<MapPage> {
   Widget build(BuildContext context) {
     GeoPoint currPoss = null;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Google Maps'),
-      ),
       body: Column(
         children: [
           Container(

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/screens/ar_camera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/search_screen.dart';
@@ -32,7 +33,7 @@ class _MyNavigationState extends State<MyNavigationBar> {
     ExplorePage(),
     SearchPage(),
     PostPage(),
-    MapPage(),
+    ARPage(),
     ProfilePage(
       uid: FirebaseAuth.instance.currentUser.uid,
     ),
