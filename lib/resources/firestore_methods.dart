@@ -438,4 +438,12 @@ class FireStoreMethods {
         .get()
         .then((value) => value.data());
   }
+
+  getPost(post) {
+    return FirebaseFirestore.instance
+        .collection('posts')
+        .doc(post)
+        .get()
+        .then((value) => value.data());
+  }
 }

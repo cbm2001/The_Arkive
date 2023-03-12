@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_app/providers/user_provider.dart';
+import 'package:first_app/screens/profile_screen.dart';
 import 'package:first_app/widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
+import 'package:first_app/widgets/post_card.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
@@ -98,10 +100,7 @@ class _FolderCardState extends State<FolderCard> {
               builder: (context) => folderScreen(
                 folderId: widget.snap["folderId"],
                 folderName: widget.snap["folderName"],
-                addpost: addpost,
-                deletepost: deletepost,
-                adduser: adduser,
-                deleteuser: deleteuser,
+                posts: widget.snap["posts"],
               ),
             ),
           );
@@ -360,96 +359,40 @@ class _FolderCardState extends State<FolderCard> {
       width: 100,
     );
   }
-}
 
-folderScreen(
-    {folderId,
-    folderName,
-    Function(String folderId, String postId) addpost,
-    Function(String folderId, String postId) deletepost,
-    Function(String folderId, String uid, String username) adduser,
-    Function(String folderId, String uid, String username) deleteuser}) {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text(folderName),
-    ),
-    body: Container(
-      child: Column(
-        children: [
-          // show the names of the users in the folder
-          StreamBuilder(
-            stream: FireStoreMethods().getUsersInFolder(folderId),
-            builder: (context, snap) {
-              if (!snap.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return ListView.builder(
-                itemCount: snap.data.documents.length,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot user = snap.data.documents[index];
-                  return ListTile(
-                    title: Text(user["username"]),
-                    subtitle: Text(user["uid"]),
-                    onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => folderScreen(
-                      //       folderId: folder["folderId"],
-                      //       folderName: folder["folderName"],
-                      //       addpost: addpost,
-                      //       deletepost: deletepost,
-                      //       adduser: adduser,
-                      //       deleteuser: deleteuser,
-                      //     ),
-                      //   ),
-                      // );
-                    },
-                  );
-                },
+  // folder screen has a list of all posts in the folder
+  folderScreen({folderId, folderName, posts}) {
+    // append '' to posts to avoid error
+    posts.add('');
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(folderName),
+          // list all posts in the folder using postCard widget
+        ),
+        body: FutureBuilder(
+          future: FirebaseFirestore.instance
+              .collection('posts')
+              .where("postId", whereIn: posts)
+              .get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
               );
-            },
-          ),
-          // show the names of the posts in the folder
-          StreamBuilder(
-            stream: FireStoreMethods().getPostsInFolder(folderId),
-            builder: (context, snap) {
-              if (!snap.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return ListView.builder(
-                itemCount: snap.data.documents.length,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot post = snap.data.documents[index];
-                  return ListTile(
-                    title: Text(post["caption"]),
-                    subtitle: Text(post["postId"]),
-                    onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => folderScreen(
-                      //       folderId: folder["folderId"],
-                      //       folderName: folder["folderName"],
-                      //       addpost: addpost,
-                      //       deletepost: deletepost,
-                      //       adduser: adduser,
-                      //       deleteuser: deleteuser,
-                      //     ),
-                      //   ),
-                      // );
-                    },
-                  );
-                },
+            }
+            if (snapshot.data.docs.isEmpty) {
+              return const Center(
+                child: Text('No posts found'),
               );
-            },
-          ),
-        ],
-      ),
-    ),
-  );
+            }
+
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: (snapshot.data as dynamic).docs.length,
+              itemBuilder: (ctx, index) =>
+                  PostCard(snap: snapshot.data.docs[index].data()),
+            );
+          },
+        ));
+  }
 }

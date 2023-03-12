@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_app/providers/user_provider.dart';
+import 'package:first_app/screens/profile_screen.dart';
 import 'package:first_app/widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,8 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   int commentLen = 0;
   bool isLikeAnimating = false;
+  int folderlen = 0;
+  List folderlist = [];
 
   @override
   void initState() {
@@ -39,7 +42,11 @@ class _PostCardState extends State<PostCard> {
           .doc(widget.snap['postId'])
           .collection('comments')
           .get();
+        QuerySnapshot folders = await FirebaseFirestore.instance.collection('folders').where('users', arrayContains: userData['uid']).get();
+          
       commentLen = snap.docs.length;
+      folderlen = folders.docs.length;
+      folderlist = folders.docs;
     } catch (err) {
       showSnackBar(
         context,
@@ -52,6 +59,17 @@ class _PostCardState extends State<PostCard> {
   deletePost(String postId) async {
     try {
       await FireStoreMethods().deletePost(postId);
+    } catch (err) {
+      showSnackBar(
+        context,
+        err.toString(),
+      );
+    }
+  }
+
+  addpostTF(String folderId, String postId) async {
+    try {
+      await FireStoreMethods().addPostToFolder(folderId, postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -227,7 +245,46 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               IconButton(
-                onPressed: (() {}),
+                onPressed: (() {
+                  // show list of folders (FirebaseFirestore.instance.collection('folders').where('users', arrayContains: user.uid).get() then use addPostToFolder() to add post to folder)
+                  showDialog(
+                    useRootNavigator: false,
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text("Add to folder"),
+                        content: Container(
+                        height: 300,
+                        width: 300,
+                        child: ListView.builder(
+                          itemCount: folderlen,
+                          itemBuilder: (context, index) {
+                            if (folderlist[index]['posts'].contains(widget.snap['postId'])) {
+                              return ListTile(
+                                title: Text(folderlist[index]['folderName']),
+                                subtitle: Text('Already in folder'),
+                              );
+                            }
+                            return ListTile(
+                              // check if post is already in folder
+                              
+                              title: Text(folderlist[index]['folderName']),
+
+                              onTap: () {
+                                addpostTF(folderlist[index]['folderId'], widget.snap['postId']);
+                                Navigator.of(context).pop();
+                              },
+                            );
+                          },
+                          
+                        ),
+                        
+                      ),
+                      );
+                    }
+                  );
+                  
+                }),
                 icon: const Icon(
                   Icons.bookmark_border_outlined,
                   color: Colors.black,
