@@ -96,6 +96,14 @@ class _NotifCardState extends State<NotifCard> {
         margin: EdgeInsets.only(left: 1.0, right: 1.0, top: 4.0, bottom: 4.0),
         color: Colors.white,
         child: ListTile(
+          onTap: (() {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => notifPost(snap: widget.snap),
+              ),
+            );
+          }),
           title: GestureDetector(
             onTap: (() {
               Navigator.push(
