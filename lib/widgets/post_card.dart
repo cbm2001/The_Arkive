@@ -177,9 +177,9 @@ class _PostCardState extends State<PostCard> {
                                           child: Text('Report Post'),
                                         ),
                                         onTap: () {
-                                          deletePost(
-                                            widget.snap['postId'].toString(),
-                                          );
+
+                                          var x = FirebaseFirestore.instance.collection("posts").doc(widget.snap['postId']);
+                                          x.update({"flag":false});
                                           // remove the dialog box
                                           Navigator.of(context).pop();
                                         }),

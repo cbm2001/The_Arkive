@@ -28,7 +28,8 @@ class FireStoreMethods {
       String profImage,
       // double latitude,
       // double longitude
-      GeoPoint geoLoc) async {
+      GeoPoint geoLoc
+      ) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
     try {
@@ -48,7 +49,8 @@ class FireStoreMethods {
           profImage: profImage,
           // longitude: longitude,
           // latitude: latitude
-          geoLoc: geoLoc);
+          geoLoc: geoLoc,
+      flag: false);
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
     } catch (err) {
@@ -428,7 +430,8 @@ class FireStoreMethods {
       String profImage,
       // double latitude,
       // double longitude
-      GeoPoint geoLoc) async {
+      GeoPoint geoLoc,
+      bool flag) async {
     String res = "Some error occurred";
     try {
       String postId = const Uuid().v1(); // creates unique id based on time
@@ -445,7 +448,8 @@ class FireStoreMethods {
           profImage: profImage,
           // longitude: longitude,
           // latitude: latitude
-          geoLoc: geoLoc);
+          geoLoc: geoLoc,
+      flag: false);
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
     } catch (err) {
