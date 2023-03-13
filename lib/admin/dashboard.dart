@@ -76,6 +76,7 @@ class _dashboardState extends State<dashboard> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),),
                 SizedBox(height: 10,),
+
                 TextButton(onPressed: (){
                   getData();
                 }, child: Row(

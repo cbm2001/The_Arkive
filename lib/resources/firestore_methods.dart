@@ -169,6 +169,7 @@ class FireStoreMethods {
           'commentId': commentId,
           'datePublished': DateTime.now(),
         });
+
         res = 'success';
         checkDoc();
         addComment();

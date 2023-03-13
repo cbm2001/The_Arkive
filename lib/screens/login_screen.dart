@@ -29,6 +29,7 @@ class _SignInScreenState extends State<SignInScreen> {
     String res = await AuthMethods().loginUser(
         email: _emailTextController.text,
         password: _passwordTextController.text);
+
     if (res == 'success') {
       checkDoc();
       addLogin();

@@ -29,6 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isLoading = false;
   Uint8List _image;
 
+
   void signUpUser() async {
     // set loading to true
     setState(() {

@@ -189,6 +189,7 @@ class _PostCardState extends State<PostCard> {
 
             //image section
           ),
+
           SizedBox(
               //height: MediaQuery.of(context).size.height,
               //width: double.infinity,
