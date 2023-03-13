@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:first_app/admin/analytics.dart';
 import 'package:first_app/screens/map_screen.dart';
 import 'package:first_app/screens/search_location.dart';
 import 'package:flutter/material.dart';
@@ -91,8 +90,6 @@ class _PostPageState extends State<PostPage> {
           // longitude
           geoLoc);
       if (res == "success") {
-        checkDoc();
-        addPost();
         setState(() {
           isLoading = false;
         });

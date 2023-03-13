@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:first_app/admin/analytics.dart';
 import 'package:first_app/screens/explore_screen.dart';
 import 'package:flutter/foundation.dart';
 //import 'package:first_app/screens/explore_screen.dart';
@@ -29,7 +28,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isLoading = false;
   Uint8List _image;
 
-
   void signUpUser() async {
     // set loading to true
     setState(() {
@@ -45,8 +43,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           bio: _bioTextController.text,
           file: _image);
       if (res == "success") {
-        checkDoc();
-        addSignup();
         /*setState(() {
         _isLoading = true;
       });*/

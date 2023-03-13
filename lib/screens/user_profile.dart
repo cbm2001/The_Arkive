@@ -13,7 +13,6 @@ import '../widgets/folder_card.dart';
 import '../widgets/post_card.dart';
 import '../utils/utils.dart';
 
-
 class UserProfilePage extends StatefulWidget {
   final String uid;
   const UserProfilePage({Key key, @required this.uid}) : super(key: key);

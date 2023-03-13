@@ -45,6 +45,9 @@ dependencies:
   vector_math:
   location: ^4.4.0
   camera: ^0.10.3+2
+  firebase_messaging: ^14.2.6
+  cached_network_image: ^3.2.3
+  timeago: ^3.3.0
 
 dev_dependencies:
   flutter_launcher_icons: "^0.12.0"
