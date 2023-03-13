@@ -179,7 +179,7 @@ class _PostCardState extends State<PostCard> {
                                         onTap: () {
 
                                           var x = FirebaseFirestore.instance.collection("posts").doc(widget.snap['postId']);
-                                          x.update({"flag":false});
+                                          x.update({"flag":true});
                                           // remove the dialog box
                                           Navigator.of(context).pop();
                                         }),
