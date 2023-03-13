@@ -48,6 +48,9 @@ class _PostDraftPageState extends State<PostDraftPage> {
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
 
+
+
+
   _selectImage(BuildContext parentContext) async {
     return showDialog(
       context: parentContext,
