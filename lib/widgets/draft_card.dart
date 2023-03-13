@@ -62,7 +62,7 @@ class _DraftCardState extends State<DraftCard> {
 
   @override
   Widget build(BuildContext context) {
-    final User user = Provider.of<UserProvider>(context).getUser;
+
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(vertical: 10),
@@ -220,14 +220,14 @@ class _DraftCardState extends State<DraftCard> {
               ),
               IconButton(
                 onPressed: () {
+                  var x = FirebaseFirestore.instance.collection("posts").doc(widget.snap['postId']);
                   //print("print");
                   //showDialog(context: context, builder: builder)
+                  x.delete();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => deleteDraft(
-                              widget.snap['postId'].toString(),
-                            )),
+                        builder: (context) => ProfilePage(uid: Provider.of<UserProvider>(context).getUser.uid)),
                   );
                 },
                 icon: const Icon(
