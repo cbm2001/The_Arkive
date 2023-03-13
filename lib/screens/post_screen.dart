@@ -746,10 +746,10 @@ class _PostPageState extends State<PostPage> {
 
   Future<bool> postImage(String uid, String username, String profImage) async {
     saveToGallery(context);
-    await Future.delayed(const Duration(milliseconds: 2500));
-    setState(() {
+     setState(() {
       isLoading = true;
     });
+    await Future.delayed(const Duration(milliseconds: 2500));
     // start the loading
     try {
       // upload to storage and db
@@ -1001,9 +1001,11 @@ class _PostPageState extends State<PostPage> {
                     height: 40,
                     width: 350,
                     child: reusableTextField("Write a caption",
-                        Icons.description, false, _descriptionController),
+                        Icons.description, 
+                        false, _descriptionController),
                     //maxLines: 8,
                   ),
+
                   SizedBox(
                     height: 5,
                     //floatingActionButton: _addTextToPost,
@@ -1031,32 +1033,41 @@ class _PostPageState extends State<PostPage> {
                               color: Colors.grey.shade700,
                             ),
                           ),
-                          ElevatedButton(
-                              onPressed: () => addDialog(context),
-                              child: Text(
-                                "Add other Images",
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                fixedSize: Size(
-                                    MediaQuery.of(context).size.width * 0.85,
-                                    MediaQuery.of(context).size.height * 0.04),
-                                backgroundColor:
-                                    Color.fromRGBO(255, 248, 185, 1),
-                                foregroundColor:
-                                    Color.fromRGBO(139, 134, 134, 1),
-                              )),
-                          ElevatedButton(
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () => addDialog(context),
+                                  child: Text(
+                                    "Add Image",
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(
+                                        MediaQuery.of(context).size.width * 0.40,
+                                        MediaQuery.of(context).size.height * 0.04),
+                                    backgroundColor:
+                                       Color.fromRGBO(192, 234, 240, 1),
+                                    foregroundColor:
+                                        Color.fromRGBO(139, 134, 134, 1),
+                                  )),
+                                  SizedBox(
+                                    width: 12,
+                                  ),
+                                  ElevatedButton(
                               onPressed: () => addNewDialog(context),
-                              child: Text("Add Text to Image"),
+                              child: Text("Add Text"),
                               style: ElevatedButton.styleFrom(
                                 fixedSize: Size(
-                                    MediaQuery.of(context).size.width * 0.85,
+                                    MediaQuery.of(context).size.width * 0.40,
                                     MediaQuery.of(context).size.height * 0.04),
                                 backgroundColor:
-                                    Color.fromRGBO(255, 248, 185, 1),
+                                    Color.fromRGBO(192, 234, 240, 1),
                                 foregroundColor:
                                     Color.fromRGBO(139, 134, 134, 1),
                               )),
+                            ],
+                          ),
+                          
                           SizedBox(
                             height: 40,
                             child: ListView(
@@ -1335,60 +1346,70 @@ class _PostPageState extends State<PostPage> {
                               ),
                             ),
                           ),
-                          ElevatedButton(
-                              onPressed: () {
-                                print("here");
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        MapSearchPage(gpVal: (value) {
-                                      print("and here");
-                                      setState(() {
-                                        geoLoc = value;
-                                      });
-                                    }),
+                         
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        print("here");
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                MapSearchPage(gpVal: (value) {
+                                              print("and here");
+                                              setState(() {
+                                                geoLoc = value;
+                                              });
+                                            }),
+                                          ),
+                                        );
+                                      },
+                                      child: Text("Search Location"),
+                                      style: ElevatedButton.styleFrom(
+                                        fixedSize: Size(
+                                            MediaQuery.of(context).size.width * 0.40,
+                                            MediaQuery.of(context).size.height * 0.04),
+                                        backgroundColor:
+                                            Color.fromRGBO(192, 234, 240, 1),
+                                        foregroundColor:
+                                            Color.fromRGBO(139, 134, 134, 1),
+                                      )),
+                                  SizedBox(
+                                    width: 12,
                                   ),
-                                );
-                              },
-                              child: Text("Search for location"),
-                              style: ElevatedButton.styleFrom(
-                                fixedSize: Size(
-                                    MediaQuery.of(context).size.width * 0.85,
-                                    MediaQuery.of(context).size.height * 0.04),
-                                backgroundColor:
-                                    Color.fromRGBO(192, 234, 240, 1),
-                                foregroundColor:
-                                    Color.fromRGBO(139, 134, 134, 1),
-                              )),
-                          ElevatedButton(
-                              onPressed: () async {
-                                setState(() {
-                                  isLoading = true;
-                                });
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      setState(() {
+                                        isLoading = true;
+                                      });
 
-                                GeoPoint pos = await determinePosition();
+                                      GeoPoint pos = await determinePosition();
 
-                                setState(() {
-                                  isLoading = false;
-                                  String x = '123';
+                                      setState(() {
+                                        isLoading = false;
+                                        String x = '123';
 
-                                  geoLoc = pos;
-                                  if (!isLoading) {
-                                    showSnackBar(context, "location received!");
-                                  }
-                                });
-                              },
-                              child: Text("Tag Current location"),
-                              style: ElevatedButton.styleFrom(
-                                fixedSize: Size(
-                                    MediaQuery.of(context).size.width * 0.85,
-                                    MediaQuery.of(context).size.height * 0.04),
-                                backgroundColor:
-                                    Color.fromRGBO(192, 234, 240, 1),
-                                foregroundColor:
-                                    Color.fromRGBO(139, 134, 134, 1),
-                              )),
+                                        geoLoc = pos;
+                                        if (!isLoading) {
+                                          showSnackBar(context, "location received!");
+                                        }
+                                      });
+                                    },
+                                    child: Text("Current location"),
+                                    style: ElevatedButton.styleFrom(
+                                      fixedSize: Size(
+                                          MediaQuery.of(context).size.width * 0.40,
+                                          MediaQuery.of(context).size.height * 0.04),
+                                      backgroundColor:
+                                          Color.fromRGBO(192, 234, 240, 1),
+                                      foregroundColor:
+                                          Color.fromRGBO(139, 134, 134, 1),
+                                    )),
+                                  ],
+                                ),
+                            
                           SizedBox(
                             height: 5,
                           ),

@@ -17,9 +17,12 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
     obscureText: isPasswordType,
     enableSuggestions: !isPasswordType,
     autocorrect: !isPasswordType,
-    cursorColor: Colors.black,
+    cursorColor: Colors.grey.shade400,
+    cursorHeight: 21,      
+    cursorRadius:const Radius.circular(500),
     style: TextStyle(color: Colors.black),
     decoration: InputDecoration(
+      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       prefixIcon: Icon(
         icon,
         //color: Colors.white70,
