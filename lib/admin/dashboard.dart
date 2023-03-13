@@ -86,11 +86,11 @@ class _dashboardState extends State<dashboard> {
                   ],
                 )),
                 Text("Today's activity...",),
-                Row(children: [tile("Posts\n",userData['posts']),
+                Row(mainAxisAlignment: MainAxisAlignment.center,children: [tile("Posts\n",userData['posts']),
                   tile("Likes\n",userData['likes']),],),
-                Row(children: [tile("Logins\n",userData['login']),
+                Row(mainAxisAlignment: MainAxisAlignment.center,children: [tile("Logins\n",userData['login']),
                   tile("New\n Sign-Ups",userData['signup']),],),
-                Row(children: [tile("Reported Posts",userData['reportedPosts']),
+                Row(mainAxisAlignment: MainAxisAlignment.center,children: [tile("Reported Posts",userData['reportedPosts']),
                   tile("Comments\n",userData['comments']),],)
 
 

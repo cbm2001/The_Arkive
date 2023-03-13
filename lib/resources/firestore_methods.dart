@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:first_app/admin/analytics.dart';
 import '../screens/post_screen.dart';
 import '../models/post.dart';
 import '../models/drafts.dart';
@@ -139,6 +140,8 @@ class FireStoreMethods {
         });
       }
       res = 'success';
+      checkDoc();
+      addLike();
     } catch (err) {
       res = err.toString();
     }
@@ -167,6 +170,8 @@ class FireStoreMethods {
           'datePublished': DateTime.now(),
         });
         res = 'success';
+        checkDoc();
+        addComment();
       } else {
         res = "Please enter text";
       }
