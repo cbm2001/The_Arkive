@@ -28,8 +28,7 @@ class FireStoreMethods {
       String profImage,
       // double latitude,
       // double longitude
-      GeoPoint geoLoc
-      ) async {
+      GeoPoint geoLoc) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
     try {
@@ -50,7 +49,7 @@ class FireStoreMethods {
           // longitude: longitude,
           // latitude: latitude
           geoLoc: geoLoc,
-      flag: false);
+          flag: false);
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
     } catch (err) {
@@ -291,7 +290,7 @@ class FireStoreMethods {
             notifId: notifId,
             text: text,
             username: username, // User who liked the post
-            userId: FirebaseAuth.instance.currentUser.uid, // owner id
+            userId: FirebaseAuth.instance.currentUser.uid, // user id
             userProfile: photoUrl,
             postId: postId,
             postUrl: postUrl,
@@ -309,34 +308,6 @@ class FireStoreMethods {
     }
     return res;
   }
-
-  /* Future<String> getNotif(String postId, String uid, String username,
-      String postUrl, String photoUrl, String text) async {
-    String res = "Some error occurred";
-    bool isNotPostOwner = FirebaseAuth.instance.currentUser.uid != uid;
-    if (isNotPostOwner) {
-      try {
-        _firestore
-            .collection("notifications")
-            .doc(uid)
-            .collection("notifItems")
-            .add({
-          "type": "Comments",
-          "text": text,
-          "username": username, // User who liked the post
-          "userId": FirebaseAuth.instance.currentUser.uid, // owner id
-          "userProfile": photoUrl,
-          "postId": postId,
-          "postUrl": postUrl,
-          "timeStamp": Timestamp.now()
-        });
-        //if (FirebaseAuth.instance.currentUser.uid == uid) {}
-      } catch (err) {
-        res = err.toString();
-      }
-    }
-    return res;
-  }*/
 
   /*Future<String> deleteComment(String postId, String text, String uid,
       String name, String profilePic) async {
@@ -449,7 +420,7 @@ class FireStoreMethods {
           // longitude: longitude,
           // latitude: latitude
           geoLoc: geoLoc,
-      flag: false);
+          flag: false);
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
     } catch (err) {
@@ -573,6 +544,35 @@ class FireStoreMethods {
       res = "success";
     } catch (err) {
       res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> addRequesttoNotif(
+      String folder, String uid, String username, String photoUrl) async {
+    String res = "Some error occurred";
+    String notifId = const Uuid().v1();
+    bool isNotFolderOwner = FirebaseAuth.instance.currentUser.uid != uid;
+    if (isNotFolderOwner) {
+      try {
+        NotificationItems item = NotificationItems(
+            type: "folders",
+            folder: folder,
+            notifId: notifId,
+            username: username, // User who requested it
+            userId: FirebaseAuth.instance.currentUser.uid, // owner id
+            userProfile: photoUrl,
+            timeStamp: Timestamp.now());
+        _firestore
+            .collection("notifications")
+            .doc(uid) // owner id
+            .collection("notifItems")
+            .doc(notifId)
+            .set(item.toJson());
+        //if (FirebaseAuth.instance.currentUser.uid == uid) {}
+      } catch (err) {
+        res = err.toString();
+      }
     }
     return res;
   }

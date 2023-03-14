@@ -10,6 +10,7 @@ class NotificationItems {
   final String text;
   final Timestamp timeStamp;
   final String notifId;
+  final String folder;
 
   NotificationItems({
     this.notifId,
@@ -21,6 +22,7 @@ class NotificationItems {
     this.userId,
     this.userProfile,
     this.username,
+    this.folder,
   });
 
   static NotificationItems fromDocument(DocumentSnapshot doc) {
@@ -36,6 +38,7 @@ class NotificationItems {
       userId: snapshot['userId'],
       userProfile: snapshot['userProfile'],
       username: snapshot['username'],
+      folder: snapshot['folder'],
     );
   }
 
@@ -49,5 +52,6 @@ class NotificationItems {
         'userId': userId,
         'userProfile': userProfile,
         'username': username,
+        'folder': folder,
       };
 }

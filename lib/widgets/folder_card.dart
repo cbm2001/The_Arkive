@@ -340,6 +340,16 @@ class _FolderCardState extends State<FolderCard> {
                                 .getUser
                                 .username);
                         Navigator.pop(context);
+                        FireStoreMethods().addRequesttoNotif(
+                            widget.snap['folderName'],
+                            widget.snap['uid'],
+                            Provider.of<UserProvider>(context, listen: false)
+                                .getUser
+                                .username,
+                            Provider.of<UserProvider>(context, listen: false)
+                                .getUser
+                                .photoUrl
+                                .toString());
                       },
                     ),
                     ElevatedButton(

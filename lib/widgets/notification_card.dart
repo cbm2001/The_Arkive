@@ -80,8 +80,11 @@ class _NotifCardState extends State<NotifCard> {
     if (widget.snap['type'] == 'likes') {
       notificationItemText = "liked your post";
     } else if (widget.snap['type'] == 'Comments') {
-      var varia = widget.snap['text'];
-      notificationItemText = " replied : $varia";
+      var text = widget.snap['text'];
+      notificationItemText = " replied : $text";
+    } else if (widget.snap['type'] == 'folders') {
+      var text = widget.snap['folder'];
+      notificationItemText = "sent a request to collaborate on folder $text";
     } else {
       notificationItemText = "Error: Unknown type $widget.snap['type'] ";
     }
@@ -97,21 +100,43 @@ class _NotifCardState extends State<NotifCard> {
         color: Colors.white,
         child: ListTile(
           onTap: (() {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => notifPost(snap: widget.snap),
-              ),
-            );
+            widget.snap['type'] == 'folders'
+                ? Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfilePage(
+                          uid: FirebaseAuth.instance.currentUser.uid),
+                    ),
+                  )
+                //Navigator.pop(context);
+                : Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => notifPost(snap: widget.snap),
+                    ),
+                  );
+            // Navigator.pop(context);
           }),
           title: GestureDetector(
             onTap: (() {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => notifPost(snap: widget.snap),
-                ),
-              );
+              if (widget.snap['type'] == 'folders') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ProfilePage(uid: FirebaseAuth.instance.currentUser.uid),
+                  ),
+                );
+                Navigator.pop(context);
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => notifPost(snap: widget.snap),
+                  ),
+                );
+                Navigator.pop(context);
+              }
             }),
             child: Row(
               children: [
@@ -197,168 +222,6 @@ class _NotifCardState extends State<NotifCard> {
       ),
     );
   }
-
-  /*Widget build(BuildContext context) {
-    return Container(
-      child: ElevatedButton(
-        child: Text(widget.snap["folderName"]),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => folderScreen(
-                folderId: widget.snap["folderId"],
-                folderName: widget.snap["folderName"],
-                posts: widget.snap["posts"],
-              ),
-            ),
-          );
-        },
-       
-                  
-
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text("Add user"),
-                                content: Container(
-                                  height: 300,
-                                  width: 300,
-                                  child: ListView.builder(
-                                    itemCount: widget.snap["requests"].length,
-                                    itemBuilder: (context, index) {
-                                      return FutureBuilder(
-                                        future: FireStoreMethods().getUser(
-                                            widget.snap["requests"][index]),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasData) {
-                                            return ListTile(
-                                              title: Text(
-                                                  snapshot.data["username"]),
-                                              trailing: ElevatedButton(
-                                                child: Text("Add"),
-                                                onPressed: () {
-                                                  FireStoreMethods()
-                                                      .addUserToFolder(
-                                                    widget.snap["folderId"],
-                                                    snapshot.data["uid"],
-                                                    snapshot.data["username"],
-                                                  );
-                                                  Navigator.pop(context);
-                                                },
-                                              ),
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  ElevatedButton(
-                                    child: Text("Cancel"),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text("Add user"),
-                                content: Text(
-                                    "There are no requests to add to this folder"),
-                                actions: <Widget>[
-                                  ElevatedButton(
-                                    child: Text("Cancel"),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
-                    ),
-                    // remove user
-                   
-                                
-                  ],
-                );
-              },
-            );
-          }
-          // else show request to join button if not already requested
-          else if (widget.snap["requests"].contains(
-              Provider.of<UserProvider>(context, listen: false).getUser.uid)) {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text("Request to join"),
-                  content:
-                      Text("You have already requested to join this folder"),
-                  actions: <Widget>[
-                    ElevatedButton(
-                      child: Text("Ok"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          } else {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text("Request to join"),
-                  content: Text(
-                      "Are you sure you want to request to join this folder?"),
-                  actions: <Widget>[
-                    ElevatedButton(
-                      child: Text("Yes"),
-                      onPressed: () {
-                        FireStoreMethods().requestToJoinFolder(
-                            widget.snap["folderId"],
-                            Provider.of<UserProvider>(context, listen: false)
-                                .getUser
-                                .uid,
-                            Provider.of<UserProvider>(context, listen: false)
-                                .getUser
-                                .username);
-                        Navigator.pop(context);
-                      },
-                    ),
-                    ElevatedButton(
-                      child: Text("No"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          }
-        },
-      ),
-      height: 100,
-      width: 100,
-    );
-  }*/
 }
 
 class notifPost extends StatefulWidget {
