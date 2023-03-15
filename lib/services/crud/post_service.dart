@@ -1,16 +1,18 @@
-/* import 'dart:ffi';
+import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../screens/post_screen.dart';
-import '../models/post.dart';
-import '../models/drafts.dart';
-import '../models/folders.dart';
-import '/resources/storage_methods.dart';
+import 'package:first_app/models/drafts.dart';
+import 'package:first_app/models/post.dart';
+import 'package:first_app/services/crud/firebase_storage_service.dart';
+
+//import '../models/folders.dart';
+//import '/resources/storage_methods.dart';
 import 'package:uuid/uuid.dart';
 
-class FireStoreMethods {
+class PostService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorageService _storage = FirebaseStorageService();
 
   Future<String> uploadPost(
       String description,
@@ -27,7 +29,7 @@ class FireStoreMethods {
     String res = "Some error occurred";
     try {
       String photoUrl =
-          await StorageMethods().uploadImageToStorage('posts', file, true);
+          await _storage.uploadImageToStorage('posts', file, true);
       String postId = const Uuid().v1(); // creates unique id based on time
       Post post = Post(
           description: description,
@@ -102,7 +104,7 @@ class FireStoreMethods {
     String res = "Some error occurred";
     try {
       String photoUrl =
-          await StorageMethods().uploadImageToStorage('drafts', file, true);
+          await _storage.uploadImageToStorage('drafts', file, true);
       String postId = const Uuid().v1(); // creates unique id based on time
       Draft draft = Draft(
         description: description,
@@ -200,34 +202,6 @@ class FireStoreMethods {
     return res;
   }
 
-  Future<void> followUser(String uid, String followId) async {
-    try {
-      DocumentSnapshot snap =
-          await _firestore.collection('Users').doc(uid).get();
-      List following = (snap.data() as dynamic)['following'];
-
-      if (following.contains(followId)) {
-        await _firestore.collection('Users').doc(followId).update({
-          'followers': FieldValue.arrayRemove([uid])
-        });
-
-        await _firestore.collection('Users').doc(uid).update({
-          'following': FieldValue.arrayRemove([followId])
-        });
-      } else {
-        await _firestore.collection('Users').doc(followId).update({
-          'followers': FieldValue.arrayUnion([uid])
-        });
-
-        await _firestore.collection('Users').doc(uid).update({
-          'following': FieldValue.arrayUnion([followId])
-        });
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
   uploadDraftPost(
       String description,
       String postURL,
@@ -264,157 +238,6 @@ class FireStoreMethods {
     return res;
   }
 
-  Future<String> createFolder(
-      String folderName,
-      String uid,
-      String username,
-      List<dynamic> posts,
-      List<dynamic> users,
-      int userCount,
-      List<dynamic> requests) async {
-    String res = "Some error occurred";
-    try {
-      String folderId = const Uuid().v1();
-      Folder folder = Folder(
-        folderName: folderName,
-        folderId: folderId,
-        uid: uid,
-        username: username,
-        users: users,
-        posts: posts,
-        userCount: userCount,
-        requests: requests,
-      );
-      _firestore.collection('folders').doc(folderId).set(folder.toJson());
-      res = "success";
-    } catch (err) {
-      res = err.toString();
-    }
-    return res;
-  }
-
-  Future<String> addPostToFolder(String folderId, String postId) async {
-    String res = "Some error occurred";
-    try {
-      _firestore.collection('folders').doc(folderId).update({
-        'posts': FieldValue.arrayUnion([postId])
-      });
-      res = "success";
-    } catch (err) {
-      res = err.toString();
-    }
-    return res;
-  }
-
-  Future<String> removePostFromFolder(String folderId, String postId) async {
-    String res = "Some error occurred";
-    try {
-      _firestore.collection('folders').doc(folderId).update({
-        'posts': FieldValue.arrayRemove([postId])
-      });
-      res = "success";
-    } catch (err) {
-      res = err.toString();
-    }
-    return res;
-  }
-
-  Future<String> addUserToFolder(
-      String folderId, String uid, String username) async {
-    String res = "Some error occurred";
-    try {
-      _firestore.collection('folders').doc(folderId).update({
-        'users': FieldValue.arrayUnion([uid]),
-        'userCount': FieldValue.increment(1),
-        // remove from requests
-        'requests': FieldValue.arrayRemove([uid])
-      });
-      res = "success";
-    } catch (err) {
-      res = err.toString();
-    }
-    return res;
-  }
-
-  Future<String> removeUserFromFolder(
-      String folderId, String uid, String username) async {
-    String res = "Some error occurred";
-    try {
-      _firestore.collection('folders').doc(folderId).update({
-        'users': FieldValue.arrayRemove([uid]),
-        'userCount': FieldValue.increment(-1),
-      });
-      // if count is 0, delete folder
-      DocumentSnapshot snap =
-          await _firestore.collection('folders').doc(folderId).get();
-      int count = (snap.data() as dynamic)['userCount'];
-      if (count == 0) {
-        await _firestore.collection('folders').doc(folderId).delete();
-      }
-      res = "success";
-    } catch (err) {
-      res = err.toString();
-    }
-    return res;
-  }
-
-  Future<String> deleteFolder(String folderId) async {
-    String res = "Some error occurred";
-    try {
-      await _firestore.collection('folders').doc(folderId).delete();
-      res = 'success';
-    } catch (err) {
-      res = err.toString();
-    }
-    return res;
-  }
-
-  Future<String> requestToJoinFolder(
-      String folderId, String uid, String username) async {
-    String res = "Some error occurred";
-    try {
-      _firestore.collection('folders').doc(folderId).update({
-        'requests': FieldValue.arrayUnion([uid])
-      });
-      res = "success";
-    } catch (err) {
-      res = err.toString();
-    }
-    return res;
-  }
-
-  Future<String> favoriteFolder(String folderId, String uid) async {
-    String res = "Some error occurred";
-    try {
-      _firestore.collection('folders').doc(folderId).update({
-        'favorites': FieldValue.arrayUnion([uid])
-      });
-      res = "success";
-    } catch (err) {
-      res = err.toString();
-    }
-    return res;
-  }
-
-  // folders has an attribute called users which is a list of uids, getfolder returns list of folders that can be accessed by the user
-  Stream<List<Folder>> getFolders(String uid) {
-    return FirebaseFirestore.instance
-        .collection('folders')
-        .where('users', arrayContains: uid)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Folder.fromJson(doc.data(), doc.id))
-            .toList());
-  }
-
-  getUsersInFolder(folderId) {
-    return FirebaseFirestore.instance
-        .collection('folders')
-        .doc(folderId)
-        .get()
-        .then((value) => value.data()['users']);
-  }
-
   getUidFromUsername(String username) {
     return FirebaseFirestore.instance
         .collection('Users')
@@ -447,4 +270,3 @@ class FireStoreMethods {
         .then((value) => value.data());
   }
 }
- */

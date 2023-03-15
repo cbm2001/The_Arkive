@@ -7,6 +7,9 @@ import 'package:first_app/models/folders.dart';
 import 'package:first_app/screens/post_screen.dart';
 import 'package:first_app/resources/auth_methods.dart';
 import 'package:first_app/screens/explore_screen.dart';
+import 'package:first_app/services/crud/firebase_storage_service.dart';
+import 'package:first_app/services/crud/folder_service.dart';
+import 'package:first_app/services/crud/user_service.dart';
 import 'package:first_app/widgets/folder_card.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -261,8 +264,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               );*/
                                       );
                                     },
-                                  )
-                                  ),
+                                  )),
                               SizedBox(
                                 height: 400,
                                 width: 400,
@@ -318,7 +320,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   ElevatedButton(
                                                     child: Text("Create"),
                                                     onPressed: () {
-                                                      FireStoreMethods()
+                                                      FolderService()
                                                           .createFolder(
                                                         folderName,
                                                         Provider.of<UserProvider>(
@@ -424,7 +426,7 @@ class _ProfilePageState extends State<ProfilePage> {
               SizedBox(height: 150),
               ElevatedButton(
                 onPressed: () async {
-                  await AuthMethods().signOut();
+                  await UserService().signOut();
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => MyHomePage()),
@@ -673,7 +675,7 @@ Widget updatePfp(BuildContext context) {
                       onPressed: () async {
                         Uint8List im = await pickImage(ImageSource.gallery);
                         // set state because we need to display the image we selected on the circle avatar
-                        String photoUrl = await StorageMethods()
+                        String photoUrl = await FirebaseStorageService()
                             .uploadImageToStorage('profilePics', im, false);
                         y.update({
                           "photoUrl": "$photoUrl",

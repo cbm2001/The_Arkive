@@ -1,13 +1,15 @@
-/* import 'dart:typed_data';
+import 'dart:typed_data';
 
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
+
+import '../auth/firebase_auth_service.dart';
 //import 'package:flutter/foundation.dart';
 //import 'package:uuid/uuid.dart';
 
-class StorageMethods {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class FirebaseStorageService {
+  final AuthService _auth = AuthService();
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   // adding image to firebase storage
@@ -35,4 +37,3 @@ class StorageMethods {
   Future shiftDraftToPost(
       String childName, String PostURL, bool isPost) async {}
 }
- */

@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_app/screens/map_screen.dart';
 import 'package:first_app/screens/search_location.dart';
+import 'package:first_app/services/crud/post_service.dart';
+import 'package:first_app/services/location/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
@@ -78,7 +80,7 @@ class _PostPageState extends State<PostPage> {
     // start the loading
     try {
       // upload to storage and db
-      String res = await FireStoreMethods().uploadPost(
+      String res = await PostService().uploadPost(
           _descriptionController.text,
           _file,
           uid,
@@ -365,7 +367,7 @@ class _PostPageState extends State<PostPage> {
     // start the loading
     try {
       // upload to storage and db
-      String res = await FireStoreMethods().uploadDraft(
+      String res = await PostService().uploadDraft(
           _descriptionController.text,
           _file,
           uid,

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/screens/explore_screen.dart';
+import 'package:first_app/services/crud/user_service.dart';
 import 'package:flutter/foundation.dart';
 //import 'package:first_app/screens/explore_screen.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
     if (_passwordTextController.text == _confirmpasswordTextController.text) {
       // signup user using our authmethodds
-      String res = await AuthMethods().signUpUser(
+      String res = await UserService().signUpUser(
           email: _emailTextController.text,
           password: _passwordTextController.text,
           username: _userNameTextController.text,

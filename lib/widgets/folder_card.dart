@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_app/providers/user_provider.dart';
 import 'package:first_app/screens/profile_screen.dart';
+import 'package:first_app/services/crud/folder_service.dart';
 import 'package:first_app/widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
 import 'package:first_app/widgets/post_card.dart';
@@ -31,7 +32,7 @@ class _FolderCardState extends State<FolderCard> {
 
   addpost(String folderId, String postId) async {
     try {
-      await FireStoreMethods().addPostToFolder(folderId, postId);
+      await FolderService().addPostToFolder(folderId, postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -57,7 +58,7 @@ class _FolderCardState extends State<FolderCard> {
         );
         return;
       }
-      await FireStoreMethods().addUserToFolder(folderId, uid, username);
+      await FolderService().addUserToFolder(folderId, uid, username);
     } catch (err) {
       showSnackBar(
         context,
@@ -68,7 +69,7 @@ class _FolderCardState extends State<FolderCard> {
 
   deletepost(String folderId, String postId) {
     try {
-      FireStoreMethods().removePostFromFolder(folderId, postId);
+      FolderService().removePostFromFolder(folderId, postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -79,7 +80,7 @@ class _FolderCardState extends State<FolderCard> {
 
   deleteuser(String folderId, String uid, String username) {
     try {
-      FireStoreMethods().removeUserFromFolder(folderId, uid, username);
+      FolderService().removeUserFromFolder(folderId, uid, username);
     } catch (err) {
       showSnackBar(
         context,
@@ -120,8 +121,7 @@ class _FolderCardState extends State<FolderCard> {
                     ElevatedButton(
                       child: Text("Delete folder"),
                       onPressed: () {
-                        FireStoreMethods()
-                            .deleteFolder(widget.snap["folderId"]);
+                        FolderService().deleteFolder(widget.snap["folderId"]);
                         Navigator.pop(context);
                       },
                     ),
@@ -146,7 +146,7 @@ class _FolderCardState extends State<FolderCard> {
                                     itemCount: widget.snap["requests"].length,
                                     itemBuilder: (context, index) {
                                       return FutureBuilder(
-                                        future: FireStoreMethods().getUser(
+                                        future: FolderService().getUser(
                                             widget.snap["requests"][index]),
                                         builder: (context, snapshot) {
                                           if (snapshot.hasData) {
@@ -156,7 +156,7 @@ class _FolderCardState extends State<FolderCard> {
                                               trailing: ElevatedButton(
                                                 child: Text("Add"),
                                                 onPressed: () {
-                                                  FireStoreMethods()
+                                                  FolderService()
                                                       .addUserToFolder(
                                                     widget.snap["folderId"],
                                                     snapshot.data["uid"],
@@ -226,7 +226,7 @@ class _FolderCardState extends State<FolderCard> {
                                     itemCount: widget.snap["users"].length,
                                     itemBuilder: (context, index) {
                                       return FutureBuilder(
-                                        future: FireStoreMethods().getUser(
+                                        future: FolderService().getUser(
                                             widget.snap["users"][index]),
                                         builder: (context, snapshot) {
                                           if (snapshot.hasData) {
@@ -236,7 +236,7 @@ class _FolderCardState extends State<FolderCard> {
                                               trailing: ElevatedButton(
                                                 child: Text("Remove"),
                                                 onPressed: () {
-                                                  FireStoreMethods()
+                                                  FolderService()
                                                       .removeUserFromFolder(
                                                     widget.snap["folderId"],
                                                     snapshot.data["uid"],
@@ -331,7 +331,7 @@ class _FolderCardState extends State<FolderCard> {
                     ElevatedButton(
                       child: Text("Yes"),
                       onPressed: () {
-                        FireStoreMethods().requestToJoinFolder(
+                        FolderService().requestToJoinFolder(
                             widget.snap["folderId"],
                             Provider.of<UserProvider>(context, listen: false)
                                 .getUser

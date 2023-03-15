@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/services/crud/user_service.dart';
 //import 'package:first_app/screens/age_form_check.dart';
 import 'package:flutter/material.dart';
 import '../resources/auth_methods.dart';
@@ -25,7 +26,7 @@ class _SignInScreenState extends State<SignInScreen> {
     setState(() {
       _isLoading = true;
     });
-    String res = await AuthMethods().loginUser(
+    String res = await UserService().loginUser(
         email: _emailTextController.text,
         password: _passwordTextController.text);
     if (res == 'success') {

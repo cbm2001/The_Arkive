@@ -1,3 +1,6 @@
+import 'package:first_app/services/auth/firebase_auth_service.dart';
+import 'package:first_app/services/auth/firebase_options.dart';
+
 import 'resources/firebase_options.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,6 +17,7 @@ import 'providers/user_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  //await AuthService().initialize();
   runApp(MyApp());
 }
 

@@ -4,6 +4,7 @@ import 'package:first_app/resources/locationMethods.dart';
 import 'package:first_app/screens/ScrapBook.dart';
 import 'package:first_app/screens/post_draft_screen.dart';
 import 'package:first_app/screens/profile_screen.dart';
+import 'package:first_app/services/location/location_service.dart';
 import 'package:first_app/widgets/position_services.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
