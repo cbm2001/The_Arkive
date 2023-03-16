@@ -21,6 +21,8 @@ class UserProfilePage extends StatefulWidget {
   _UserProfilePageState createState() => _UserProfilePageState();
 }
 
+
+
 class _UserProfilePageState extends State<UserProfilePage> {
   //const SearchPage({Key key}) : super(key: key);
 
