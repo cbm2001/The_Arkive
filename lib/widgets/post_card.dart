@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_app/providers/user_provider.dart';
 import 'package:first_app/screens/profile_screen.dart';
@@ -11,6 +13,12 @@ import 'package:provider/provider.dart';
 import '../models/user.dart';
 import '../resources/firestore_methods.dart';
 import '../utils/utils.dart';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 
 class PostCard extends StatefulWidget {
   final snap;
@@ -177,9 +185,10 @@ class _PostCardState extends State<PostCard> {
                                           child: Text('Report Post'),
                                         ),
                                         onTap: () {
-
-                                          var x = FirebaseFirestore.instance.collection("posts").doc(widget.snap['postId']);
-                                          x.update({"flag":true});
+                                          var x = FirebaseFirestore.instance
+                                              .collection("posts")
+                                              .doc(widget.snap['postId']);
+                                          x.update({"flag": true});
                                           // remove the dialog box
                                           Navigator.of(context).pop();
                                         }),
@@ -254,7 +263,19 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               IconButton(
-                onPressed: (() {}),
+                onPressed: (() async {
+                  final urlImage = widget.snap['postUrl'];
+                  final url = Uri.parse(urlImage);
+                  final response = await http.get(url);
+                  final bytes = response.bodyBytes;
+                  final temp = await getTemporaryDirectory();
+                  final path = '${temp.path}/image.jpg';
+                  File(path).writeAsBytesSync(bytes);
+                  await Share.shareFiles([path],
+                      text: 'Check out the Scrapboard I made at The Arkive');
+                  // await Share.share(text: 'Hi', [path]);
+                  // Share.share(text);
+                }),
                 icon: const Icon(
                   Icons.send_outlined,
                   color: Colors.black,
