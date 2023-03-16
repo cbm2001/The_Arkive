@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/admin/analytics.dart';
 import 'package:first_app/models/notif.dart';
 import 'package:first_app/screens/notification.dart';
 import 'package:flutter/widgets.dart';
@@ -52,6 +53,8 @@ class FireStoreMethods {
           flag: false);
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
+      checkDoc();
+      addPost();
     } catch (err) {
       res = err.toString();
     }
@@ -149,6 +152,8 @@ class FireStoreMethods {
 
       //}
       res = 'success';
+      checkDoc();
+      addLike();
     } catch (err) {
       res = err.toString();
     }
@@ -269,6 +274,8 @@ class FireStoreMethods {
           'datePublished': DateTime.now(),
         });
         res = 'success';
+        checkDoc();
+        addComment();
       } else {
         res = "Please enter text";
       }

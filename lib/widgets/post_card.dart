@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:first_app/admin/analytics.dart';
 import 'package:first_app/providers/user_provider.dart';
 import 'package:first_app/screens/profile_screen.dart';
 import 'package:first_app/widgets/like_animation.dart';
@@ -177,7 +178,8 @@ class _PostCardState extends State<PostCard> {
                                           child: Text('Report Post'),
                                         ),
                                         onTap: () {
-
+                                          checkDoc();
+                                          addReportedPosts();
                                           var x = FirebaseFirestore.instance.collection("posts").doc(widget.snap['postId']);
                                           x.update({"flag":true});
                                           // remove the dialog box

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/admin/analytics.dart';
 //import 'package:first_app/screens/age_form_check.dart';
 import 'package:flutter/material.dart';
 import '../resources/auth_methods.dart';
@@ -29,6 +30,8 @@ class _SignInScreenState extends State<SignInScreen> {
         email: _emailTextController.text,
         password: _passwordTextController.text);
     if (res == 'success') {
+      checkDoc();
+      addLogin();
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => MyNavigationBar()));
 

@@ -1,3 +1,5 @@
+import 'package:first_app/admin/panel.dart';
+
 import 'admin/dashboard.dart';
 import 'resources/firebase_options.dart';
 
@@ -178,7 +180,7 @@ class MyHomePage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => dashboard()),
+                          builder: (context) => panel()),
                     );
                   }),
                   child: Text('Admin'),
