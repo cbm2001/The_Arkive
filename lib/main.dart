@@ -1,3 +1,4 @@
+import 'package:first_app/admin/admin_login.dart';
 import 'package:first_app/admin/panel.dart';
 
 import 'admin/dashboard.dart';
@@ -180,7 +181,7 @@ class MyHomePage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => panel()),
+                          builder: (context) => adminLogin()),
                     );
                   }),
                   child: Text('Admin'),
