@@ -854,13 +854,6 @@ class _PostPageState extends State<PostPage> {
 
               actions: <Widget>[
                 TextButton(
-                  onPressed: () => saveToGallery(context),
-                  child: const Text(
-                    "Save Edits",
-                    style: TextStyle(color: Colors.black, fontSize: 16.0),
-                  ),
-                ),
-                TextButton(
                   onPressed: () => postImage(
                     userProvider.getUser.uid,
                     userProvider.getUser.username,
@@ -1026,14 +1019,48 @@ class _PostPageState extends State<PostPage> {
                           SizedBox(
                             height: 5,
                           ),
-                          Text(
-                            'Edit Scrapboard',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey.shade700,
+                          SizedBox(
+                            height:25,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min, 
+                              children: [
+                                SizedBox(width: 90,),
+                                Text(
+                                  'Edit Scrapboard',
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey.shade700,
+                                  ),
+                                ),
+                                SizedBox(width: 30,),
+                                TextButton(
+                                  onPressed: () => saveToGallery(context),
+                                  // style: TextButton.styleFrom(
+                                  //   padding: EdgeInsets.zero,),
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.zero,),
+                                  child: Text(
+                                    "Save Edits",
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 148, 79, 74), 
+                                      fontSize: 12.0,
+                                      fontStyle: FontStyle.italic, 
+                                      // shadows: [
+                                      //   Shadow(
+                                      //     blurRadius:2.0,  // shadow blur
+                                      //     color: Colors.grey.shade300, // shadow color
+                                      //     offset: Offset(0.8,0.8), // how much shadow will be shown
+                                      //   ),
+                                      // ],
+                                    ),
+                                  ),
+                                ),            
+                              ],
                             ),
                           ),
+                          
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

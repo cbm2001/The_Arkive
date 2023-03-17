@@ -68,7 +68,13 @@ class MapSampleState extends State<MapSearchPage> {
                     child: TextFormField(
                       controller: _originController,
                       textCapitalization: TextCapitalization.words,
-                      decoration: InputDecoration(hintText: 'Search Place...'),
+                      decoration: const InputDecoration(
+                          labelText: 'Search Place...',
+                          prefixIcon: Icon(Icons.search),
+                          prefixIconColor: Colors.black,
+                      ),
+                      
+                      
                     ),
                   ),
                   SizedBox(

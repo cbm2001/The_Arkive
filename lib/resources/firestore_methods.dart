@@ -1,13 +1,17 @@
+import 'dart:core';
 import 'dart:ffi';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/admin/analytics.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:first_app/models/notif.dart';
 import 'package:first_app/screens/notification.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../screens/post_screen.dart';
 import '../models/post.dart';
@@ -60,6 +64,7 @@ class FireStoreMethods {
     }
     return res;
   }
+
   // Future<String> uploadDraftPost(String description,
   //
   //       String uid,
@@ -96,6 +101,31 @@ class FireStoreMethods {
   //   return res;
   //
   // }
+  XFile fil;
+  String imageURL = '';
+  UploadCover(String folderId) async {
+    final ImagePicker _imagePicker = ImagePicker();
+    fil = await _imagePicker.pickImage(source: ImageSource.gallery);
+    if (fil == null) return;
+    print('hi${fil?.path}');
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages = referenceRoot.child('images');
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+    try {
+      await referenceImageToUpload.putFile(File(fil.path));
+      imageURL = await referenceImageToUpload.getDownloadURL();
+      _firestore.collection('folders').doc(folderId).update({
+        'cover': imageURL,
+      });
+    } catch (error) {}
+    print(imageURL);
+  }
+
+  isCover() {
+    if (fil == null) return false;
+    if (fil != null) return true;
+  }
 
   Future<String> uploadDraft(
       String description,
@@ -444,6 +474,7 @@ class FireStoreMethods {
       List<dynamic> posts,
       List<dynamic> users,
       int userCount,
+      String imageURL,
       List<dynamic> requests) async {
     String res = "Some error occurred";
     try {
@@ -457,6 +488,7 @@ class FireStoreMethods {
         posts: posts,
         userCount: userCount,
         requests: requests,
+        cover: imageURL,
       );
       _firestore.collection('folders').doc(folderId).set(folder.toJson());
       res = "success";
@@ -465,6 +497,14 @@ class FireStoreMethods {
     }
     return res;
   }
+
+//   uploadCover() async {
+//     final _firebaseStorage = FirebaseStorage.instance;
+//     final _imagePicker = ImagePicker();
+//     PickedFile image;
+//     await Permission.photos.request();
+// var permissionStatus = await Permission.photos.status;
+//   }
 
   Future<String> addPostToFolder(String folderId, String postId) async {
     String res = "Some error occurred";
