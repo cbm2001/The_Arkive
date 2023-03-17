@@ -255,7 +255,7 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               IconButton(
-                onPressed: (() {}),
+                onPressed: (() async {}),
                 icon: const Icon(
                   Icons.send_outlined,
                   color: Colors.black,
