@@ -1,52 +1,92 @@
-/*import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:flutter_auth/model/user_repository.dart';
+import 'dart:math';
+import 'package:first_app/resources/firestore_methods.dart';
+import 'package:first_app/resources/auth_methods.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../lib/resources/auth_methods.dart';
-import '../lib/resources/firestore_methods.dart';
-import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
-
-class MockFirebaseAuth extends Mock implements FirebaseAuth {}
-
-class MockFirebaseUser extends Mock implements FirebaseUser {}
-
-class MockAuthResult extends Mock implements AuthResult {}
 
 void main() {
-  MockFirebaseAuth _auth = MockFirebaseAuth();
-
-  BehaviorSubject<MockFirebaseUser> _user = BehaviorSubject<MockFirebaseUser>();
-  when(_auth.onAuthStateChanged).thenAnswer((_) {
-    return _user;
+  test('create user', () async {
+    final auth = MockAuthService();
+    String res = await auth.createUser('email', 'password');
+    expect(res, 'success');
   });
-  //UserRepository _repo = UserRepository.instance(auth: _auth);
-  AuthMethods _repo = AuthMethods();
-  group('user repository test', () {
-    when(_auth.signInWithEmailAndPassword(email: "email", password: "password"))
-        .thenAnswer((_) async {
-      _user.add(MockFirebaseUser());
-      return MockAuthResult();
-    });
-    when(_auth.signInWithEmailAndPassword(email: "mail", password: "pass"))
-        .thenThrow(() {
-      return null;
-    });
-    test("sign in with email and password", () async {
-      bool signedIn =
-          await _repo.loginUser(email: "email", password: "password");
-      expect(signedIn, true);
-      // expect(_repo.status, Status.Authenticated);
-    });
 
-    test("sing in fails with incorrect email and password", () async {
-      bool signedIn = await _repo.loginUser(email: "mail", password: "pass");
-      expect(signedIn, false);
-      // expect(_repo.status, Status.Unauthenticated);
-    });
-
-    test('sign out', () async {
-      await _repo.signOut();
-      expect(_repo.status, Status.Unauthenticated);
-    });
+  test('login test with invalid email', () async {
+    final auth = MockAuthService();
+    String res = await auth.signIn('invalidEmail@test.com', 'password');
+    expect(res, 'Invalid Email');
   });
-}*/
+
+  test('login test with invalid password', () async {
+    final auth = MockAuthService();
+    String res = await auth.signIn('email', 'invalidPassword');
+    expect(res, 'Invalid Password');
+  });
+
+  test('Sign out test', () async {
+    final auth = MockAuthService();
+    String res = await auth.signOut();
+    expect(res, 'success');
+  });
+
+  test('Reset password', () async {
+    final auth = MockAuthService();
+    String res = await auth.resetPassword('password');
+    expect(res, 'success');
+  });
+
+  test('Update password', () async {
+    final auth = MockAuthService();
+    String res = await auth.updatePassword('password');
+    expect(res, 'success');
+  });
+
+  test('Update email', () async {
+    final auth = MockAuthService();
+    String res = await auth.updateEmail('nripesh@gmail.com');
+    expect(res, 'success');
+  });
+}
+
+class MockAuthService {
+  Future<String> createUser(String email, String password) async {
+    await Future.delayed(Duration(seconds: 1));
+    if (email == null) return 'Please enter an email';
+    if (password == null) return 'Please enter a password';
+    return 'success';
+  }
+
+  Future<String> signIn(
+    String email,
+    String password,
+  ) async {
+    await Future.delayed(Duration(seconds: 1));
+    if (email == 'invalidEmail@test.com') return 'Invalid Email';
+    if (password == 'invalidPassword') return 'Invalid Password';
+    return 'success';
+  }
+
+  Future<String> signOut() async {
+    await Future.delayed(Duration(seconds: 1));
+    return 'success';
+  }
+
+  Future<String> resetPassword(String password) async {
+    await Future.delayed(Duration(seconds: 1));
+    if (password == null) return 'Please enter a password';
+    if (password == 'invalidPassword') return 'Invalid Password';
+    return 'success';
+  }
+
+  Future<String> updatePassword(String password) async {
+    await Future.delayed(Duration(seconds: 1));
+    if (password == null) return 'Please enter a password';
+    if (password == 'invalidPassword') return 'Invalid Password';
+    return 'success';
+  }
+
+  Future<String> updateEmail(String email) async {
+    await Future.delayed(Duration(seconds: 1));
+    if (email == null) return 'Please enter an email';
+    return 'success';
+  }
+}

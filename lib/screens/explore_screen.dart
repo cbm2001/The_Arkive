@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/main.dart';
 import 'package:first_app/screens/login_screen.dart';
+import 'package:first_app/screens/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart' as model;
-import '../reusable_widgets/post_card.dart';
+import '../widgets/post_card.dart';
 import '../providers/user_provider.dart';
+import 'notification.dart';
+
 
 class ExplorePage extends StatefulWidget {
   @override
@@ -31,7 +34,7 @@ class _ExplorePageState extends State<ExplorePage> {
     return Scaffold(
       //extendBodyBehindAppBar: false,
       backgroundColor: Colors.white,
-      
+
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -57,7 +60,7 @@ class _ExplorePageState extends State<ExplorePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Notifications(),
+                  builder: (context) => NewNotification(),
                 ),
               );
             }),
@@ -73,7 +76,13 @@ class _ExplorePageState extends State<ExplorePage> {
           // width: MediaQuery.of(context).size.width,
 
           StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('posts')
+            .orderBy(
+              'datePublished',
+              descending: true,
+            )
+            .snapshots(),
         builder: (context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -83,8 +92,10 @@ class _ExplorePageState extends State<ExplorePage> {
           }
           return ListView.builder(
             itemCount: snapshot.data.docs.length,
-            itemBuilder: (ctx, index) =>
-                PostCard(snap: snapshot.data.docs[index].data()),
+            itemBuilder: (ctx, index) => Card(
+              child: PostCard(snap: snapshot.data.docs[index].data()),
+              elevation: 10,
+            ),
           );
         },
       ),

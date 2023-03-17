@@ -1,4 +1,8 @@
-import 'firebase_options.dart';
+import 'package:first_app/admin/admin_login.dart';
+import 'package:first_app/admin/panel.dart';
+
+import 'admin/dashboard.dart';
+import 'resources/firebase_options.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,12 +12,12 @@ import './screens/login_screen.dart';
 import './screens/signup_screen.dart';
 //import './screens/explore_screen.dart';
 //import './models/nav_bar.dart';
-import './models/new_nav_bar.dart';
+import 'models/nav_bar.dart';
 import 'providers/user_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -27,6 +31,7 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'App',
           //home: MyHomePage(),
           home: StreamBuilder(
@@ -176,10 +181,10 @@ class MyHomePage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MyNavigationBar()),
+                          builder: (context) => adminLogin()),
                     );
                   }),
-                  child: Text('View Application'),
+                  child: Text('Admin'),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                         Color.fromRGBO(255, 250, 202, 1)),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'signup_screen.dart';
 import 'explore_screen.dart';
-import '../reusable_widgets/reusable_widgets.dart';
+import '../widgets/reusable_widgets.dart';
 
 class ResetPassword extends StatefulWidget {
   //const SignUpScreen({Key? key}) : super(key: key);
@@ -73,7 +73,9 @@ class _ResetPasswordState extends State<ResetPassword> {
               SizedBox(
                 height: 50,
                 child: reusableTextField(
-                    "Enter Email Id", Icons.email, false, _emailTextController),
+                    "Enter Email Id", 
+                    Icons.email, 
+                    false, _emailTextController),
                 width: 350,
               ),
               SizedBox(

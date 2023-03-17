@@ -31,4 +31,7 @@ class StorageMethods {
     String downloadUrl = await snapshot.ref.getDownloadURL();
     return downloadUrl;
   }
+
+  Future shiftDraftToPost(
+      String childName, String PostURL, bool isPost) async {}
 }

@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:first_app/navscreens/profile_screen.dart';
+import 'package:first_app/screens/map_screen.dart';
+import 'package:first_app/screens/profile_screen.dart';
+import 'package:first_app/screens/search_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:first_app/models/side_nav_bar.dart';
-import '../reusable_widgets/post_card.dart';
-import '../screens/explore_screen.dart';
-import '../reusable_widgets/reusable_widgets.dart';
-import '../screens/user_profile.dart';
+import '../widgets/post_card.dart';
+import 'explore_screen.dart';
+import '../widgets/reusable_widgets.dart';
+import 'user_profile.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -28,11 +30,11 @@ class _SearchPageState extends State<SearchPage> {
             child: TextFormField(
               controller: searchController,
               decoration: const InputDecoration(
-                labelText: 'Search for a user...',
+                labelText: 'Search...',
                 prefixIcon: Icon(Icons.search),
                 prefixIconColor: Colors.black,
               ),
-              onFieldSubmitted: (String _) {
+              onChanged: (String _) {
                 setState(() {
                   isShowUsers = true;
                 });
@@ -338,11 +340,8 @@ class _SearchNavBarState extends State<SearchNavBar> {
               alignment: Alignment.center,
               child: const Text('Page 2'),
             ),*/
-            Container(
-              height: MediaQuery.of(context).size.height,
-              color: Colors.white,
-              alignment: Alignment.center,
-              child: const Text('Page 2'),
+            Scaffold(
+              body: MapPage(),
             ),
             Container(
               height: 500,

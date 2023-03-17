@@ -1,17 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/admin/analytics.dart';
 import 'package:first_app/screens/explore_screen.dart';
 import 'package:flutter/foundation.dart';
 //import 'package:first_app/screens/explore_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../resources/auth_methods.dart';
-import '../reusable_widgets/reusable_widgets.dart';
+import '../widgets/reusable_widgets.dart';
 //import '../screens/login_screen.dart';
 import '../utils/utils.dart';
 import 'age_form_check.dart';
 
 class SignUpScreen extends StatefulWidget {
-  //const SignUpScreen({Key? key}) : super(key: key);
+  SignUpScreen({Key key}) : super(key: key);
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -47,6 +48,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _isLoading = true;
       });*/
         // navigate to the home screen
+        checkDoc();
+        addSignup();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => AgeCheck()),
         );
@@ -224,7 +227,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 onTap: (() {}),
               ),*/
               ElevatedButton(
-                onPressed: (() => signUpUser()),
+                onPressed: (() {
+                  // if(_image==null){
+                  //   showSnackBar(context, "Upload Profile Picture");
+                  // }
+                  // else {
+                  signUpUser();
+                  // }
+                }),
                 child: !_isLoading
                     ? const Text(
                         'Sign up',
