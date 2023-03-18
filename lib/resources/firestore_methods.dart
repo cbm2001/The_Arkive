@@ -58,7 +58,7 @@ class FireStoreMethods {
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
       checkDoc();
-      addPost();
+      await addPost();
       print("heloo");
     } catch (err) {
       res = err.toString();
@@ -184,7 +184,7 @@ class FireStoreMethods {
       //}
       res = 'success';
       checkDoc();
-      addLike();
+      await addLike();
     } catch (err) {
       res = err.toString();
     }
@@ -306,7 +306,7 @@ class FireStoreMethods {
         });
         res = 'success';
         checkDoc();
-        addComment();
+        await addComment();
       } else {
         res = "Please enter text";
       }

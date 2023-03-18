@@ -32,7 +32,7 @@ class _SignInScreenState extends State<SignInScreen> {
         password: _passwordTextController.text);
     if (res == 'success') {
       checkDoc();
-      addLogin();
+      await addLogin();
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => MyNavigationBar()));
 

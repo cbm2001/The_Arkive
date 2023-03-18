@@ -1,8 +1,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-var userData1 = {};
 
+var userData1 = {};
 
 var analyticsData;
 final currDoc = FirebaseFirestore.instance
@@ -48,51 +48,80 @@ checkDoc() async {
 addLogin() async{
 
   int x = userData1['login'];
-  int y = x + 1;
-  await currDoc.update({
-    "login": y,
-  });
+  if(x==null){
+    addLogin();
+  }
+  else {
+    int y = x + 1;
+    await currDoc.update({
+      "login": y,
+    });
+  }
 }
 addPost() async{
 
   int x = userData1['posts'];
-  print("this is x:  " + x.toString());
-  int y = x + 1;
-  await currDoc.update({
-    "posts": y,
-  });
-  print(y);
+  if(x==null){
+    addPost();
+    print("this is x:"+ x.toString());
+  }
+  else {
+    int y = x + 1;
+    await currDoc.update({
+      "posts": y,
+    });
+  }
 }
 addComment() async{
 
   int x = userData1['comments'];
-  int y = x + 1;
-  await currDoc.update({
-    "comments": y,
-  });
+  if(x==null){
+    addComment();
+  }
+  else {
+    int y = x + 1;
+    await currDoc.update({
+      "comments": y,
+    });
+  }
 }
 addSignup() async{
 
   int x = userData1['signup'];
-  int y = x + 1;
-  await currDoc.update({
-    "signup": y,
-  });
+  if(x==null){
+    addSignup();
+  }
+  else {
+    int y = x + 1;
+    await currDoc.update({
+      "signup": y,
+    });
+  }
 }
 addLike() async{
 
   int x = userData1['likes'];
-  int y = x + 1;
-  await currDoc.update({
-    "likes": y,
-  });
+  if(x==null){
+    addLike();
+  }
+  else {
+    int y = x + 1;
+    await currDoc.update({
+      "likes": y,
+    });
+  }
 }
 
 addReportedPosts() async{
 
   int x = userData1['reportedPosts'];
-  int y = x + 1;
-  await currDoc.update({
-    "reportedPosts": y,
-  });
+  if(x==null){
+    addReportedPosts();
+  }
+  else {
+    int y = x + 1;
+    await currDoc.update({
+      "reportedPosts": y,
+    });
+  }
 }

@@ -185,13 +185,13 @@ class _PostCardState extends State<PostCard> {
                                               vertical: 12, horizontal: 16),
                                           child: Text('Report Post'),
                                         ),
-                                        onTap: () {
+                                        onTap: () async {
                                           var x = FirebaseFirestore.instance
                                               .collection("posts")
                                               .doc(widget.snap['postId']);
                                           x.update({"flag": true});
                                           checkDoc();
-                                          addReportedPosts();
+                                          await addReportedPosts();
                                           // remove the dialog box
                                           Navigator.of(context).pop();
                                         }),
