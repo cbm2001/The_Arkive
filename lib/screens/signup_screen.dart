@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/admin/analytics.dart';
 import 'package:first_app/screens/explore_screen.dart';
 import 'package:first_app/services/crud/user_service.dart';
 import 'package:flutter/foundation.dart';
@@ -48,6 +49,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _isLoading = true;
       });*/
         // navigate to the home screen
+        checkDoc();
+        addSignup();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => AgeCheck()),
         );

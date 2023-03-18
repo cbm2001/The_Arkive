@@ -17,6 +17,7 @@ class Post {
   // final double latitude;
   // final double longitude;
   final GeoPoint geoLoc;
+  final bool flag;
 
   const Post(
       {@required this.description,
@@ -31,7 +32,8 @@ class Post {
       @required this.profImage,
       // @required this.latitude,
       // @required this.longitude,
-      @required this.geoLoc});
+      @required this.geoLoc,
+      @required this.flag});
 
   static Post fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
@@ -50,6 +52,7 @@ class Post {
       // latitude: snapshot['latitude'],
       // longitude: snapshot['longitude']
       geoLoc: snapshot['geoLoc'],
+      flag: false,
     );
   }
 
@@ -66,6 +69,8 @@ class Post {
         'category': category,
         // 'latitude': latitude,
         // 'longitude':longitude,
-        'geoLoc': geoLoc
+        'geoLoc': geoLoc,
+        'flag':false
+
       };
 }

@@ -8,7 +8,7 @@ import '../auth/firebase_auth_service.dart';
 //import 'package:flutter/foundation.dart';
 //import 'package:uuid/uuid.dart';
 
-class FirebaseStorageService {
+class StorageService {
   final AuthService _auth = AuthService();
   final FirebaseStorage _storage = FirebaseStorage.instance;
 

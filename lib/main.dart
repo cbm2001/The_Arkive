@@ -1,6 +1,10 @@
 import 'package:first_app/services/auth/firebase_auth_service.dart';
 import 'package:first_app/services/auth/firebase_options.dart';
 
+import 'package:first_app/admin/admin_login.dart';
+import 'package:first_app/admin/panel.dart';
+
+import 'admin/dashboard.dart';
 import 'resources/firebase_options.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -180,11 +184,10 @@ class MyHomePage extends StatelessWidget {
                   onPressed: (() {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => MyNavigationBar()),
+                      MaterialPageRoute(builder: (context) => adminLogin()),
                     );
                   }),
-                  child: Text('View Application'),
+                  child: Text('Admin'),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                         Color.fromRGBO(255, 250, 202, 1)),

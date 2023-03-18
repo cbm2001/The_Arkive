@@ -1,24 +1,23 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/admin/panel.dart';
 import 'package:first_app/services/crud/user_service.dart';
-import 'package:first_app/admin/analytics.dart';
-//import 'package:first_app/screens/age_form_check.dart';
 import 'package:flutter/material.dart';
-import '../resources/auth_methods.dart';
-import '../widgets/reusable_widgets.dart';
-import '../utils/utils.dart';
-import './signup_screen.dart';
-import '../screens/explore_screen.dart';
-import 'reset_pw.dart';
-import '../models/nav_bar.dart';
 
-class SignInScreen extends StatefulWidget {
-  //const SignInScreen({Key? key}) : super(key: key);
+import '../screens/reset_pw.dart';
+import '../screens/signup_screen.dart';
+import '../utils/utils.dart';
+import '../widgets/reusable_widgets.dart';
+import 'analytics.dart';
+
+class adminLogin extends StatefulWidget {
+  const adminLogin({Key key}) : super(key: key);
 
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  State<adminLogin> createState() => _adminLoginState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _adminLoginState extends State<adminLogin> {
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _emailTextController = TextEditingController();
   bool _isLoading = false;
@@ -31,10 +30,20 @@ class _SignInScreenState extends State<SignInScreen> {
         email: _emailTextController.text,
         password: _passwordTextController.text);
     if (res == 'success') {
-      checkDoc();
-      addLogin();
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => MyNavigationBar()));
+      var x = await FirebaseFirestore.instance
+          .collection("admin")
+          .doc(FirebaseAuth.instance.currentUser.uid)
+          .get();
+      if (x.data() != null) {
+        checkDoc();
+        addLogin();
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => panel()));
+      } else {
+        showSnackBar(context, "You are not an admin");
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => adminLogin()));
+      }
 
       /*setState(() {
         _isLoading = false;
@@ -54,12 +63,12 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: false,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       appBar: AppBar(
         //backgroundColor: Color.fromRGBO(211, 211, 211, 1),
 
-        backgroundColor: Colors.white,
-        elevation: 0, iconTheme: IconThemeData.fallback(),
+        backgroundColor: Color(0xFF111328),
+        elevation: 1, iconTheme: IconThemeData.fallback(),
         /*title: const Text(
             "Sign Up",
             style: TextStyle(
@@ -76,12 +85,15 @@ class _SignInScreenState extends State<SignInScreen> {
                 const SizedBox(
                   height: 30,
                 ),*/
+            SizedBox(
+              height: 10,
+            ),
             Text(
-              'Log In',
+              'Admin Log In',
               style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.normal,
-                  color: Colors.black),
+                  color: Color(0xFF8D8E98)),
             ),
             SizedBox(height: 50),
             SizedBox(
@@ -135,8 +147,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       color: Colors.white,
                     ),
               style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black87,
-                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blueGrey,
+                  foregroundColor: Colors.black,
                   fixedSize: Size(350, 50)),
             ),
 

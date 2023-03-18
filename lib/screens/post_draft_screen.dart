@@ -123,7 +123,8 @@ class _PostDraftPageState extends State<PostDraftPage> {
           profImage,
           // latitude ,
           // longitude
-          (geoLoc == null) ? widget.geoLoc : geoLoc);
+          (geoLoc == null) ? widget.geoLoc : geoLoc,
+          false);
       if (res == "success") {
         setState(() {
           isLoading = false;

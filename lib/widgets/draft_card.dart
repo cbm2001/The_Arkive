@@ -63,15 +63,15 @@ class _DraftCardState extends State<DraftCard> {
 
   @override
   Widget build(BuildContext context) {
-    final User user = Provider.of<UserProvider>(context).getUser;
+
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(vertical: 0),
       child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10)
-                .copyWith(right: 0),
+            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0)
+                .copyWith(right: 4),
             child: Row(children: [
               //header section
               /*SizedBox(
@@ -186,14 +186,17 @@ class _DraftCardState extends State<DraftCard> {
 
             //image section
           ),
-          SizedBox(
-              //height: MediaQuery.of(context).size.height,
-              //width: double.infinity,
-              child: Image.network(
-            //'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfw8zy3G7-GYrDilkANhTaVIKEwEuVycOGsj7k4wtXsrasmJ03ZV9AUMsntAOugN26NLg&usqp=CAU',
-            widget.snap['postUrl'],
-            fit: BoxFit.cover,
-          )),
+          Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: SizedBox(
+                //height: MediaQuery.of(context).size.height,
+                //width: double.infinity,
+                child: Image.network(
+              //'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfw8zy3G7-GYrDilkANhTaVIKEwEuVycOGsj7k4wtXsrasmJ03ZV9AUMsntAOugN26NLg&usqp=CAU',
+              widget.snap['postUrl'],
+              fit: BoxFit.cover,
+            )),
+          ),
 
           //SECTION
           Row(
@@ -221,14 +224,14 @@ class _DraftCardState extends State<DraftCard> {
               ),
               IconButton(
                 onPressed: () {
+                  var x = FirebaseFirestore.instance.collection("posts").doc(widget.snap['postId']);
                   //print("print");
                   //showDialog(context: context, builder: builder)
+                  x.delete();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => deleteDraft(
-                              widget.snap['postId'].toString(),
-                            )),
+                        builder: (context) => ProfilePage(uid: Provider.of<UserProvider>(context).getUser.uid)),
                   );
                 },
                 icon: const Icon(

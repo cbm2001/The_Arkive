@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:typed_data';
+import 'package:first_app/admin/analytics.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_app/models/drafts.dart';
@@ -12,7 +13,7 @@ import 'package:uuid/uuid.dart';
 
 class PostService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorageService _storage = FirebaseStorageService();
+  final StorageService _storage = StorageService();
 
   Future<String> uploadPost(
       String description,
@@ -44,9 +45,12 @@ class PostService {
           profImage: profImage,
           // longitude: longitude,
           // latitude: latitude
-          geoLoc: geoLoc);
+          geoLoc: geoLoc,
+          flag: false);
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
+      checkDoc();
+      addPost();
     } catch (err) {
       res = err.toString();
     }
@@ -129,17 +133,44 @@ class PostService {
   Future<String> likePost(String postId, String uid, List likes) async {
     String res = "Some error occurred";
     try {
-      if (likes.contains(uid)) {
+      /*if (likes.contains(uid)) {
         // if the likes list contains the user uid, we need to remove it
         _firestore.collection('posts').doc(postId).update({
           'likes': FieldValue.arrayRemove([uid])
         });
-      } else {
+      } */
+      //{
+      // else we need to add uid to the likes array
+      _firestore.collection('posts').doc(postId).update({
+        'likes': FieldValue.arrayUnion([uid])
+      });
+      //addLiketoNotif(postId, uid, username, postUrl);
+
+      //}
+      res = 'success';
+      checkDoc();
+      addLike();
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> unlikePost(String postId, String uid, List likes) async {
+    String res = "Some error occurred";
+    try {
+      //if (likes.contains(uid)) {
+      // if the likes list contains the user uid, we need to remove it
+      _firestore.collection('posts').doc(postId).update({
+        'likes': FieldValue.arrayRemove([uid])
+      });
+      /*} else {
         // else we need to add uid to the likes array
         _firestore.collection('posts').doc(postId).update({
           'likes': FieldValue.arrayUnion([uid])
         });
-      }
+        //addLiketoNotif(postId, uid, username, postUrl);
+      }*/
       res = 'success';
     } catch (err) {
       res = err.toString();
@@ -169,6 +200,8 @@ class PostService {
           'datePublished': DateTime.now(),
         });
         res = 'success';
+        checkDoc();
+        addComment();
       } else {
         res = "Please enter text";
       }
@@ -212,7 +245,8 @@ class PostService {
       String profImage,
       // double latitude,
       // double longitude
-      GeoPoint geoLoc) async {
+      GeoPoint geoLoc,
+      bool flag) async {
     String res = "Some error occurred";
     try {
       String postId = const Uuid().v1(); // creates unique id based on time
@@ -229,44 +263,13 @@ class PostService {
           profImage: profImage,
           // longitude: longitude,
           // latitude: latitude
-          geoLoc: geoLoc);
+          geoLoc: geoLoc,
+          flag: false);
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
     } catch (err) {
       res = err.toString();
     }
     return res;
-  }
-
-  getUidFromUsername(String username) {
-    return FirebaseFirestore.instance
-        .collection('Users')
-        .where('username', isEqualTo: username)
-        .get()
-        .then((value) => value.docs[0].id);
-  }
-
-  getPostsInFolder(folderId) {
-    return FirebaseFirestore.instance
-        .collection('folders')
-        .doc(folderId)
-        .get()
-        .then((value) => value.data()['posts']);
-  }
-
-  getUser(snap) {
-    return FirebaseFirestore.instance
-        .collection('Users')
-        .doc(snap)
-        .get()
-        .then((value) => value.data());
-  }
-
-  getPost(post) {
-    return FirebaseFirestore.instance
-        .collection('posts')
-        .doc(post)
-        .get()
-        .then((value) => value.data());
   }
 }

@@ -53,7 +53,7 @@ class UserService {
         if (file == null) {
           photoUrl = 'https://i.stack.imgur.com/l60Hf.png';
         } else {
-          photoUrl = await FirebaseStorageService()
+          photoUrl = await StorageService()
               .uploadImageToStorage('profilePics', file, false);
         }
 

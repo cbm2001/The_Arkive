@@ -7,8 +7,42 @@ import 'package:first_app/models/folders.dart';
 //import '/resources/storage_methods.dart';
 import 'package:uuid/uuid.dart';
 
+import 'dart:core';
+
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+
 class FolderService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  XFile fil;
+  String imageURL = '';
+
+  Future<void> uploadCover(String folderId) async {
+    final ImagePicker _imagePicker = ImagePicker();
+    fil = await _imagePicker.pickImage(source: ImageSource.gallery);
+    if (fil == null) return;
+    print('hi${fil?.path}');
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages = referenceRoot.child('images');
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+    try {
+      await referenceImageToUpload.putFile(File(fil.path));
+      imageURL = await referenceImageToUpload.getDownloadURL();
+      _firestore.collection('folders').doc(folderId).update({
+        'cover': imageURL,
+      });
+    } catch (error) {}
+    print(imageURL);
+  }
+
+  isCover() {
+    if (fil == null) return false;
+    if (fil != null) return true;
+  }
 
   Future<String> createFolder(
       String folderName,
@@ -17,6 +51,7 @@ class FolderService {
       List<dynamic> posts,
       List<dynamic> users,
       int userCount,
+      String imageURL,
       List<dynamic> requests) async {
     String res = "Some error occurred";
     try {
@@ -30,6 +65,7 @@ class FolderService {
         posts: posts,
         userCount: userCount,
         requests: requests,
+        cover: imageURL,
       );
       _firestore.collection('folders').doc(folderId).set(folder.toJson());
       res = "success";
@@ -38,6 +74,14 @@ class FolderService {
     }
     return res;
   }
+
+//   uploadCover() async {
+//     final _firebaseStorage = FirebaseStorage.instance;
+//     final _imagePicker = ImagePicker();
+//     PickedFile image;
+//     await Permission.photos.request();
+// var permissionStatus = await Permission.photos.status;
+//   }
 
   Future<String> addPostToFolder(String folderId, String postId) async {
     String res = "Some error occurred";
@@ -144,7 +188,7 @@ class FolderService {
 
   // folders has an attribute called users which is a list of uids, getfolder returns list of folders that can be accessed by the user
   Stream<List<Folder>> getFolders(String uid) {
-    return FirebaseFirestore.instance
+    return _firestore
         .collection('folders')
         .where('users', arrayContains: uid)
         .snapshots()
@@ -154,7 +198,7 @@ class FolderService {
   }
 
   getUsersInFolder(folderId) {
-    return FirebaseFirestore.instance
+    return _firestore
         .collection('folders')
         .doc(folderId)
         .get()
@@ -162,7 +206,7 @@ class FolderService {
   }
 
   getUidFromUsername(String username) {
-    return FirebaseFirestore.instance
+    return _firestore
         .collection('Users')
         .where('username', isEqualTo: username)
         .get()
@@ -170,7 +214,7 @@ class FolderService {
   }
 
   getPostsInFolder(folderId) {
-    return FirebaseFirestore.instance
+    return _firestore
         .collection('folders')
         .doc(folderId)
         .get()
@@ -178,7 +222,7 @@ class FolderService {
   }
 
   getUser(snap) {
-    return FirebaseFirestore.instance
+    return _firestore
         .collection('Users')
         .doc(snap)
         .get()
@@ -186,7 +230,7 @@ class FolderService {
   }
 
   getPost(post) {
-    return FirebaseFirestore.instance
+    return _firestore
         .collection('posts')
         .doc(post)
         .get()

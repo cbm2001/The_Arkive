@@ -12,6 +12,7 @@ class Folder {
   final List<dynamic> posts;
   final List<dynamic> requests;
   final int userCount;
+  final String cover;
 
   const Folder({
     @required this.uid,
@@ -22,6 +23,7 @@ class Folder {
     @required this.userCount,
     @required this.posts,
     @required this.requests,
+    @required this.cover,
   });
 
   static Folder fromSnap(DocumentSnapshot snap) {
@@ -36,6 +38,7 @@ class Folder {
       userCount: snapshot["userCount"],
       posts: snapshot["posts"],
       requests: snapshot["requests"],
+      cover: snapshot["cover"],
     );
   }
 
@@ -48,6 +51,7 @@ class Folder {
         "userCount": userCount,
         "posts": posts,
         "requests": requests,
+         "cover": cover,
       };
 
   static fromJson(Map<String, dynamic> data, String id) {
@@ -60,6 +64,7 @@ class Folder {
       userCount: data["userCount"],
       posts: data["posts"],
       requests: data["requests"],
+      cover: data["cover"],
     );
   }
 }

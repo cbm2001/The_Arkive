@@ -21,6 +21,7 @@ import '../providers/user_provider.dart';
 import '../main.dart';
 import '../resources/firestore_methods.dart';
 import '../resources/storage_methods.dart';
+import '../widgets/folder_card.dart';
 import '../widgets/post_card.dart';
 import '../widgets/reusable_widgets.dart';
 import '../utils/utils.dart';
@@ -75,41 +76,56 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  TabBar get _tabBar => TabBar(
+        tabs: [
+          Tab(icon: Icon(Icons.call)),
+          Tab(icon: Icon(Icons.message)),
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     String folderName;
     model.User user = Provider.of<UserProvider>(context).getUser;
     upperTab = //FirebaseAuth.instance.currentUser.uid == userData['uid']
-        TabBar(tabs: [
-      //if (FirebaseAuth.instance.currentUser.uid == user.uid)
-      Tab(
-        icon: new Icon(
-          Icons.post_add,
-          color: Colors.black,
-        ),
-        child: Text('posts',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
-      ),
-      Tab(
-        icon: new Icon(
-          Icons.folder_copy_sharp,
-          color: Colors.black,
-        ),
-        child: Text('folders',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
-      ),
-      Tab(
-        icon: new Icon(
-          Icons.drive_file_rename_outline_sharp,
-          color: Colors.black,
-        ),
-        child: Text('drafts',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
-      )
-    ]);
+        TabBar(
+            indicator: UnderlineTabIndicator(
+              borderSide: BorderSide(width: 1.5),
+              insets: EdgeInsets.zero,
+            ),
+            tabs: [
+          //if (FirebaseAuth.instance.currentUser.uid == user.uid)
+          Tab(
+            icon: new Icon(
+              Icons.dashboard_outlined,
+              // Icons.developer_board ,
+              color: Colors.black,
+            ),
+            child: Text('Boards',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
+          ),
+          Tab(
+            icon: new Icon(
+              Icons.book_outlined,
+              color: Colors.black,
+            ),
+            child: Text('Scrap Books',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
+          ),
+          Tab(
+            icon: new Icon(
+              // Icons.drive_file_rename_outline_sharp,
+              Icons.create_outlined,
+              color: Colors.black,
+            ),
+            child: Text('Drafts',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
+          )
+        ]);
+
     /*: TabBar(tabs: [
             //if (FirebaseAuth.instance.currentUser.uid == user.uid)
             Tab(
@@ -190,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Text(
                     //'@urgalbarbz \n Only slays and sandwiches',
                     '@${userData['username']}',
-                    style: TextStyle(color: Colors.black, fontSize: 14.0),
+                    style: TextStyle(color: Colors.black, fontSize: 13.0),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
@@ -201,22 +217,21 @@ class _ProfilePageState extends State<ProfilePage> {
                     userData['bio'],
                     style: TextStyle(
                         color: Color.fromRGBO(139, 134, 134, 1),
-                        fontSize: 14.0),
+                        fontSize: 13.0),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   SizedBox(
-                    height: 500,
+                    height: 551,
                     child: DefaultTabController(
                       length: upperTab.tabs.length,
                       child: Scaffold(
                           extendBodyBehindAppBar: true,
-
-                          //backgroundColor: Colors.lightGreen,
+                          // backgroundColor: Colors.pink.shade100,
                           appBar: PreferredSize(
-                            preferredSize: Size.fromHeight(80),
+                            preferredSize: Size.fromHeight(74),
                             child: AppBar(
                               bottom: PreferredSize(
                                 preferredSize: upperTab.preferredSize,
@@ -232,42 +247,43 @@ class _ProfilePageState extends State<ProfilePage> {
                           body: TabBarView(
                             children: [
                               SizedBox(
-                                  height: 400,
-                                  width: 600,
+                                  // height: 300,
+                                  // width: 600,
                                   child: FutureBuilder(
-                                    future: FirebaseFirestore.instance
-                                        .collection('posts')
-                                        .where('uid',
-                                            isEqualTo: userData['uid'])
-                                        .get(),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
+                                future: FirebaseFirestore.instance
+                                    .collection('posts')
+                                    .where('uid', isEqualTo: userData['uid'])
+                                    .get(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
 
-                                      return ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: (snapshot.data as dynamic)
-                                            .docs
-                                            .length,
-                                        itemBuilder: (ctx, index) => PostCard(
-                                            snap: snapshot.data.docs[index]
-                                                .data()),
-                                        /*return Container(
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount:
+                                        (snapshot.data as dynamic).docs.length,
+                                    itemBuilder: (ctx, index) => Card(
+                                      elevation: 10,
+                                      child: PostCard(
+                                          snap:
+                                              snapshot.data.docs[index].data()),
+                                    ),
+                                    /*return Container(
                                 child: Image(
                                   image: NetworkImage(snap['postUrl']),
                                   fit: BoxFit.cover,
                                 ),
                               );*/
-                                      );
-                                    },
-                                  )),
+                                  );
+                                },
+                              )),
                               SizedBox(
-                                height: 400,
-                                width: 400,
+                                // height: 400,
+                                // width: 400,
                                 child: Column(
                                   children: [
                                     Expanded(
@@ -302,6 +318,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                     ),
                                     ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        fixedSize: Size(
+                                            MediaQuery.of(context).size.width *
+                                                0.40,
+                                            MediaQuery.of(context).size.height *
+                                                0.04),
+                                        backgroundColor:
+                                            Color.fromRGBO(192, 234, 240, 1),
+                                        foregroundColor:
+                                            Color.fromRGBO(139, 134, 134, 1),
+                                      ),
                                       onPressed: () {
                                         showDialog(
                                             context: context,
@@ -317,39 +344,88 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   },
                                                 ),
                                                 actions: <Widget>[
-                                                  ElevatedButton(
-                                                    child: Text("Create"),
-                                                    onPressed: () {
-                                                      FolderService()
-                                                          .createFolder(
-                                                        folderName,
-                                                        Provider.of<UserProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .getUser
-                                                            .uid,
-                                                        Provider.of<UserProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .getUser
-                                                            .username,
-                                                        // create an empty list for posts
-                                                        [],
-                                                        // create an list with uid
-                                                        [
-                                                          Provider.of<UserProvider>(
-                                                                  context,
-                                                                  listen: false)
-                                                              .getUser
-                                                              .uid
-                                                        ],
-                                                        1,
-                                                        // create an empty list for requests
-                                                        [],
-                                                      );
-                                                      Navigator.pop(context);
-                                                    },
-                                                  )
+                                                  Center(
+                                                    child: ElevatedButton(
+                                                        child: Text("Create"),
+                                                        onPressed: () {
+                                                          FolderService()
+                                                              .createFolder(
+                                                            folderName,
+                                                            Provider.of<UserProvider>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .getUser
+                                                                .uid,
+                                                            Provider.of<UserProvider>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .getUser
+                                                                .username,
+                                                            // create an empty list for posts
+                                                            [],
+                                                            // create an list with uid
+                                                            [
+                                                              Provider.of<UserProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .getUser
+                                                                  .uid
+                                                            ],
+                                                            1,
+                                                            //empty string for cover
+                                                            'https://cdn-icons-png.flaticon.com/512/9967/9967298.png',
+                                                            // create an empty list for requests
+                                                            [],
+                                                          );
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          fixedSize: Size(
+                                                              MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.40,
+                                                              MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.04),
+                                                          backgroundColor:
+                                                              Color.fromRGBO(
+                                                                  192,
+                                                                  234,
+                                                                  240,
+                                                                  1),
+                                                          foregroundColor:
+                                                              Color.fromRGBO(
+                                                                  139,
+                                                                  134,
+                                                                  134,
+                                                                  1),
+                                                        )),
+                                                  ),
+                                                  // Center(
+                                                  //   child: ElevatedButton(
+                                                  //     child: Text("Pick Cover"),
+                                                  //     onPressed: () async {
+                                                  //       FolderCardState().addCover();
+                                                  //     },
+                                                  //     style: ElevatedButton
+                                                  //           .styleFrom(
+                                                  //         fixedSize: Size(
+                                                  //             MediaQuery.of( context)  .size .width *  0.40,
+                                                  //             MediaQuery.of( context)  .size .height *  0.04),
+                                                  //         backgroundColor:  Color.fromRGBO(192, 234, 240, 1),
+                                                  //         foregroundColor:  Color.fromRGBO( 139, 134, 134, 1),
+                                                  //       )
+                                                  //   ),
+                                                  // ),
                                                 ],
                                               );
                                             });
@@ -360,39 +436,40 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               SizedBox(
-                                  height: 400,
-                                  width: 400,
+                                  // height: 400,
+                                  // width: 400,
                                   child: FutureBuilder(
-                                    future: FirebaseFirestore.instance
-                                        .collection('drafts')
-                                        .where('uid',
-                                            isEqualTo: userData['uid'])
-                                        .get(),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
+                                future: FirebaseFirestore.instance
+                                    .collection('drafts')
+                                    .where('uid', isEqualTo: userData['uid'])
+                                    .get(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
 
-                                      return ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: (snapshot.data as dynamic)
-                                            .docs
-                                            .length,
-                                        itemBuilder: (ctx, index) => DraftCard(
-                                            snap: snapshot.data.docs[index]
-                                                .data()),
-                                        /*return Container(
-                                child: Image(
-                                  image: NetworkImage(snap['postUrl']),
-                                  fit: BoxFit.cover,
-                                ),
-                              );*/
-                                      );
-                                    },
-                                  )),
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount:
+                                        (snapshot.data as dynamic).docs.length,
+                                    itemBuilder: (ctx, index) => Card(
+                                      elevation: 10,
+                                      child: DraftCard(
+                                          snap:
+                                              snapshot.data.docs[index].data()),
+                                    ),
+                                    /*return Container(
+                                  child: Image(
+                                    image: NetworkImage(snap['postUrl']),
+                                    fit: BoxFit.cover,
+                                  ),
+                                );*/
+                                  );
+                                },
+                              )),
                             ],
                           )),
                     ),
@@ -652,7 +729,7 @@ Widget updatePfp(BuildContext context) {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            SizedBox(height: 40),
+            SizedBox(height: 20),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -662,20 +739,20 @@ Widget updatePfp(BuildContext context) {
                     height: 180,
                     width: 180,
                     child: CircleAvatar(
-                      radius: 400,
+                      radius: 350,
                       backgroundImage: NetworkImage(pfp),
                       backgroundColor: Colors.red,
                     ),
                     //maxLines: 8,
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 20,
                   ),
                   ElevatedButton(
                       onPressed: () async {
                         Uint8List im = await pickImage(ImageSource.gallery);
                         // set state because we need to display the image we selected on the circle avatar
-                        String photoUrl = await FirebaseStorageService()
+                        String photoUrl = await StorageService()
                             .uploadImageToStorage('profilePics', im, false);
                         y.update({
                           "photoUrl": "$photoUrl",
@@ -692,7 +769,7 @@ Widget updatePfp(BuildContext context) {
                       ),
                       style: ElevatedButton.styleFrom(
                         fixedSize: Size(200, 50),
-                        backgroundColor: Color.fromRGBO(255, 248, 185, 1),
+                        backgroundColor: Color.fromRGBO(255, 203, 200, 1),
                         foregroundColor: Color.fromRGBO(139, 134, 134, 1),
                       )),
                 ],
@@ -710,9 +787,11 @@ Widget updateBio(BuildContext context) {
         color: Colors.black,
       ),
       backgroundColor: Colors.white,
-      title: Text(
-        "Edit Bio",
-        style: TextStyle(color: Colors.black),
+      title: Center(
+        child: Text(
+          "Edit Bio",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
     ),
     body: Container(
@@ -721,59 +800,67 @@ Widget updateBio(BuildContext context) {
         children: [
           SizedBox(height: 20),
           Padding(
-            padding: const EdgeInsets.only(right: 250.0, top: 10.0),
-            child: Text(
-              "Current bio",
-              style: TextStyle(color: Colors.black, fontSize: 20),
+            padding: const EdgeInsets.only(right: 0.0, top: 10.0),
+            child: Center(
+              child: Text(
+                "Current bio",
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
             ),
           ),
           SizedBox(height: 15),
           Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: Container(
-              padding: EdgeInsets.only(
-                  right: 30.0, left: 30.0, top: 15.0, bottom: 15.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 2),
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(35),
+            padding: const EdgeInsets.only(right: 0.0),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.90,
+              height: MediaQuery.of(context).size.height * 0.06,
+              child: Container(
+                padding: EdgeInsets.only(
+                    right: 15.0, left: 15.0, top: 15.0, bottom: 15.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.yellow[100], width: 2),
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(5),
+                  ),
+                  color: Colors.white,
                 ),
-                color: Colors.white,
-              ),
-              child: Text(
-                //'@urgalbarbz \n Only slays and sandwiches',
-                userData['bio'],
-                style: TextStyle(
-                  color: Color.fromRGBO(139, 134, 134, 1),
-                  fontSize: 16.0,
+                child: Text(
+                  //'@urgalbarbz \n Only slays and sandwiches',
+                  userData['bio'],
+                  style: TextStyle(
+                    color: Color.fromRGBO(93, 90, 90, 1),
+                    fontSize: 13.0,
+                    // fontStyle: FontStyle.italic,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
           ),
           SizedBox(
-            height: 80,
+            height: 20,
           ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 200.0),
+                // Padding(
+                // padding: const EdgeInsets.only(right: 200.0),
+                Center(
                   child: Text(
                     "Edit current bio",
                     style: TextStyle(color: Colors.black, fontSize: 20),
                   ),
                 ),
+                // ),
                 SizedBox(height: 20),
                 SizedBox(
-                  height: 40,
-                  width: 350,
+                  width: MediaQuery.of(context).size.width * 0.90,
+                  height: MediaQuery.of(context).size.height * 0.06,
                   child: reusableTextField(
                       "Write a bio", Icons.edit, false, _textController),
-
                   //maxLines: 8,
                 ),
                 SizedBox(height: 20),
@@ -838,39 +925,45 @@ Widget updateUsername(BuildContext context) {
         children: [
           SizedBox(height: 20),
           Padding(
-            padding: const EdgeInsets.only(right: 200.0, top: 10.0),
-            child: Text(
-              "Current Username",
-              style: TextStyle(color: Colors.black, fontSize: 20),
+            padding: const EdgeInsets.only(right: 0.0, top: 10.0),
+            child: Center(
+              child: Text(
+                "Current Username",
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
             ),
           ),
           SizedBox(height: 15),
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
-            child: Container(
-              padding: EdgeInsets.only(
-                  right: 30.0, left: 30.0, top: 15.0, bottom: 15.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 2),
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(35),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.90,
+              height: MediaQuery.of(context).size.height * 0.06,
+              child: Container(
+                padding: EdgeInsets.only(
+                    right: 30.0, left: 30.0, top: 15.0, bottom: 15.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.yellow[100], width: 2),
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(5),
+                  ),
+                  color: Colors.white,
                 ),
-                color: Colors.white,
-              ),
-              child: Text(
-                //'@urgalbarbz \n Only slays and sandwiches',
-                '@${userData['username']}',
-                style: TextStyle(
-                  color: Color.fromRGBO(139, 134, 134, 1),
-                  fontSize: 16.0,
+                child: Text(
+                  //'@urgalbarbz \n Only slays and sandwiches',
+                  '@${userData['username']}',
+                  style: TextStyle(
+                    color: Color.fromRGBO(139, 134, 134, 1),
+                    fontSize: 13.0,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
           ),
           SizedBox(
-            height: 100,
+            height: 20,
           ),
           Center(
             child: Column(
@@ -878,10 +971,12 @@ Widget updateUsername(BuildContext context) {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(right: 160.0),
-                  child: Text(
-                    "Edit current username",
-                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  padding: const EdgeInsets.only(right: 0.0),
+                  child: Center(
+                    child: Text(
+                      "Edit current username",
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -925,7 +1020,7 @@ Widget updateUsername(BuildContext context) {
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromRGBO(255, 203, 200, 1),
-                    fixedSize: Size(150, 30),
+                    fixedSize: Size(200, 30),
                     alignment: Alignment.center,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(7.0)),
@@ -947,9 +1042,11 @@ Widget updatePassword(BuildContext context) {
         color: Colors.black,
       ),
       backgroundColor: Colors.white,
-      title: Text(
-        "Edit Password",
-        style: TextStyle(color: Colors.black),
+      title: Center(
+        child: Text(
+          "Edit Password",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
     ),
     body: Container(
@@ -962,10 +1059,12 @@ Widget updatePassword(BuildContext context) {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(right: 160.0, top: 50.0),
-                  child: Text(
-                    "Edit current password",
-                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  padding: const EdgeInsets.only(right: 0.0, top: 50.0),
+                  child: Center(
+                    child: Text(
+                      "Edit current password",
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -1007,7 +1106,7 @@ Widget updatePassword(BuildContext context) {
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromRGBO(255, 203, 200, 1),
-                    fixedSize: Size(150, 30),
+                    fixedSize: Size(200, 30),
                     alignment: Alignment.center,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(7.0)),
@@ -1040,52 +1139,60 @@ Widget updateEmail(BuildContext context) {
         children: [
           SizedBox(height: 20),
           Padding(
-            padding: const EdgeInsets.only(right: 160.0, top: 10.0),
-            child: Text(
-              "Current Email Address",
-              style: TextStyle(color: Colors.black, fontSize: 20),
+            padding: const EdgeInsets.only(right: 0.0, top: 10.0),
+            child: Center(
+              child: Text(
+                "Current Email Address",
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
             ),
           ),
           SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: Container(
-              padding: EdgeInsets.only(
-                  right: 30.0, left: 30.0, top: 15.0, bottom: 15.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 2),
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(35),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.90,
+            height: MediaQuery.of(context).size.height * 0.06,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: Container(
+                padding: EdgeInsets.only(
+                    right: 0.0, left: 0.0, top: 15.0, bottom: 15.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.yellow[100], width: 2),
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(5),
+                  ),
+                  color: Colors.white,
                 ),
-                color: Colors.white,
-              ),
-              child: Text(
-                //'@urgalbarbz \n Only slays and sandwiches',
-                userData['email'],
-                style: TextStyle(
-                  color: Color.fromRGBO(139, 134, 134, 1),
-                  fontSize: 16.0,
+                child: Text(
+                  //'@urgalbarbz \n Only slays and sandwiches',
+                  userData['email'],
+                  style: TextStyle(
+                    color: Color.fromRGBO(139, 134, 134, 1),
+                    fontSize: 13.0,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
           ),
-          SizedBox(height: 80),
+          SizedBox(height: 20),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(right: 100.0),
-                  child: Text(
-                    "Edit registered email address",
-                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  padding: const EdgeInsets.only(right: 00.0),
+                  child: Center(
+                    child: Text(
+                      "Edit registered email address",
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
                   ),
                 ),
                 SizedBox(
-                  height: 25,
+                  height: 20,
                 ),
                 SizedBox(
                   height: 40,

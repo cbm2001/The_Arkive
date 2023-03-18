@@ -1,4 +1,12 @@
+import 'dart:core';
+import 'dart:core';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:first_app/models/folders.dart';
 import 'package:first_app/providers/user_provider.dart';
 import 'package:first_app/screens/profile_screen.dart';
 import 'package:first_app/services/crud/folder_service.dart';
@@ -6,10 +14,10 @@ import 'package:first_app/widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
 import 'package:first_app/widgets/post_card.dart';
 import 'package:flutter/material.dart';
-
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
+import 'package:vector_math/vector_math.dart' as prefix;
 import '../models/user.dart';
 import '../resources/firestore_methods.dart';
 import '../utils/utils.dart';
@@ -21,10 +29,15 @@ class FolderCard extends StatefulWidget {
     @required this.snap,
   }) : super(key: key);
   @override
-  State<FolderCard> createState() => _FolderCardState();
+  State<FolderCard> createState() => FolderCardState();
 }
 
-class _FolderCardState extends State<FolderCard> {
+class FolderCardState extends State<FolderCard> {
+  Image cover;
+  Uint8List filee;
+  bool coverSet;
+  List<Image> covers = [];
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +52,12 @@ class _FolderCardState extends State<FolderCard> {
         err.toString(),
       );
     }
+  }
+
+  addCover() {
+    FolderService().uploadCover(
+      widget.snap["folderId"],
+    );
   }
 
   adduser(String folderId, String uid, String username) async {
@@ -366,6 +385,8 @@ class _FolderCardState extends State<FolderCard> {
     posts.add('');
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
           title: Text(folderName),
           // list all posts in the folder using postCard widget
         ),

@@ -26,8 +26,8 @@ class MapSampleState extends State<MapPage> {
   TextEditingController _originController = TextEditingController();
 
   static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+    target: LatLng(25.102204, 55.162221),
+    zoom: 15,
   );
 
   prompt(Map<String, dynamic> data) {
@@ -85,9 +85,7 @@ class MapSampleState extends State<MapPage> {
                       decoration: InputDecoration(hintText: 'Search Place...'),
                     ),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
+                 
                   ElevatedButton(
                       onPressed: () async {
                         final place = await PositionServices()
@@ -99,7 +97,17 @@ class MapSampleState extends State<MapPage> {
                         _getScrapBooks(place['geometry']['location']['lat'],
                             place['geometry']['location']['lng']);
                       },
-                      child: Text('Search Place...'))
+                       style: ElevatedButton.styleFrom(
+                                            fixedSize: Size(
+                                                MediaQuery.of(context).size.width * 0.60,
+                                                MediaQuery.of(context).size.height *
+                                                    0.04),
+                                            backgroundColor:
+                                                Color.fromRGBO(192, 234, 240, 1),
+                                            foregroundColor:
+                                                Color.fromRGBO(139, 134, 134, 1),
+                                          ),
+                      child: Text('Search Place...')),
                 ],
               ),
             ),
@@ -112,6 +120,7 @@ class MapSampleState extends State<MapPage> {
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
               },
+              zoomControlsEnabled: false,
             ),
           ),
           ElevatedButton(
@@ -124,8 +133,16 @@ class MapSampleState extends State<MapPage> {
               },
               child: Text("Get Scrapbooks Near Me"),
               style: ElevatedButton.styleFrom(
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(50))))),
+                                            fixedSize: Size(
+                                                MediaQuery.of(context).size.width * 0.60,
+                                                MediaQuery.of(context).size.height *
+                                                    0.04),
+                                            backgroundColor:
+                                                Color.fromRGBO(192, 234, 240, 1),
+                                            foregroundColor:
+                                                Color.fromRGBO(139, 134, 134, 1),
+                                          )
+              ),
         ],
       ),
     );

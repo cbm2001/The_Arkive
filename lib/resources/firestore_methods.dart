@@ -1,7 +1,18 @@
-/* import 'dart:ffi';
+/* import 'dart:core';
+import 'dart:ffi';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/admin/analytics.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:first_app/models/notif.dart';
+import 'package:first_app/screens/notification.dart';
+import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
+
 import '../screens/post_screen.dart';
 import '../models/post.dart';
 import '../models/drafts.dart';
@@ -42,14 +53,18 @@ class FireStoreMethods {
           profImage: profImage,
           // longitude: longitude,
           // latitude: latitude
-          geoLoc: geoLoc);
+          geoLoc: geoLoc,
+          flag: false);
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
+      checkDoc();
+      addPost();
     } catch (err) {
       res = err.toString();
     }
     return res;
   }
+
   // Future<String> uploadDraftPost(String description,
   //
   //       String uid,
@@ -86,6 +101,31 @@ class FireStoreMethods {
   //   return res;
   //
   // }
+  XFile fil;
+  String imageURL = '';
+  UploadCover(String folderId) async {
+    final ImagePicker _imagePicker = ImagePicker();
+    fil = await _imagePicker.pickImage(source: ImageSource.gallery);
+    if (fil == null) return;
+    print('hi${fil?.path}');
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages = referenceRoot.child('images');
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+    try {
+      await referenceImageToUpload.putFile(File(fil.path));
+      imageURL = await referenceImageToUpload.getDownloadURL();
+      _firestore.collection('folders').doc(folderId).update({
+        'cover': imageURL,
+      });
+    } catch (error) {}
+    print(imageURL);
+  }
+
+  isCover() {
+    if (fil == null) return false;
+    if (fil != null) return true;
+  }
 
   Future<String> uploadDraft(
       String description,
@@ -127,17 +167,44 @@ class FireStoreMethods {
   Future<String> likePost(String postId, String uid, List likes) async {
     String res = "Some error occurred";
     try {
-      if (likes.contains(uid)) {
+      /*if (likes.contains(uid)) {
         // if the likes list contains the user uid, we need to remove it
         _firestore.collection('posts').doc(postId).update({
           'likes': FieldValue.arrayRemove([uid])
         });
-      } else {
+      } */
+      //{
+      // else we need to add uid to the likes array
+      _firestore.collection('posts').doc(postId).update({
+        'likes': FieldValue.arrayUnion([uid])
+      });
+      //addLiketoNotif(postId, uid, username, postUrl);
+
+      //}
+      res = 'success';
+      checkDoc();
+      addLike();
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> unlikePost(String postId, String uid, List likes) async {
+    String res = "Some error occurred";
+    try {
+      //if (likes.contains(uid)) {
+      // if the likes list contains the user uid, we need to remove it
+      _firestore.collection('posts').doc(postId).update({
+        'likes': FieldValue.arrayRemove([uid])
+      });
+      /*} else {
         // else we need to add uid to the likes array
         _firestore.collection('posts').doc(postId).update({
           'likes': FieldValue.arrayUnion([uid])
         });
-      }
+        //addLiketoNotif(postId, uid, username, postUrl);
+      }*/
       res = 'success';
     } catch (err) {
       res = err.toString();
@@ -145,8 +212,141 @@ class FireStoreMethods {
     return res;
   }
 
+  Future<String> addLiketoNotif(String postId, String uid, String username,
+      String postUrl, String photoUrl) async {
+    String res = "Some error occurred";
+    String notifId = const Uuid().v1();
+    bool isNotPostOwner = FirebaseAuth.instance.currentUser.uid != uid;
+    if (isNotPostOwner) {
+      try {
+        NotificationItems item = NotificationItems(
+            type: "likes",
+            notifId: notifId,
+            username: username, // User who liked the post
+            userId: FirebaseAuth.instance.currentUser.uid, // owner id
+            userProfile: photoUrl,
+            postId: postId,
+            postUrl: postUrl,
+            timeStamp: Timestamp.now());
+        _firestore
+            .collection("notifications")
+            .doc(uid)
+            .collection("notifItems")
+            .doc(notifId)
+            .set(item.toJson());
+        //if (FirebaseAuth.instance.currentUser.uid == uid) {}
+      } catch (err) {
+        res = err.toString();
+      }
+    }
+    return res;
+  }
+
+  Future<String> removeLikefromNotif(String notifId, String uid) async {
+    String res = "Some error occurred";
+    bool isNotPostOwner = FirebaseAuth.instance.currentUser.uid != uid;
+    if (isNotPostOwner) {
+      try {
+        _firestore
+            .collection("notifications")
+            .doc(uid)
+            .collection("notifItems")
+            .doc(notifId)
+            .delete();
+        res = "success";
+        //if (FirebaseAuth.instance.currentUser.uid == uid) {}
+      } catch (err) {
+        res = err.toString();
+      }
+    }
+    return res;
+  }
+
+  Future<String> removeNotif(String notifId, String uid) async {
+    String res = "Some error occurred";
+    //bool isNotPostOwner = FirebaseAuth.instance.currentUser.uid != uid;
+
+    try {
+      _firestore
+          .collection("notifications")
+          .doc(uid)
+          .collection("notifItems")
+          .doc(notifId)
+          .delete();
+      res = "success";
+      //if (FirebaseAuth.instance.currentUser.uid == uid) {}
+    } catch (err) {
+      res = err.toString();
+    }
+
+    return res;
+  }
+
   // Post comment
   Future<String> postComment(String postId, String text, String uid,
+      String name, String profilePic) async {
+    String res = "Some error occurred";
+    try {
+      if (text.isNotEmpty) {
+        // if the likes list contains the user uid, we need to remove it
+        String commentId = const Uuid().v1();
+        _firestore
+            .collection('posts')
+            .doc(postId)
+            .collection('comments')
+            .doc(commentId)
+            .set({
+          'profilePic': profilePic,
+          'name': name,
+          'uid': uid,
+          'text': text,
+          'commentId': commentId,
+          'datePublished': DateTime.now(),
+        });
+        res = 'success';
+        checkDoc();
+        addComment();
+      } else {
+        res = "Please enter text";
+      }
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> addCommenttoNotif(String postId, String uid, String username,
+      String postUrl, String photoUrl, String text) async {
+    String res = "Some error occurred";
+    bool isNotPostOwner = FirebaseAuth.instance.currentUser.uid != uid;
+    String notifId = const Uuid().v1();
+    if (isNotPostOwner) {
+      try {
+        NotificationItems item = NotificationItems(
+            type: "Comments",
+            notifId: notifId,
+            text: text,
+            username: username, // User who liked the post
+            userId: FirebaseAuth.instance.currentUser.uid, // user id
+            userProfile: photoUrl,
+            postId: postId,
+            postUrl: postUrl,
+            timeStamp: Timestamp.now());
+        _firestore
+            .collection("notifications")
+            .doc(uid)
+            .collection("notifItems")
+            .doc(notifId)
+            .set(item.toJson());
+        //if (FirebaseAuth.instance.currentUser.uid == uid) {}
+      } catch (err) {
+        res = err.toString();
+      }
+    }
+    return res;
+  }
+
+  /*Future<String> deleteComment(String postId, String text, String uid,
       String name, String profilePic) async {
     String res = "Some error occurred";
     try {
@@ -174,7 +374,7 @@ class FireStoreMethods {
       res = err.toString();
     }
     return res;
-  }
+  }*/
 
   // Delete Post
   Future<String> deletePost(String postId) async {
@@ -238,7 +438,8 @@ class FireStoreMethods {
       String profImage,
       // double latitude,
       // double longitude
-      GeoPoint geoLoc) async {
+      GeoPoint geoLoc,
+      bool flag) async {
     String res = "Some error occurred";
     try {
       String postId = const Uuid().v1(); // creates unique id based on time
@@ -255,7 +456,8 @@ class FireStoreMethods {
           profImage: profImage,
           // longitude: longitude,
           // latitude: latitude
-          geoLoc: geoLoc);
+          geoLoc: geoLoc,
+          flag: false);
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
     } catch (err) {
@@ -271,6 +473,7 @@ class FireStoreMethods {
       List<dynamic> posts,
       List<dynamic> users,
       int userCount,
+      String imageURL,
       List<dynamic> requests) async {
     String res = "Some error occurred";
     try {
@@ -284,6 +487,7 @@ class FireStoreMethods {
         posts: posts,
         userCount: userCount,
         requests: requests,
+        cover: imageURL,
       );
       _firestore.collection('folders').doc(folderId).set(folder.toJson());
       res = "success";
@@ -292,6 +496,14 @@ class FireStoreMethods {
     }
     return res;
   }
+
+//   uploadCover() async {
+//     final _firebaseStorage = FirebaseStorage.instance;
+//     final _imagePicker = ImagePicker();
+//     PickedFile image;
+//     await Permission.photos.request();
+// var permissionStatus = await Permission.photos.status;
+//   }
 
   Future<String> addPostToFolder(String folderId, String postId) async {
     String res = "Some error occurred";
@@ -379,6 +591,35 @@ class FireStoreMethods {
       res = "success";
     } catch (err) {
       res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> addRequesttoNotif(
+      String folder, String uid, String username, String photoUrl) async {
+    String res = "Some error occurred";
+    String notifId = const Uuid().v1();
+    bool isNotFolderOwner = FirebaseAuth.instance.currentUser.uid != uid;
+    if (isNotFolderOwner) {
+      try {
+        NotificationItems item = NotificationItems(
+            type: "folders",
+            folder: folder,
+            notifId: notifId,
+            username: username, // User who requested it
+            userId: FirebaseAuth.instance.currentUser.uid, // owner id
+            userProfile: photoUrl,
+            timeStamp: Timestamp.now());
+        _firestore
+            .collection("notifications")
+            .doc(uid) // owner id
+            .collection("notifItems")
+            .doc(notifId)
+            .set(item.toJson());
+        //if (FirebaseAuth.instance.currentUser.uid == uid) {}
+      } catch (err) {
+        res = err.toString();
+      }
     }
     return res;
   }

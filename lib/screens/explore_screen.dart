@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/main.dart';
 import 'package:first_app/screens/login_screen.dart';
+import 'package:first_app/screens/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart' as model;
 import '../widgets/post_card.dart';
 import '../providers/user_provider.dart';
+import 'notification.dart';
+
 
 class ExplorePage extends StatefulWidget {
   @override
@@ -57,7 +60,7 @@ class _ExplorePageState extends State<ExplorePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Notifications(),
+                  builder: (context) => NewNotification(),
                 ),
               );
             }),
