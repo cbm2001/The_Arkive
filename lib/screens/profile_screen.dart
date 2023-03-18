@@ -1256,3 +1256,4 @@ Widget updateEmail(BuildContext context) {
     ),
   );
 }
+

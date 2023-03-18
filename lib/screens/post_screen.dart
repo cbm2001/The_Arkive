@@ -745,6 +745,7 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
+
   Future<bool> postImage(String uid, String username, String profImage) async {
     saveToGallery(context);
      setState(() {

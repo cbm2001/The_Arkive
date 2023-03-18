@@ -127,6 +127,7 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
     }
   }
 
+
   saveToGallery(BuildContext context) {
     screenshotController.capture().then((Uint8List image) {
       //_file = image;

@@ -19,6 +19,7 @@ double longitude;
 GeoPoint geoLoc;
 String Category = 'travel';
 
+
 class PostDraftPage extends StatefulWidget {
   final String postURL;
   final String category;
