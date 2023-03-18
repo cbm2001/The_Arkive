@@ -20,7 +20,6 @@ import '../models/folders.dart';
 import '/resources/storage_methods.dart';
 import 'package:uuid/uuid.dart';
 
-
 class FireStoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 

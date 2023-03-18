@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 var userData1 = {};
 
+
 var analyticsData;
 final currDoc = FirebaseFirestore.instance
     .collection("analytics")

@@ -18,6 +18,7 @@ import '../resources/firestore_methods.dart';
 import '../utils/utils.dart';
 
 
+
 int i = 0;
 
 class DraftCard extends StatefulWidget {
