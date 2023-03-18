@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui';
 
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/models/folders.dart';
@@ -227,7 +228,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 551,
                     child: DefaultTabController(
                       length: upperTab.tabs.length,
-                      child: Scaffold(
+                      child: 
+                      Scaffold(
                           extendBodyBehindAppBar: true,
                           // backgroundColor: Colors.pink.shade100,
                           appBar: PreferredSize(
@@ -795,6 +797,7 @@ Widget updateBio(BuildContext context) {
       ),
     ),
     body: Container(
+      
       color: Color.fromRGBO(192, 234, 240, 1),
       child: Column(
         children: [

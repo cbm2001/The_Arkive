@@ -44,7 +44,6 @@ class _adminLoginState extends State<adminLogin> {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => adminLogin()));
       }
-
       /*setState(() {
         _isLoading = false;
       });*/
@@ -88,6 +87,7 @@ class _adminLoginState extends State<adminLogin> {
             SizedBox(
               height: 10,
             ),
+
             Text(
               'Admin Log In',
               style: TextStyle(

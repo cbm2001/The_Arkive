@@ -108,6 +108,8 @@ class FolderCardState extends State<FolderCard> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -181,7 +183,6 @@ class FolderCardState extends State<FolderCard> {
                                                     snapshot.data["uid"],
                                                     snapshot.data["username"],
                                                   );
-                                                  Navigator.pop(context);
                                                 },
                                               ),
                                             );
@@ -261,45 +262,279 @@ class FolderCardState extends State<FolderCard> {
                                                     snapshot.data["uid"],
                                                     snapshot.data["username"],
                                                   );
-                                                  Navigator.pop(context);
                                                 },
-                                              ),
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  ElevatedButton(
-                                    child: Text("Cancel"),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      // remove user
+
+                                      Center(
+                                        child: ElevatedButton(
+                                            child: Text("Remove user"),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              if (widget.snap["users"].length > 0) {
+                                                // show list of users with a checkbox next to each one and a button to remove them
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: Center(
+                                                          child: Text("Remove User")),
+                                                      content: Container(
+                                                        height: 300,
+                                                        width: 300,
+                                                        child: ListView.builder(
+                                                          itemCount:
+                                                              widget.snap["users"].length,
+                                                          itemBuilder: (context, index) {
+                                                            return FutureBuilder(
+                                                              future: FireStoreMethods()
+                                                                  .getUser(
+                                                                      widget.snap["users"]
+                                                                          [index]),
+                                                              builder: (context, snapshot) {
+                                                                if (snapshot.hasData) {
+                                                                  return ListTile(
+                                                                    title: Text(snapshot
+                                                                        .data["username"]),
+                                                                    trailing:
+                                                                        ElevatedButton(
+                                                                      child: Text("Remove"),
+                                                                      onPressed: () {
+                                                                        FireStoreMethods()
+                                                                            .removeUserFromFolder(
+                                                                          widget.snap[
+                                                                              "folderId"],
+                                                                          snapshot
+                                                                              .data["uid"],
+                                                                          snapshot.data[
+                                                                              "username"],
+                                                                        );
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      style: ElevatedButton
+                                                                          .styleFrom(
+                                                                        fixedSize: Size(
+                                                                            MediaQuery.of(
+                                                                                        context)
+                                                                                    .size
+                                                                                    .width *
+                                                                                0.25,
+                                                                            MediaQuery.of(
+                                                                                        context)
+                                                                                    .size
+                                                                                    .height *
+                                                                                0.04),
+                                                                        backgroundColor:
+                                                                            Color.fromRGBO(
+                                                                                192,
+                                                                                234,
+                                                                                240,
+                                                                                1),
+                                                                        foregroundColor:
+                                                                            Color.fromRGBO(
+                                                                                139,
+                                                                                134,
+                                                                                134,
+                                                                                1),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                } else {
+                                                                  return Container();
+                                                                }
+                                                              },
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                      actions: <Widget>[
+                                                        Center(
+                                                          child: ElevatedButton(
+                                                              child: Text("Cancel"),
+                                                              onPressed: () {
+                                                                Navigator.pop(context);
+                                                              },
+                                                              style:
+                                                                  ElevatedButton.styleFrom(
+                                                                fixedSize: Size(
+                                                                    MediaQuery.of(context)
+                                                                            .size
+                                                                            .width *
+                                                                        0.25,
+                                                                    MediaQuery.of(context)
+                                                                            .size
+                                                                            .height *
+                                                                        0.04),
+                                                                backgroundColor:
+                                                                    Color.fromRGBO(
+                                                                        232, 213, 235, 1),
+                                                                foregroundColor:
+                                                                    Color.fromRGBO(
+                                                                        139, 134, 134, 1),
+                                                              )),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              } else {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: Text("Remove user"),
+                                                      content: Text(
+                                                          "There are no users to remove from this folder"),
+                                                      actions: <Widget>[
+                                                        Center(
+                                                          child: ElevatedButton(
+                                                              child: Text("Cancel"),
+                                                              onPressed: () {
+                                                                Navigator.pop(context);
+                                                              },
+                                                              style:
+                                                                  ElevatedButton.styleFrom(
+                                                                fixedSize: Size(
+                                                                    MediaQuery.of(context)
+                                                                            .size
+                                                                            .width *
+                                                                        0.40,
+                                                                    MediaQuery.of(context)
+                                                                            .size
+                                                                            .height *
+                                                                        0.04),
+                                                                backgroundColor:
+                                                                    Color.fromRGBO(
+                                                                        232, 213, 235, 1),
+                                                                foregroundColor:
+                                                                    Color.fromRGBO(
+                                                                        139, 134, 134, 1),
+                                                              )),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              fixedSize: Size(
+                                                  MediaQuery.of(context).size.width * 0.40,
+                                                  MediaQuery.of(context).size.height *
+                                                      0.04),
+                                              backgroundColor:
+                                                  Color.fromRGBO(192, 234, 240, 1),
+                                              foregroundColor:
+                                                  Color.fromRGBO(139, 134, 134, 1),
+                                            )),
+                                      ),
+
+                                      Center(
+                                        child: ElevatedButton(
+                                            child: Text("Change Cover"),
+                                            onPressed: () async {
+                                              coverSet = true;
+                                              Navigator.of(context).pop();
+                                              FireStoreMethods().UploadCover(
+                                                widget.snap["folderId"],
+                                              );
+
+                                              // final ImagePicker _imagePicker = ImagePicker();
+                                              // XFile _file = await _imagePicker.pickImage(
+                                              //     source: ImageSource.gallery);
+                                              // if (_file == null) return;
+                                              // print('hi${_file?.path}');
+                                              // Reference referenceRoot =
+                                              //     FirebaseStorage.instance.ref();
+                                              // Reference referenceDirImages =
+                                              //     referenceRoot.child('images');
+                                              // String uniqueFileName = DateTime.now()
+                                              //     .millisecondsSinceEpoch
+                                              //     .toString();
+                                              // Reference referenceImageToUpload =
+                                              //     referenceDirImages.child(uniqueFileName);
+                                              // // try {
+                                              //   await referenceImageToUpload
+                                              //       .putFile(File(_file.path));
+                                              //   imageURL = await referenceImageToUpload
+                                              //       .getDownloadURL();
+                                              //   print('vobjectobjectobjectobjectobjectobjectobjectobjectobject   ');
+                                              //   print(imageURL);
+                                              // } catch (error) {}
+                                              // setState(() {
+                                              //   coverSet = true;
+                                              //   // cover = Image.memory(file);
+                                              //   // covers.add(cover);
+                                              // });
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              fixedSize: Size(
+                                                  MediaQuery.of(context).size.width * 0.40,
+                                                  MediaQuery.of(context).size.height *
+                                                      0.04),
+                                              backgroundColor:
+                                                  Color.fromRGBO(192, 234, 240, 1),
+                                              foregroundColor:
+                                                  Color.fromRGBO(139, 134, 134, 1),
+                                            )),
+                                      ),
+                                      Center(
+                                        child: ElevatedButton(
+                                            child: Text("Cancel"),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              fixedSize: Size(
+                                                  MediaQuery.of(context).size.width * 0.40,
+                                                  MediaQuery.of(context).size.height *
+                                                      0.04),
+                                              backgroundColor:
+                                                  Color.fromRGBO(232, 213, 235, 1),
+                                              foregroundColor:
+                                                  Color.fromRGBO(139, 134, 134, 1),
+                                            )),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
-                            },
-                          );
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text("Remove user"),
-                                content: Text(
-                                    "There are no users to remove from this folder"),
-                                actions: <Widget>[
-                                  ElevatedButton(
-                                    child: Text("Cancel"),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
+                            }
+                            // else show request to join button if not already requested
+                            else if (widget.snap["requests"].contains(
+                                Provider.of<UserProvider>(context, listen: false)
+                                    .getUser
+                                    .uid)) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text("Request to join"),
+                                    content: Text(
+                                        "You have already requested to join this folder"),
+                                    actions: <Widget>[
+                                      ElevatedButton(
+                                          child: Text("Ok"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            fixedSize: Size(
+                                                MediaQuery.of(context).size.width * 0.40,
+                                                MediaQuery.of(context).size.height * 0.04),
+                                            backgroundColor:
+                                                Color.fromRGBO(192, 234, 240, 1),
+                                            foregroundColor:
+                                                Color.fromRGBO(139, 134, 134, 1),
+                                          )),
+                                    ],
+                                  );
+                                },
                               );
                             },
                           );
