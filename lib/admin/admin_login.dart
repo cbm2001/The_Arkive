@@ -1,12 +1,9 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/admin/panel.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:first_app/services/crud/user_service.dart';
 import 'package:flutter/material.dart';
 
-import '../models/nav_bar.dart';
-import '../resources/auth_methods.dart';
 import '../screens/reset_pw.dart';
 import '../screens/signup_screen.dart';
 import '../utils/utils.dart';
@@ -29,27 +26,24 @@ class _adminLoginState extends State<adminLogin> {
     setState(() {
       _isLoading = true;
     });
-    String res = await AuthMethods().loginUser(
+    String res = await UserService().loginUser(
         email: _emailTextController.text,
         password: _passwordTextController.text);
     if (res == 'success') {
-      var x = await FirebaseFirestore.instance.collection("admin").doc(FirebaseAuth.instance.currentUser.uid).get();
-      if(x.data()!=null){
+      var x = await FirebaseFirestore.instance
+          .collection("admin")
+          .doc(FirebaseAuth.instance.currentUser.uid)
+          .get();
+      if (x.data() != null) {
         checkDoc();
         addLogin();
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => panel()));
-      }
-      else{
+      } else {
         showSnackBar(context, "You are not an admin");
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => adminLogin()));
-
-
       }
-
-
-
       /*setState(() {
         _isLoading = false;
       });*/
@@ -90,7 +84,10 @@ class _adminLoginState extends State<adminLogin> {
                 const SizedBox(
                   height: 30,
                 ),*/
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
+
             Text(
               'Admin Log In',
               style: TextStyle(
@@ -144,11 +141,11 @@ class _adminLoginState extends State<adminLogin> {
               onPressed: (() => loginUser()),
               child: !_isLoading
                   ? const Text(
-                'Log in',
-              )
+                      'Log in',
+                    )
                   : const CircularProgressIndicator(
-                color: Colors.white,
-              ),
+                      color: Colors.white,
+                    ),
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueGrey,
                   foregroundColor: Colors.black,

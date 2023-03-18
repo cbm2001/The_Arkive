@@ -1,4 +1,4 @@
-import 'dart:core';
+/* import 'dart:core';
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
@@ -314,8 +314,7 @@ class FireStoreMethods {
     }
     return res;
   }
-
-
+  
   Future<String> addCommenttoNotif(String postId, String uid, String username,
       String postUrl, String photoUrl, String text) async {
     String res = "Some error occurred";
@@ -689,3 +688,4 @@ class FireStoreMethods {
         .then((value) => value.data());
   }
 }
+ */

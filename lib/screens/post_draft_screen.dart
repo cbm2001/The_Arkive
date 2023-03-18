@@ -3,6 +3,9 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_app/screens/search_location.dart';
+import 'package:first_app/services/crud/firebase_storage_service.dart';
+import 'package:first_app/services/crud/post_service.dart';
+import 'package:first_app/services/location/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
@@ -107,7 +110,7 @@ class _PostDraftPageState extends State<PostDraftPage> {
     // start the loading
     try {
       // upload to storage and db
-      String res = await FireStoreMethods().uploadDraftPost(
+      String res = await PostService().uploadDraftPost(
           (_descriptionController.text == '')
               ? widget.description
               : _descriptionController.text,
@@ -124,7 +127,7 @@ class _PostDraftPageState extends State<PostDraftPage> {
           // latitude ,
           // longitude
           (geoLoc == null) ? widget.geoLoc : geoLoc,
-      false);
+          false);
       if (res == "success") {
         setState(() {
           isLoading = false;
@@ -349,7 +352,7 @@ class _PostDraftPageState extends State<PostDraftPage> {
     // start the loading
     try {
       // upload to storage and db
-      String res = await FireStoreMethods().uploadDraft(
+      String res = await PostService().uploadDraft(
           _descriptionController.text,
           _file,
           uid,

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_app/providers/user_provider.dart';
 import 'package:first_app/screens/profile_screen.dart';
+import 'package:first_app/services/crud/folder_service.dart';
+import 'package:first_app/services/crud/post_service.dart';
 import 'package:first_app/widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +71,7 @@ class _PostCardState extends State<PostCard> {
 
   deletePost(String postId) async {
     try {
-      await FireStoreMethods().deletePost(postId);
+      await PostService().deletePost(postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -80,7 +82,7 @@ class _PostCardState extends State<PostCard> {
 
   addpostTF(String folderId, String postId) async {
     try {
-      await FireStoreMethods().addPostToFolder(folderId, postId);
+      await FolderService().addPostToFolder(folderId, postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -216,33 +218,10 @@ class _PostCardState extends State<PostCard> {
               LikeAnimation(
                 isAnimating: widget.snap['likes'].contains(user.uid),
                 child: IconButton(
-                  onPressed: widget.snap['likes'].contains(user.uid)
-                      ? (() async {
-                          await FireStoreMethods().unlikePost(
-                              widget.snap['postId'],
-                              user.uid,
-                              widget.snap['likes']);
-                          await FireStoreMethods().removeLikefromNotif(
-                            widget.snap['notifId'],
-                            widget.snap['uid'],
-                          );
-
-                          // addLikeNotif(widget.snap['postId']);
-                        })
-                      : (() async {
-                          await FireStoreMethods().likePost(
-                              widget.snap['postId'],
-                              user.uid,
-                              widget.snap['likes']);
-                          await FireStoreMethods().addLiketoNotif(
-                              widget.snap['postId'],
-                              widget.snap['uid'],
-                              user.username,
-                              widget.snap['postUrl'],
-                              user.photoUrl.toString());
-
-                          // addLikeNotif(widget.snap['postId']);
-                        }),
+                  onPressed: (() async {
+                    await PostService().likePost(
+                        widget.snap['postId'], user.uid, widget.snap['likes']);
+                  }),
                   icon: widget.snap['likes'].contains(user.uid)
                       ? const Icon(
                           Icons.favorite,

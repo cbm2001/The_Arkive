@@ -1,3 +1,5 @@
+import 'package:first_app/services/auth/firebase_auth_service.dart';
+import 'package:first_app/services/auth/firebase_options.dart';
 import 'package:first_app/admin/admin_login.dart';
 import 'package:first_app/admin/panel.dart';
 
@@ -18,6 +20,7 @@ import 'providers/user_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  //await AuthService().initialize();
   runApp(MyApp());
 }
 
@@ -180,8 +183,7 @@ class MyHomePage extends StatelessWidget {
                   onPressed: (() {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => adminLogin()),
+                      MaterialPageRoute(builder: (context) => adminLogin()),
                     );
                   }),
                   child: Text('Admin'),

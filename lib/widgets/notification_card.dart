@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/providers/user_provider.dart';
 import 'package:first_app/screens/profile_screen.dart';
+import 'package:first_app/services/crud/notification_service.dart';
 import 'package:first_app/widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
 import 'package:first_app/widgets/post_card.dart';
@@ -37,7 +38,7 @@ class _NotifCardState extends State<NotifCard> {
 
   deleteNotif() async {
     try {
-      await FireStoreMethods().removeNotif(
+      await NotificationService().removeNotif(
           widget.snap['notifId'], FirebaseAuth.instance.currentUser.uid);
     } catch (err) {
       showSnackBar(
