@@ -49,8 +49,8 @@ class _ARPageState extends State<ARPage> {
   void _getPosts() async {
     var posts = await FirebaseFirestore.instance
         .collection('posts')
-    // .where('location', isGreaterThan: _locationData.latitude - 0.1)
-    // .where('location', isLessThan: _locationData.latitude + 0.1)
+        // .where('location', isGreaterThan: _locationData.latitude - 0.1)
+        // .where('location', isLessThan: _locationData.latitude + 0.1)
         .get();
     setState(() {
       _posts = posts.docs;
@@ -98,19 +98,19 @@ class _ARPageState extends State<ARPage> {
             var long = geoLoc.longitude;
 
             _arKitController.addArCoreNodeWithAnchor(
-                ArCoreNode(
-                  shape: ArCoreSphere(
-                    radius: 0.1,
-                    materials: [
-                      ArCoreMaterial(
-                        color: Colors.red,
-                        reflectance: 1,
-                      ),
-                    ],
-                  ),
-                  position: vector.Vector3(lat, long, -0.5),
-                  rotation: vector.Vector4(0, 0, 0, 0),
-                )
+              ArCoreNode(
+                shape: ArCoreSphere(
+                  radius: 0.1,
+                  materials: [
+                    ArCoreMaterial(
+                      color: Colors.red,
+                      reflectance: 1,
+                    ),
+                  ],
+                ),
+                position: vector.Vector3(lat, long, -0.5),
+                rotation: vector.Vector4(0, 0, 0, 0),
+              )
             );
           }
         }

@@ -45,6 +45,9 @@ dependencies:
   vector_math: ^2.1.2
   location: ^4.4.0
   camera: ^0.10.3+2
+  ar_flutter_plugin: ^0.7.3
+  arcore_flutter_plugin: ^0.1.0
+  flutter_compass: ^0.7.0
   firebase_messaging: ^14.2.6
   cached_network_image: ^3.2.3
   timeago: ^3.3.0
