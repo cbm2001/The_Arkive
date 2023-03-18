@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:first_app/screens/profile_screen.dart';
 import 'package:first_app/screens/search_location.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,6 +25,7 @@ class PostDraftPage extends StatefulWidget {
   final String description;
   final String location;
   final GeoPoint geoLoc;
+  final String postID;
   const PostDraftPage({
     Key key,
     // String postID,
@@ -35,6 +37,7 @@ class PostDraftPage extends StatefulWidget {
     // String location,
     @required this.location,
     @required this.geoLoc,
+    @required this.postID
   }) : super(key: key);
 
   @override
@@ -95,11 +98,7 @@ class _PostDraftPageState extends State<PostDraftPage> {
     String uid,
     String username,
     String profImage,
-    // String postID,
-    // String postURL,
-    // String category,
-    // String description,
-    // String location,
+
   ) async {
     setState(() {
       isLoading = true;
@@ -126,6 +125,7 @@ class _PostDraftPageState extends State<PostDraftPage> {
           (geoLoc == null) ? widget.geoLoc : geoLoc,
       false);
       if (res == "success") {
+        await FirebaseFirestore.instance.collection("drafts").doc(widget.postID).delete();
         setState(() {
           isLoading = false;
         });
@@ -134,6 +134,7 @@ class _PostDraftPageState extends State<PostDraftPage> {
           'Posted!',
         );
         clearImage();
+
       } else {
         setState(() {
           isLoading = false;
@@ -193,21 +194,7 @@ class _PostDraftPageState extends State<PostDraftPage> {
                   fontSize: 16.0),
             ),
           ),
-          // TextButton(
-          //   onPressed: () =>
-          //       draftImage(
-          //         userProvider.getUser.uid,
-          //         userProvider.getUser.username,
-          //         userProvider.getUser.photoUrl,
-          //       ),
-          //   child: const Text(
-          //     "Save as draft",
-          //     style: TextStyle(
-          //         color: Colors.blueAccent,
-          //         fontWeight: FontWeight.bold,
-          //         fontSize: 16.0),
-          //   ),
-          // ),
+
         ],
       ),
       // POST FORM

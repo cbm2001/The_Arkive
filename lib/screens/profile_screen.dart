@@ -158,12 +158,15 @@ class _ProfilePageState extends State<ProfilePage> {
               //width: double.infinity,
               //height: double.infinity,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(children: <Widget>[
                     //SizedBox(width: 150, height: 20),
 
                     Padding(
-                      padding: EdgeInsets.only(left: 155, top: 40.0),
+                      padding: EdgeInsets.only(left: 175, top: 40.0),
+
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(userData['photoUrl']),
                         radius: 40.0,

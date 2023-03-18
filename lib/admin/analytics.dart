@@ -56,10 +56,12 @@ addLogin() async{
 addPost() async{
 
   int x = userData1['posts'];
+  print("this is x:  " + x.toString());
   int y = x + 1;
   await currDoc.update({
     "posts": y,
   });
+  print(y);
 }
 addComment() async{
 

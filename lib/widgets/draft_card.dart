@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/screens/newPostDraftScreen.dart';
 import 'package:first_app/screens/post_draft_screen.dart';
 import 'package:first_app/providers/user_provider.dart';
 import 'package:first_app/widgets/like_animation.dart';
@@ -73,114 +75,7 @@ class _DraftCardState extends State<DraftCard> {
                 .copyWith(right: 4),
             child: Row(children: [
               //header section
-              /*SizedBox(
-                height: 70,
-              ),*/
-              /*CircleAvatar(
-                radius: 16,
-                backgroundImage: NetworkImage(
-                  widget.snap['profImage'].toString(),
-                ),
-              ),
-              Expanded(
-                  child: Padding(
-                      padding: EdgeInsets.only(left: 8),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.snap['username'],
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ))),*/
-              /*IconButton(
-                padding: EdgeInsets.only(left: 300),
-                onPressed: (() {
-                  showDialog(
-                    useRootNavigator: false,
-                    context: context,
-                    builder: (context) => Dialog(
-                        child: ListView(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shrinkWrap: true,
-                            children: [
-                              InkWell(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 16),
-                                    child: Text('Delete Draft'),
-                                  ),
-                                  onTap: () {
-                                    deleteDraft(
-                                      widget.snap['postId'].toString(),
-                                    );
-                                    // remove the dialog box
-                                    Navigator.of(context).pop();
-                                  }),
-                              InkWell(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 16),
-                                    child: Text('Edit Draft'),
-                                  ),
-                                  onTap: () {
-                                    print("hello");
-                                    return Scaffold();
-                                    // EditDraft(
-                                    //   widget.snap['postId'].toString(),
-                                    // );
-                                    // remove the dialog box
-                                    Navigator.of(context).pop();
-                                  })
-                              /*InkWell(
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 12, horizontal: 16),
-                                          child: Text('Report Post'),
-                                        ),
-                                        onTap: () {
-                                          /*deletePost(
-                                              widget.snap['postId'].toString(),
-                                            );
-                                            // remove the dialog box
-                                            Navigator.of(context).pop();*/
-                                        }),*/
-                            ].toList())),
-                  );
-                }),
-                icon: Icon(Icons.more_vert),
-              )*/
-              /* IconButton(
-                      onPressed: (() {
-                        showDialog(
-                          useRootNavigator: false,
-                          context: context,
-                          builder: (context) => Dialog(
-                              child: ListView(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
-                                  shrinkWrap: true,
-                                  children: [
-                                    InkWell(
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 12, horizontal: 16),
-                                          child: Text('Report Post'),
-                                        ),
-                                        onTap: () {
-                                          /*deletePost(
-                                              widget.snap['postId'].toString(),
-                                            );
-                                            // remove the dialog box
-                                            Navigator.of(context).pop();*/
-                                        }),
-                                  ].toList())),
-                        );
-                      }),
-                      icon: Icon(Icons.more_vert),
-                    )*/
+
             ]),
 
             //image section
@@ -214,6 +109,7 @@ class _DraftCardState extends State<DraftCard> {
                               widget.snap['description'],
                               widget.snap['geoLoc'],
                               widget.snap['location'],
+                              widget.snap['postId'],
                             )),
                   );
                 },
@@ -223,15 +119,12 @@ class _DraftCardState extends State<DraftCard> {
               ),
               IconButton(
                 onPressed: () {
-                  var x = FirebaseFirestore.instance.collection("posts").doc(widget.snap['postId']);
-                  //print("print");
-                  //showDialog(context: context, builder: builder)
-                  x.delete();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProfilePage(uid: Provider.of<UserProvider>(context).getUser.uid)),
-                  );
+
+
+                  deleteDraft(widget.snap['postId']);
+                  // Navigator.of(context).pop();
+
+
                 },
                 icon: const Icon(
                   Icons.delete_outline,
@@ -282,14 +175,15 @@ class _DraftCardState extends State<DraftCard> {
 }
 
 Widget editDraft(BuildContext context, String PostURL, String category,
-    String Description, GeoPoint geoLoc, String Location) {
+    String Description, GeoPoint geoLoc, String Location, String postID) {
   return Scaffold(
-    body: PostDraftPage(
+    body: newPostDraftScreen(
       postURL: PostURL,
       category: category,
       description: Description,
       location: Location,
       geoLoc: geoLoc,
+      postID: postID,
     ),
   );
 }

@@ -59,6 +59,7 @@ class FireStoreMethods {
       res = "success";
       checkDoc();
       addPost();
+      print("heloo");
     } catch (err) {
       res = err.toString();
     }

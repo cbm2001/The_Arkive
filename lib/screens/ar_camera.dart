@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:arkit_plugin/arkit_plugin.dart';
-import 'package:location/location.dart';
-
+import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
+import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
+import 'package:ar_flutter_plugin/models/ar_node.dart';
+import 'package:first_app/screens/post_draft_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:vector_math/vector_math_64.dart' as vector;
-import '../models/side_nav_bar.dart';
-import 'explore_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:camera/camera.dart';
+import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
+import 'package:vector_math/vector_math_64.dart' as vector;
 
 class ARPage extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class ARPage extends StatefulWidget {
 }
 
 class _ARPageState extends State<ARPage> {
-  ARKitController _arKitController;
+  ArCoreController _arKitController;
   LocationData _locationData;
   List<DocumentSnapshot> _posts = [];
 
@@ -36,8 +36,11 @@ class _ARPageState extends State<ARPage> {
   }
 
   void _getLocation() async {
-    var location = Location();
-    var currentLocation = await location.getLocation();
+    var location = await Geolocator.getCurrentPosition();
+    var currentLocation = LocationData.fromMap({
+      "latitude": location.latitude,
+      "longitude": location.longitude,
+    });
     setState(() {
       _locationData = currentLocation;
     });
@@ -46,8 +49,8 @@ class _ARPageState extends State<ARPage> {
   void _getPosts() async {
     var posts = await FirebaseFirestore.instance
         .collection('posts')
-        .where('location', isGreaterThan: _locationData.latitude - 0.1)
-        .where('location', isLessThan: _locationData.latitude + 0.1)
+    // .where('location', isGreaterThan: _locationData.latitude - 0.1)
+    // .where('location', isLessThan: _locationData.latitude + 0.1)
         .get();
     setState(() {
       _posts = posts.docs;
@@ -57,20 +60,30 @@ class _ARPageState extends State<ARPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ARKitSceneView(
-        onARKitViewCreated: _onARKitViewCreated,
+      body: ArCoreView(
+        onArCoreViewCreated: _onARKitViewCreated,
         enableTapRecognizer: true,
       ),
     );
   }
 
-  void _onARKitViewCreated(ARKitController controller) {
+  void _onARKitViewCreated(ArCoreController controller) {
     _arKitController = controller;
     _addMarkers();
-    // this._arKitController = _arKitController;
-    // final node = ARKitNode(
-    //     geometry: ARKitSphere(radius: 0.1), position: vector.Vector3(0, 0, -0.5));
-    // this._arKitController.add(node);
+    this._arKitController = _arKitController;
+    final node = ArCoreNode(
+      shape: ArCoreSphere(
+        radius: 0.1,
+        materials: [
+          ArCoreMaterial(
+            color: Colors.red,
+            reflectance: 1,
+          ),
+        ],
+      ),
+      position: vector.Vector3(0, 0, -0.5),
+    );
+    this._arKitController.addArCoreNode(node);
   }
 
   void _addMarkers() {
@@ -84,18 +97,20 @@ class _ARPageState extends State<ARPage> {
             var lat = geoLoc.latitude;
             var long = geoLoc.longitude;
 
-            _arKitController.add(
-              ARKitNode(
-                position: vector.Vector3(lat, long, -0.5),
-                geometry: ARKitSphere(
-                  radius: 0.01,
-                  materials: [
-                    ARKitMaterial(
-                      diffuse: ARKitMaterialProperty.color(Colors.red),
-                    ),
-                  ],
-                ),
-              ),
+            _arKitController.addArCoreNodeWithAnchor(
+                ArCoreNode(
+                  shape: ArCoreSphere(
+                    radius: 0.1,
+                    materials: [
+                      ArCoreMaterial(
+                        color: Colors.red,
+                        reflectance: 1,
+                      ),
+                    ],
+                  ),
+                  position: vector.Vector3(lat, long, -0.5),
+                  rotation: vector.Vector4(0, 0, 0, 0),
+                )
             );
           }
         }

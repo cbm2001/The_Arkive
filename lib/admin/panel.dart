@@ -18,7 +18,7 @@ class _panelState extends State<panel> {
   QuerySnapshot numUsers = null ;
   int users = 0;
   getAnalytics() async {
-    numPosts = await FirebaseFirestore.instance.collection('posts').get();
+    numPosts = await FirebaseFirestore.instance.collection('posts').where("postId",isNotEqualTo: null).get();
 
     numUsers = await FirebaseFirestore.instance.collection('Users').get();
 

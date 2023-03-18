@@ -1452,9 +1452,12 @@ class _PostPageState extends State<PostPage> {
   }
 
   Future<bool> draftImage(String uid, String username, String profImage) async {
+    saveToGallery(context);
     setState(() {
       isLoading = true;
     });
+    await Future.delayed(const Duration(milliseconds: 2500));
+
     // start the loading
     try {
       // upload to storage and db
