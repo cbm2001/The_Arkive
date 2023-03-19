@@ -22,16 +22,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.7.0"
-<<<<<<< HEAD
-=======
-  ar_flutter_plugin:
-    dependency: "direct main"
-    description:
-      name: ar_flutter_plugin
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.7.3"
->>>>>>> 50d3ee39c3b8601e95d6bdd5287a4e224bc9ec91
   archive:
     dependency: transitive
     description:
@@ -39,16 +29,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.6"
-<<<<<<< HEAD
-=======
-  arcore_flutter_plugin:
-    dependency: "direct main"
-    description:
-      name: arcore_flutter_plugin
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
->>>>>>> 50d3ee39c3b8601e95d6bdd5287a4e224bc9ec91
   args:
     dependency: transitive
     description:
@@ -259,16 +239,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.4"
-<<<<<<< HEAD
-=======
-  equatable:
-    dependency: transitive
-    description:
-      name: equatable
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.5"
->>>>>>> 50d3ee39c3b8601e95d6bdd5287a4e224bc9ec91
   fake_async:
     dependency: transitive
     description:
@@ -407,16 +377,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
-<<<<<<< HEAD
-=======
-  flutter_compass:
-    dependency: "direct main"
-    description:
-      name: flutter_compass
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.7.0"
->>>>>>> 50d3ee39c3b8601e95d6bdd5287a4e224bc9ec91
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -428,16 +388,14 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_linkify
-      sha256: c89fe74de985ec22f23d3538d2249add085a4f37ac1c29fd79e1a207efb81d63
-      url: "https://pub.dev"
+      url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.2"
   flutter_mentions:
     dependency: "direct main"
     description:
       name: flutter_mentions
-      sha256: "86206b70e14a96c195130202f258c5764ef16f406c72613dfadbaea6bc4717d2"
-      url: "https://pub.dev"
+      url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
   flutter_plugin_android_lifecycle:
@@ -458,8 +416,7 @@ packages:
     dependency: transitive
     description:
       name: flutter_portal
-      sha256: "0e3f9428dbe9f5253b0e65cdc5ce4fa65a1d8cd6ec2a3f3770b46785aa3c57fd"
-      url: "https://pub.dev"
+      url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.0"
   flutter_staggered_grid_view:
@@ -700,8 +657,7 @@ packages:
     dependency: transitive
     description:
       name: linkify
-      sha256: bdfbdafec6cdc9cd0ebb333a868cafc046714ad508e48be8095208c54691d959
-      url: "https://pub.dev"
+      url: "https://pub.dartlang.org"
     source: hosted
     version: "4.1.0"
   location:
@@ -858,44 +814,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.1"
-<<<<<<< HEAD
-=======
-  permission_handler:
-    dependency: transitive
-    description:
-      name: permission_handler
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "10.2.0"
-  permission_handler_android:
-    dependency: transitive
-    description:
-      name: permission_handler_android
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "10.2.0"
-  permission_handler_apple:
-    dependency: transitive
-    description:
-      name: permission_handler_apple
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "9.0.7"
-  permission_handler_platform_interface:
-    dependency: transitive
-    description:
-      name: permission_handler_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.9.0"
-  permission_handler_windows:
-    dependency: transitive
-    description:
-      name: permission_handler_windows
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
->>>>>>> 50d3ee39c3b8601e95d6bdd5287a4e224bc9ec91
   petitparser:
     dependency: transitive
     description:
