@@ -1,12 +1,13 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:first_app/admin/analytics.dart';
 import 'package:first_app/providers/user_provider.dart';
 import 'package:first_app/screens/profile_screen.dart';
+import 'package:first_app/services/crud/folder_service.dart';
+import 'package:first_app/services/crud/notification_service.dart';
+import 'package:first_app/services/crud/post_service.dart';
 import 'package:first_app/widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
 import 'package:flutter/material.dart';
-
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +15,7 @@ import '../models/user.dart';
 import '../resources/firestore_methods.dart';
 import '../utils/utils.dart';
 
-import 'dart:io' as gy;
+import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -39,6 +40,10 @@ class _PostCardState extends State<PostCard> {
   int folderlen = 0;
   List folderlist = [];
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final PostService _postService = PostService();
+  final NotificationService _notificaionService = NotificationService();
+
   @override
   void initState() {
     super.initState();
@@ -47,12 +52,12 @@ class _PostCardState extends State<PostCard> {
 
   fetchCommentLen() async {
     try {
-      QuerySnapshot snap = await FirebaseFirestore.instance
+      QuerySnapshot snap = await _firestore
           .collection('posts')
           .doc(widget.snap['postId'])
           .collection('comments')
           .get();
-      QuerySnapshot folders = await FirebaseFirestore.instance
+      QuerySnapshot folders = await _firestore
           .collection('folders')
           .where('users', arrayContains: userData['uid'])
           .get();
@@ -71,7 +76,7 @@ class _PostCardState extends State<PostCard> {
 
   deletePost(String postId) async {
     try {
-      await FireStoreMethods().deletePost(postId);
+      await _postService.deletePost(postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -82,7 +87,7 @@ class _PostCardState extends State<PostCard> {
 
   addpostTF(String folderId, String postId) async {
     try {
-      await FireStoreMethods().addPostToFolder(folderId, postId);
+      await FolderService().addPostToFolder(folderId, postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -186,11 +191,13 @@ class _PostCardState extends State<PostCard> {
                                               vertical: 12, horizontal: 16),
                                           child: Text('Report Post'),
                                         ),
-                                        onTap: () {
-                                          var x = FirebaseFirestore.instance
+                                        onTap: () async {
+                                          var x = _firestore
                                               .collection("posts")
                                               .doc(widget.snap['postId']);
                                           x.update({"flag": true});
+                                          checkDoc();
+                                          await addReportedPosts();
                                           // remove the dialog box
                                           Navigator.of(context).pop();
                                         }),
@@ -220,11 +227,9 @@ class _PostCardState extends State<PostCard> {
                 child: IconButton(
                   onPressed: widget.snap['likes'].contains(user.uid)
                       ? (() async {
-                          await FireStoreMethods().unlikePost(
-                              widget.snap['postId'],
-                              user.uid,
-                              widget.snap['likes']);
-                          await FireStoreMethods().removeLikefromNotif(
+                          await _postService.unlikePost(widget.snap['postId'],
+                              user.uid, widget.snap['likes']);
+                          await _notificaionService.removeLikefromNotif(
                             widget.snap['notifId'],
                             widget.snap['uid'],
                           );
@@ -232,11 +237,9 @@ class _PostCardState extends State<PostCard> {
                           // addLikeNotif(widget.snap['postId']);
                         })
                       : (() async {
-                          await FireStoreMethods().likePost(
-                              widget.snap['postId'],
-                              user.uid,
-                              widget.snap['likes']);
-                          await FireStoreMethods().addLiketoNotif(
+                          await _postService.likePost(widget.snap['postId'],
+                              user.uid, widget.snap['likes']);
+                          await _notificaionService.addLiketoNotif(
                               widget.snap['postId'],
                               widget.snap['uid'],
                               user.username,
@@ -266,21 +269,16 @@ class _PostCardState extends State<PostCard> {
               ),
               IconButton(
                 onPressed: (() async {
-                  // final urlImage = widget.snap['postUrl'];
-                  // final url = Uri.parse(urlImage);
-                  // final response = await http.get(url);
-                  // final bytes = response.bodyBytes;
-                  // final temp = await getTemporaryDirectory();
-                  // final path = '${temp.path}/image.jpg';
-                  // //final temp = await getTemporaryDirectory();
-                  // //final path = '${temp.path}/image.jpg';
-                  // gy.File(path).writeAsBytesSync(bytes);
-                  // // File(path).writeAsBytesSync(bytes);
-                  // //    File(path).writeAsBytesSync(bytes);
-                  // await Share.shareFiles([path],
-                  //     text: 'Check out the Scrapboard I made at The Arkive');
-                  // await Share.share(text: 'Hi', [path]);
-                  // Share.share(text);
+                  final urlImage = widget.snap['postUrl'];
+                  final url = Uri.parse(urlImage);
+                  final response = await http.get(url);
+                  final bytes = response.bodyBytes;
+                  final temp = await getTemporaryDirectory();
+                  final path = '${temp.path}/image.jpg';
+                  File(path).writeAsBytesSync(bytes);
+                  // ignore: deprecated_member_use
+                  await Share.shareFiles([path],
+                      text: 'Check out the Scrapboard I made at The Arkive');
                 }),
                 icon: const Icon(
                   Icons.send_outlined,

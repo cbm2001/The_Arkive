@@ -1,6 +1,5 @@
 // import 'dart:typed_data';
 
-
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:first_app/screens/map_screen.dart';
 // import 'package:first_app/screens/search_location.dart';
@@ -407,7 +406,10 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_app/screens/map_screen.dart';
 import 'package:first_app/screens/search_location.dart';
+import 'package:first_app/services/crud/post_service.dart';
+import 'package:first_app/services/location/location_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/route_manager.dart';
 import 'package:image_picker/image_picker.dart';
@@ -433,6 +435,7 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
+  GlobalKey<FlutterMentionsState> key = GlobalKey<FlutterMentionsState>();
   Uint8List _file;
   Uint8List _scndFile;
   Image _scndImg;
@@ -747,14 +750,14 @@ class _PostPageState extends State<PostPage> {
 
   Future<bool> postImage(String uid, String username, String profImage) async {
     saveToGallery(context);
-     setState(() {
+    setState(() {
       isLoading = true;
     });
     await Future.delayed(const Duration(milliseconds: 2500));
     // start the loading
     try {
       // upload to storage and db
-      String res = await FireStoreMethods().uploadPost(
+      String res = await PostService().uploadPost(
           _descriptionController.text,
           _file,
           uid,
@@ -800,6 +803,28 @@ class _PostPageState extends State<PostPage> {
     super.dispose();
     _descriptionController.dispose();
   }
+
+  List<Map<String, dynamic>> data = [];
+
+  Future<void> getData() async {
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .where('username',)
+        .get();
+    var docs = querySnapshot.docs;
+
+    for (var doc in docs) {
+      data.add({'display': doc.data()['username']});
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -991,17 +1016,35 @@ class _PostPageState extends State<PostPage> {
                     ),
                   ),
 
-                  SizedBox(
-                    height: 40,
-                    width: 350,
-                    child: reusableTextField("Write a caption",
-                        Icons.description, 
-                        false, _descriptionController),
-                    //maxLines: 8,
+                  Portal(
+                    child: SizedBox(
+                      height: 96,
+                      width: 350,
+                      child: Column(
+                        children: [
+                          reusableTextField("Write a caption",
+                              Icons.description, false, _descriptionController),
+                          FlutterMentions(
+                            decoration: InputDecoration(
+                              hintText: "Tag someone",
+                            ),
+                            mentions: [
+                              Mention(
+                                trigger: "@",
+                                data: data,
+                                style: const TextStyle(
+                                  color: Colors.pink,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
 
                   SizedBox(
-                    height: 5,
+                    height: 55,
                     //floatingActionButton: _addTextToPost,
                   ),
 
@@ -1020,12 +1063,14 @@ class _PostPageState extends State<PostPage> {
                             height: 5,
                           ),
                           SizedBox(
-                            height:25,
+                            height: 25,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min, 
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                SizedBox(width: 90,),
+                                SizedBox(
+                                  width: 90,
+                                ),
                                 Text(
                                   'Edit Scrapboard',
                                   style: TextStyle(
@@ -1034,19 +1079,22 @@ class _PostPageState extends State<PostPage> {
                                     color: Colors.grey.shade700,
                                   ),
                                 ),
-                                SizedBox(width: 30,),
+                                SizedBox(
+                                  width: 30,
+                                ),
                                 TextButton(
                                   onPressed: () => saveToGallery(context),
                                   // style: TextButton.styleFrom(
                                   //   padding: EdgeInsets.zero,),
                                   style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,),
+                                    padding: EdgeInsets.zero,
+                                  ),
                                   child: Text(
                                     "Save Edits",
                                     style: TextStyle(
-                                      color: Color.fromARGB(255, 148, 79, 74), 
+                                      color: Color.fromARGB(255, 148, 79, 74),
                                       fontSize: 12.0,
-                                      fontStyle: FontStyle.italic, 
+                                      fontStyle: FontStyle.italic,
                                       // shadows: [
                                       //   Shadow(
                                       //     blurRadius:2.0,  // shadow blur
@@ -1056,11 +1104,10 @@ class _PostPageState extends State<PostPage> {
                                       // ],
                                     ),
                                   ),
-                                ),            
+                                ),
                               ],
                             ),
                           ),
-                          
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -1071,31 +1118,34 @@ class _PostPageState extends State<PostPage> {
                                   ),
                                   style: ElevatedButton.styleFrom(
                                     fixedSize: Size(
-                                        MediaQuery.of(context).size.width * 0.40,
-                                        MediaQuery.of(context).size.height * 0.04),
+                                        MediaQuery.of(context).size.width *
+                                            0.40,
+                                        MediaQuery.of(context).size.height *
+                                            0.04),
                                     backgroundColor:
-                                       Color.fromRGBO(192, 234, 240, 1),
+                                        Color.fromRGBO(192, 234, 240, 1),
                                     foregroundColor:
                                         Color.fromRGBO(139, 134, 134, 1),
                                   )),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  ElevatedButton(
-                              onPressed: () => addNewDialog(context),
-                              child: Text("Add Text"),
-                              style: ElevatedButton.styleFrom(
-                                fixedSize: Size(
-                                    MediaQuery.of(context).size.width * 0.40,
-                                    MediaQuery.of(context).size.height * 0.04),
-                                backgroundColor:
-                                    Color.fromRGBO(192, 234, 240, 1),
-                                foregroundColor:
-                                    Color.fromRGBO(139, 134, 134, 1),
-                              )),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              ElevatedButton(
+                                  onPressed: () => addNewDialog(context),
+                                  child: Text("Add Text"),
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(
+                                        MediaQuery.of(context).size.width *
+                                            0.40,
+                                        MediaQuery.of(context).size.height *
+                                            0.04),
+                                    backgroundColor:
+                                        Color.fromRGBO(192, 234, 240, 1),
+                                    foregroundColor:
+                                        Color.fromRGBO(139, 134, 134, 1),
+                                  )),
                             ],
                           ),
-                          
                           SizedBox(
                             height: 40,
                             child: ListView(
@@ -1374,70 +1424,73 @@ class _PostPageState extends State<PostPage> {
                               ),
                             ),
                           ),
-                         
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        print("here");
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                MapSearchPage(gpVal: (value) {
-                                              print("and here");
-                                              setState(() {
-                                                geoLoc = value;
-                                              });
-                                            }),
-                                          ),
-                                        );
-                                      },
-                                      child: Text("Search Location"),
-                                      style: ElevatedButton.styleFrom(
-                                        fixedSize: Size(
-                                            MediaQuery.of(context).size.width * 0.40,
-                                            MediaQuery.of(context).size.height * 0.04),
-                                        backgroundColor:
-                                            Color.fromRGBO(192, 234, 240, 1),
-                                        foregroundColor:
-                                            Color.fromRGBO(139, 134, 134, 1),
-                                      )),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      setState(() {
-                                        isLoading = true;
-                                      });
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    print("here");
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            MapSearchPage(gpVal: (value) {
+                                          print("and here");
+                                          setState(() {
+                                            geoLoc = value;
+                                          });
+                                        }),
+                                      ),
+                                    );
+                                  },
+                                  child: Text("Search Location"),
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(
+                                        MediaQuery.of(context).size.width *
+                                            0.40,
+                                        MediaQuery.of(context).size.height *
+                                            0.04),
+                                    backgroundColor:
+                                        Color.fromRGBO(192, 234, 240, 1),
+                                    foregroundColor:
+                                        Color.fromRGBO(139, 134, 134, 1),
+                                  )),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
 
-                                      GeoPoint pos = await determinePosition();
+                                    GeoPoint pos = await determinePosition();
 
-                                      setState(() {
-                                        isLoading = false;
-                                        String x = '123';
+                                    setState(() {
+                                      isLoading = false;
+                                      String x = '123';
 
-                                        geoLoc = pos;
-                                        if (!isLoading) {
-                                          showSnackBar(context, "location received!");
-                                        }
-                                      });
-                                    },
-                                    child: Text("Current location"),
-                                    style: ElevatedButton.styleFrom(
-                                      fixedSize: Size(
-                                          MediaQuery.of(context).size.width * 0.40,
-                                          MediaQuery.of(context).size.height * 0.04),
-                                      backgroundColor:
-                                          Color.fromRGBO(192, 234, 240, 1),
-                                      foregroundColor:
-                                          Color.fromRGBO(139, 134, 134, 1),
-                                    )),
-                                  ],
-                                ),
-                            
+                                      geoLoc = pos;
+                                      if (!isLoading) {
+                                        showSnackBar(
+                                            context, "location received!");
+                                      }
+                                    });
+                                  },
+                                  child: Text("Current location"),
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(
+                                        MediaQuery.of(context).size.width *
+                                            0.40,
+                                        MediaQuery.of(context).size.height *
+                                            0.04),
+                                    backgroundColor:
+                                        Color.fromRGBO(192, 234, 240, 1),
+                                    foregroundColor:
+                                        Color.fromRGBO(139, 134, 134, 1),
+                                  )),
+                            ],
+                          ),
                           SizedBox(
                             height: 5,
                           ),
@@ -1452,13 +1505,16 @@ class _PostPageState extends State<PostPage> {
   }
 
   Future<bool> draftImage(String uid, String username, String profImage) async {
+    saveToGallery(context);
     setState(() {
       isLoading = true;
     });
+    await Future.delayed(const Duration(milliseconds: 2500));
+
     // start the loading
     try {
       // upload to storage and db
-      String res = await FireStoreMethods().uploadDraft(
+      String res = await PostService().uploadDraft(
           _descriptionController.text,
           _file,
           uid,

@@ -33,7 +33,7 @@ class _MyNavigationState extends State<MyNavigationBar> {
     ExplorePage(),
     SearchPage(),
     PostPage(),
-    ARPage(),
+    MapPage(),
     ProfilePage(
       uid: FirebaseAuth.instance.currentUser.uid,
     ),
