@@ -110,11 +110,11 @@ class NotificationService {
     return res;
   }
 
-  Future<String> addRequesttoNotif(
-      String folder, String folderUrl, String uid, String username, String photoUrl) async {
+  Future<String> addRequesttoNotif(String folder, String folderUrl, String uid,
+      String username, String photoUrl) async {
     String res = "Some error occurred";
     String notifId = const Uuid().v1();
-    bool isNotFolderOwner = FirebaseAuth.instance.currentUser.uid != uid;
+    bool isNotFolderOwner = _auth.currentUser.uid != uid;
     if (isNotFolderOwner) {
       try {
         NotificationItems item = NotificationItems(
@@ -123,7 +123,7 @@ class NotificationService {
             folderUrl: folderUrl,
             notifId: notifId,
             username: username, // User who requested it
-            userId: FirebaseAuth.instance.currentUser.uid, // owner id
+            userId: _auth.currentUser.uid, // owner id
             userProfile: photoUrl,
             timeStamp: Timestamp.now());
         _firestore
