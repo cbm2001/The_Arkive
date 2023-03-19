@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:first_app/services/crud/notification_service.dart';
 import 'package:first_app/services/crud/post_service.dart';
 import 'package:flutter/material.dart';
 import '/models/user.dart';
@@ -11,7 +12,14 @@ import 'package:provider/provider.dart';
 
 class CommentsScreen extends StatefulWidget {
   final postId;
-  const CommentsScreen({Key key, @required this.postId}) : super(key: key);
+  final postUrl;
+  final uid; // uid of the post
+  const CommentsScreen(
+      {Key key,
+      @required this.postId,
+      @required this.postUrl,
+      @required this.uid})
+      : super(key: key);
 
   @override
   _CommentsScreenState createState() => _CommentsScreenState();
@@ -112,11 +120,20 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 ),
               ),
               InkWell(
-                onTap: () => postComment(
-                  user.uid,
-                  user.username,
-                  user.photoUrl,
-                ),
+                onTap: () async {
+                  postComment(
+                    user.uid,
+                    user.username,
+                    user.photoUrl,
+                  );
+                  await NotificationService().addCommenttoNotif(
+                      widget.postId,
+                      widget.uid,
+                      user.username,
+                      widget.postUrl,
+                      user.photoUrl.toString(),
+                      commentEditingController.text);
+                },
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 8),

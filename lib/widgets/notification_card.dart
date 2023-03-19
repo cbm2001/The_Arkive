@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 
 import '../models/user.dart';
 import '../resources/firestore_methods.dart';
+import '../screens/user_profile.dart';
 import '../utils/utils.dart';
 
 class NotifCard extends StatefulWidget {
@@ -59,6 +60,7 @@ class _NotifCardState extends State<NotifCard> {
                   ProfilePage(uid: FirebaseAuth.instance.currentUser.uid),
             ),
           );
+          //  Navigator.pop(context);
         }),
         child: Container(
           height: 50.0,
@@ -85,6 +87,7 @@ class _NotifCardState extends State<NotifCard> {
                   ProfilePage(uid: FirebaseAuth.instance.currentUser.uid),
             ),
           );
+          //Navigator.pop(context);
         }),
         child: Container(
           height: 50.0,
@@ -143,7 +146,7 @@ class _NotifCardState extends State<NotifCard> {
                     ProfilePage(uid: FirebaseAuth.instance.currentUser.uid),
               ),
             );
-            Navigator.pop(context);
+            //  Navigator.pop(context);
           }),
           title: GestureDetector(
             onTap: (() {
@@ -164,7 +167,7 @@ class _NotifCardState extends State<NotifCard> {
                       ProfilePage(uid: FirebaseAuth.instance.currentUser.uid),
                 ),
               );
-              Navigator.pop(context);
+              //Navigator.pop(context);
             }),
             child: Row(
               children: [

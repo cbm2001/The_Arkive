@@ -165,8 +165,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(children: <Widget>[
-                    //SizedBox(width: 150, height: 20),
-
                     Padding(
                       padding: EdgeInsets.only(left: 155, top: 40.0),
                       child: CircleAvatar(
@@ -174,7 +172,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         radius: 40.0,
                       ),
                     ),
-
                     IconButton(
                       icon: new Icon(
                         Icons.menu,

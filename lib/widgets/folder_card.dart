@@ -734,21 +734,19 @@ class FolderCardState extends State<FolderCard> {
                                               .getUser
                                               .username);
                                       NotificationService().addRequesttoNotif(
-                                          widget.snap["folderId"],
-                                          widget.snap['cover'].toString(),
-                                          Provider.of<UserProvider>(context,
-                                                  listen: false)
-                                              .getUser
-                                              .photoUrl
-                                              .toString(),
-                                          Provider.of<UserProvider>(context,
-                                                  listen: false)
-                                              .getUser
-                                              .uid,
-                                          Provider.of<UserProvider>(context,
-                                                  listen: false)
-                                              .getUser
-                                              .username);
+                                        widget.snap["folderId"],
+                                        widget.snap['cover'].toString(),
+                                        widget.snap['uid'],
+                                        Provider.of<UserProvider>(context,
+                                                listen: false)
+                                            .getUser
+                                            .username,
+                                        Provider.of<UserProvider>(context,
+                                                listen: false)
+                                            .getUser
+                                            .photoUrl
+                                            .toString(),
+                                      );
                                       Navigator.pop(context);
                                     },
                                     style: ElevatedButton.styleFrom(
