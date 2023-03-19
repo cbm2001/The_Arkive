@@ -1,3 +1,5 @@
+import 'package:first_app/services/crud/post_service.dart';
+import 'package:first_app/services/location/location_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:typed_data';
 
@@ -34,17 +36,19 @@ class newPostDraftScreen extends StatefulWidget {
   final String location;
   final GeoPoint geoLoc;
   final String postID;
-  const newPostDraftScreen({Key key,
-    // String postID,
-    @required this.postURL,
-    @required this.category,
-    @required this.description,
-    // String category,
-    // String description,
-    // String location,
-    @required this.location,
-    @required this.geoLoc,
-    @required this.postID}) : super(key: key);
+  const newPostDraftScreen(
+      {Key key,
+      // String postID,
+      @required this.postURL,
+      @required this.category,
+      @required this.description,
+      // String category,
+      // String description,
+      // String location,
+      @required this.location,
+      @required this.geoLoc,
+      @required this.postID})
+      : super(key: key);
 
   @override
   State<newPostDraftScreen> createState() => _newPostDraftScreenState();
@@ -77,14 +81,18 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
   final ValueNotifier<Matrix4> notifier = ValueNotifier(Matrix4.identity());
   final ValueNotifier<Matrix4> notifierr = ValueNotifier(Matrix4.identity());
 
-  void uploadDraftPost(String uid,String username,String profImage,) async {
+  void uploadDraftPost(
+    String uid,
+    String username,
+    String profImage,
+  ) async {
     setState(() {
       isLoading = true;
     });
     // start the loading
     try {
       // upload to storage and db
-      String res = await FireStoreMethods().uploadDraftPost(
+      String res = await PostService().uploadDraftPost(
           (_descriptionController.text == '')
               ? widget.description
               : _descriptionController.text,
@@ -103,7 +111,10 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
           (geoLoc == null) ? widget.geoLoc : geoLoc,
           false);
       if (res == "success") {
-        await FirebaseFirestore.instance.collection("drafts").doc(widget.postID).delete();
+        await FirebaseFirestore.instance
+            .collection("drafts")
+            .doc(widget.postID)
+            .delete();
         setState(() {
           isLoading = false;
         });
@@ -112,7 +123,6 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
           'Posted!',
         );
         clearImage();
-
       } else {
         setState(() {
           isLoading = false;
@@ -309,72 +319,72 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
     showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: Center(
-            child: Text("Add Image"),
-          ),
-          actions: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                //SizedBox(width: 30),
-                Builder(builder: (context) {
-                  return ElevatedButton(
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                      Uint8List file = await pickImage(ImageSource.gallery);
-                      setState(() {
-                        _scndFile = file;
-                        //_scndImg = Image.memory(_scndFile);
-                        _addedWidgets.add(
-                          OverlayedWidget(
-                            child: Image.memory(_scndFile),
-                          ),
-                        );
-                      });
-                    },
-                    child: Text(
-                      'Pick Image',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Color.fromRGBO(139, 134, 134, 1),
-                          fontSize: 14),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromRGBO(192, 234, 240, 1),
-                      fixedSize: Size(
-                          MediaQuery.of(context).size.width * 0.70,
-                          MediaQuery.of(context).size.height * 0.04),
-                      alignment: Alignment.center,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.0)),
-                    ),
-                  );
-                }),
-                Builder(builder: (context) {
-                  return ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text(
-                      'Return',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Color.fromRGBO(139, 134, 134, 1),
-                          fontSize: 14),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromRGBO(192, 234, 240, 1),
-                      fixedSize: Size(
-                          MediaQuery.of(context).size.width * 0.70,
-                          MediaQuery.of(context).size.height * 0.04),
-                      alignment: Alignment.center,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.0)),
-                    ),
-                  );
-                }),
+              title: Center(
+                child: Text("Add Image"),
+              ),
+              actions: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //SizedBox(width: 30),
+                    Builder(builder: (context) {
+                      return ElevatedButton(
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          Uint8List file = await pickImage(ImageSource.gallery);
+                          setState(() {
+                            _scndFile = file;
+                            //_scndImg = Image.memory(_scndFile);
+                            _addedWidgets.add(
+                              OverlayedWidget(
+                                child: Image.memory(_scndFile),
+                              ),
+                            );
+                          });
+                        },
+                        child: Text(
+                          'Pick Image',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Color.fromRGBO(139, 134, 134, 1),
+                              fontSize: 14),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(192, 234, 240, 1),
+                          fixedSize: Size(
+                              MediaQuery.of(context).size.width * 0.70,
+                              MediaQuery.of(context).size.height * 0.04),
+                          alignment: Alignment.center,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7.0)),
+                        ),
+                      );
+                    }),
+                    Builder(builder: (context) {
+                      return ElevatedButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(
+                          'Return',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Color.fromRGBO(139, 134, 134, 1),
+                              fontSize: 14),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(192, 234, 240, 1),
+                          fixedSize: Size(
+                              MediaQuery.of(context).size.width * 0.70,
+                              MediaQuery.of(context).size.height * 0.04),
+                          alignment: Alignment.center,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7.0)),
+                        ),
+                      );
+                    }),
+                  ],
+                ),
               ],
-            ),
-          ],
-        ));
+            ));
   }
 
   _selectImage(BuildContext parentContext) async {
@@ -417,7 +427,6 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
     );
   }
 
-
   void clearImage() {
     setState(() {
       _file = null;
@@ -443,7 +452,6 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
           color: Colors.amber,
           onPressed: clearImage,
         ),
-
         actions: <Widget>[
           TextButton(
             onPressed: () {
@@ -459,7 +467,6 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
               style: TextStyle(color: Colors.black, fontSize: 16.0),
             ),
           ),
-
           SizedBox(
             width: 15,
           ),
@@ -519,10 +526,10 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
                           alignment: Alignment.topCenter,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                fit: BoxFit.fill,
-                                alignment: FractionalOffset.topCenter,
-                                image: NetworkImage(widget.postURL),
-                              )),
+                            fit: BoxFit.fill,
+                            alignment: FractionalOffset.topCenter,
+                            image: NetworkImage(widget.postURL),
+                          )),
                         ),
                       ),
                     ),
@@ -537,9 +544,8 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
                             child: ImageText(textInfo: texts[i]),
                             onDragEnd: (drag) {
                               final renderBox =
-                              context.findRenderObject() as RenderBox;
-                              Offset off =
-                              renderBox.globalToLocal(drag.offset);
+                                  context.findRenderObject() as RenderBox;
+                              Offset off = renderBox.globalToLocal(drag.offset);
                               setState(() {
                                 texts[i].top = off.dy - 120;
                                 texts[i].left = off.dx - 20;
@@ -550,23 +556,22 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
                       ),
                     creatorText.text.isNotEmpty
                         ? Positioned(
-                      left: 0,
-                      bottom: 0,
-                      child: Text(
-                        creatorText.text,
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black.withOpacity(
-                              0.3,
-                            )),
-                      ),
-                    )
+                            left: 0,
+                            bottom: 0,
+                            child: Text(
+                              creatorText.text,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black.withOpacity(
+                                    0.3,
+                                  )),
+                            ),
+                          )
                         : const SizedBox.shrink(),
                     for (int z = 0; z < _addedWidgets.length; z++)
                       SizedBox(
-                        height:
-                        MediaQuery.of(context).size.height * 0.395,
+                        height: MediaQuery.of(context).size.height * 0.395,
                         width: MediaQuery.of(context).size.width * 0.9,
                         //child: _scndImg,
                         child: _addedWidgets[z],
@@ -579,8 +584,7 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
             SizedBox(
               height: 40,
               width: 350,
-              child: reusableTextField("Write a caption",
-                  Icons.description,
+              child: reusableTextField("Write a caption", Icons.description,
                   false, _descriptionController),
               //maxLines: 8,
             ),
@@ -605,12 +609,14 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
                       height: 5,
                     ),
                     SizedBox(
-                      height:25,
+                      height: 25,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SizedBox(width: 90,),
+                          SizedBox(
+                            width: 90,
+                          ),
                           Text(
                             'Edit Scrapboard',
                             style: TextStyle(
@@ -619,13 +625,16 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
                               color: Colors.grey.shade700,
                             ),
                           ),
-                          SizedBox(width: 30,),
+                          SizedBox(
+                            width: 30,
+                          ),
                           TextButton(
                             onPressed: () => saveToGallery(context),
                             // style: TextButton.styleFrom(
                             //   padding: EdgeInsets.zero,),
                             style: TextButton.styleFrom(
-                              padding: EdgeInsets.zero,),
+                              padding: EdgeInsets.zero,
+                            ),
                             child: Text(
                               "Save Edits",
                               style: TextStyle(
@@ -645,7 +654,6 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
                         ],
                       ),
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -658,10 +666,8 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
                               fixedSize: Size(
                                   MediaQuery.of(context).size.width * 0.40,
                                   MediaQuery.of(context).size.height * 0.04),
-                              backgroundColor:
-                              Color.fromRGBO(192, 234, 240, 1),
-                              foregroundColor:
-                              Color.fromRGBO(139, 134, 134, 1),
+                              backgroundColor: Color.fromRGBO(192, 234, 240, 1),
+                              foregroundColor: Color.fromRGBO(139, 134, 134, 1),
                             )),
                         SizedBox(
                           width: 12,
@@ -673,14 +679,11 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
                               fixedSize: Size(
                                   MediaQuery.of(context).size.width * 0.40,
                                   MediaQuery.of(context).size.height * 0.04),
-                              backgroundColor:
-                              Color.fromRGBO(192, 234, 240, 1),
-                              foregroundColor:
-                              Color.fromRGBO(139, 134, 134, 1),
+                              backgroundColor: Color.fromRGBO(192, 234, 240, 1),
+                              foregroundColor: Color.fromRGBO(139, 134, 134, 1),
                             )),
                       ],
                     ),
-
                     SizedBox(
                       height: 40,
                       child: ListView(
@@ -900,14 +903,8 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
                   ),
                   DropdownButton<String>(
                     value: category,
-                    items: [
-                      '',
-                      'travel',
-                      'sports',
-                      'food',
-                      'art',
-                      'lifestyle'
-                    ].map<DropdownMenuItem<String>>((String value) {
+                    items: ['', 'travel', 'sports', 'food', 'art', 'lifestyle']
+                        .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(
@@ -959,7 +956,6 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
                         ),
                       ),
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -971,11 +967,11 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       MapSearchPage(gpVal: (value) {
-                                        print("and here");
-                                        setState(() {
-                                          geoLoc = value;
-                                        });
-                                      }),
+                                    print("and here");
+                                    setState(() {
+                                      geoLoc = value;
+                                    });
+                                  }),
                                 ),
                               );
                             },
@@ -984,10 +980,8 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
                               fixedSize: Size(
                                   MediaQuery.of(context).size.width * 0.40,
                                   MediaQuery.of(context).size.height * 0.04),
-                              backgroundColor:
-                              Color.fromRGBO(192, 234, 240, 1),
-                              foregroundColor:
-                              Color.fromRGBO(139, 134, 134, 1),
+                              backgroundColor: Color.fromRGBO(192, 234, 240, 1),
+                              foregroundColor: Color.fromRGBO(139, 134, 134, 1),
                             )),
                         SizedBox(
                           width: 12,
@@ -1015,14 +1009,11 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
                               fixedSize: Size(
                                   MediaQuery.of(context).size.width * 0.40,
                                   MediaQuery.of(context).size.height * 0.04),
-                              backgroundColor:
-                              Color.fromRGBO(192, 234, 240, 1),
-                              foregroundColor:
-                              Color.fromRGBO(139, 134, 134, 1),
+                              backgroundColor: Color.fromRGBO(192, 234, 240, 1),
+                              foregroundColor: Color.fromRGBO(139, 134, 134, 1),
                             )),
                       ],
                     ),
-
                     SizedBox(
                       height: 5,
                     ),
@@ -1043,7 +1034,7 @@ class _newPostDraftScreenState extends State<newPostDraftScreen> {
     // start the loading
     try {
       // upload to storage and db
-      String res = await FireStoreMethods().uploadDraft(
+      String res = await PostService().uploadDraft(
           _descriptionController.text,
           _file,
           uid,

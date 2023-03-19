@@ -1,13 +1,15 @@
 import 'dart:typed_data';
 import 'dart:ui';
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/models/folders.dart';
 import 'package:first_app/screens/post_screen.dart';
 import 'package:first_app/resources/auth_methods.dart';
 import 'package:first_app/screens/explore_screen.dart';
+import 'package:first_app/services/crud/firebase_storage_service.dart';
+import 'package:first_app/services/crud/folder_service.dart';
+import 'package:first_app/services/crud/user_service.dart';
 import 'package:first_app/widgets/folder_card.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,6 +21,7 @@ import '../providers/user_provider.dart';
 import '../main.dart';
 import '../resources/firestore_methods.dart';
 import '../resources/storage_methods.dart';
+import '../widgets/folder_card.dart';
 import '../widgets/folder_card.dart';
 import '../widgets/post_card.dart';
 import '../widgets/reusable_widgets.dart';
@@ -85,8 +88,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     String folderName;
     model.User user = Provider.of<UserProvider>(context).getUser;
-    upperTab = //FirebaseAuth.instance.currentUser.uid == userData['uid']    
-    TabBar(
+    upperTab = //FirebaseAuth.instance.currentUser.uid == userData['uid']
+        TabBar(
             indicator: UnderlineTabIndicator(
               borderSide: BorderSide(width: 1.5),
               insets: EdgeInsets.zero,
@@ -95,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
           //if (FirebaseAuth.instance.currentUser.uid == user.uid)
           Tab(
             icon: new Icon(
-              Icons.dashboard_outlined ,
+              Icons.dashboard_outlined,
               // Icons.developer_board ,
               color: Colors.black,
             ),
@@ -165,8 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     //SizedBox(width: 150, height: 20),
 
                     Padding(
-                      padding: EdgeInsets.only(left: 175, top: 40.0),
-
+                      padding: EdgeInsets.only(left: 155, top: 40.0),
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(userData['photoUrl']),
                         radius: 40.0,
@@ -228,8 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 551,
                     child: DefaultTabController(
                       length: upperTab.tabs.length,
-                      child: 
-                      Scaffold(
+                      child: Scaffold(
                           extendBodyBehindAppBar: true,
                           // backgroundColor: Colors.pink.shade100,
                           appBar: PreferredSize(
@@ -271,7 +272,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     itemBuilder: (ctx, index) => Card(
                                       elevation: 10,
                                       child: PostCard(
-                                          snap: snapshot.data.docs[index].data()),
+                                          snap:
+                                              snapshot.data.docs[index].data()),
                                     ),
                                     /*return Container(
                                 child: Image(
@@ -349,7 +351,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     child: ElevatedButton(
                                                         child: Text("Create"),
                                                         onPressed: () {
-                                                          FireStoreMethods()
+                                                          FolderService()
                                                               .createFolder(
                                                             folderName,
                                                             Provider.of<UserProvider>(
@@ -459,7 +461,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     itemBuilder: (ctx, index) => Card(
                                       elevation: 10,
                                       child: DraftCard(
-                                          snap: snapshot.data.docs[index].data()),
+                                          snap:
+                                              snapshot.data.docs[index].data()),
                                     ),
                                     /*return Container(
                                   child: Image(
@@ -503,7 +506,7 @@ class _ProfilePageState extends State<ProfilePage> {
               SizedBox(height: 150),
               ElevatedButton(
                 onPressed: () async {
-                  await AuthMethods().signOut();
+                  await UserService().signOut();
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => MyHomePage()),
@@ -752,7 +755,7 @@ Widget updatePfp(BuildContext context) {
                       onPressed: () async {
                         Uint8List im = await pickImage(ImageSource.gallery);
                         // set state because we need to display the image we selected on the circle avatar
-                        String photoUrl = await StorageMethods()
+                        String photoUrl = await StorageService()
                             .uploadImageToStorage('profilePics', im, false);
                         y.update({
                           "photoUrl": "$photoUrl",
@@ -795,7 +798,6 @@ Widget updateBio(BuildContext context) {
       ),
     ),
     body: Container(
-      
       color: Color.fromRGBO(192, 234, 240, 1),
       child: Column(
         children: [
@@ -848,13 +850,13 @@ Widget updateBio(BuildContext context) {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 // Padding(
-                  // padding: const EdgeInsets.only(right: 200.0),
-                   Center(
-                    child: Text(
-                      "Edit current bio",
-                      style: TextStyle(color: Colors.black, fontSize: 20),
-                    ),
+                // padding: const EdgeInsets.only(right: 200.0),
+                Center(
+                  child: Text(
+                    "Edit current bio",
+                    style: TextStyle(color: Colors.black, fontSize: 20),
                   ),
+                ),
                 // ),
                 SizedBox(height: 20),
                 SizedBox(
@@ -974,11 +976,10 @@ Widget updateUsername(BuildContext context) {
                 Padding(
                   padding: const EdgeInsets.only(right: 0.0),
                   child: Center(
-                      child: Text(
-                        "Edit current username",
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                    
+                    child: Text(
+                      "Edit current username",
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -1036,7 +1037,6 @@ Widget updateUsername(BuildContext context) {
     ),
   );
 }
-
 
 Widget updatePassword(BuildContext context) {
   return Scaffold(
@@ -1257,4 +1257,3 @@ Widget updateEmail(BuildContext context) {
     ),
   );
 }
-

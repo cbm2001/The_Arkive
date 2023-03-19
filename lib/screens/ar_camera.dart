@@ -97,21 +97,19 @@ class _ARPageState extends State<ARPage> {
             var lat = geoLoc.latitude;
             var long = geoLoc.longitude;
 
-            _arKitController.addArCoreNodeWithAnchor(
-              ArCoreNode(
-                shape: ArCoreSphere(
-                  radius: 0.1,
-                  materials: [
-                    ArCoreMaterial(
-                      color: Colors.red,
-                      reflectance: 1,
-                    ),
-                  ],
-                ),
-                position: vector.Vector3(lat, long, -0.5),
-                rotation: vector.Vector4(0, 0, 0, 0),
-              )
-            );
+            _arKitController.addArCoreNodeWithAnchor(ArCoreNode(
+              shape: ArCoreSphere(
+                radius: 0.1,
+                materials: [
+                  ArCoreMaterial(
+                    color: Colors.red,
+                    reflectance: 1,
+                  ),
+                ],
+              ),
+              position: vector.Vector3(lat, long, -0.5),
+              rotation: vector.Vector4(0, 0, 0, 0),
+            ));
           }
         }
       }

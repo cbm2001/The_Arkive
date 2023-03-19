@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/screens/newPostDraftScreen.dart';
 import 'package:first_app/screens/post_draft_screen.dart';
 import 'package:first_app/providers/user_provider.dart';
+import 'package:first_app/services/crud/post_service.dart';
 import 'package:first_app/widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,6 @@ import '../screens/post_draft_screen.dart';
 import '../resources/auth_methods.dart';
 import '../resources/firestore_methods.dart';
 import '../utils/utils.dart';
-
-
 
 int i = 0;
 
@@ -55,7 +54,7 @@ class _DraftCardState extends State<DraftCard> {
 
   deleteDraft(String postId) async {
     try {
-      await FireStoreMethods().deleteDraft(postId);
+      await PostService().deleteDraft(postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -66,7 +65,6 @@ class _DraftCardState extends State<DraftCard> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(vertical: 0),
@@ -77,7 +75,6 @@ class _DraftCardState extends State<DraftCard> {
                 .copyWith(right: 4),
             child: Row(children: [
               //header section
-
             ]),
 
             //image section
@@ -121,12 +118,8 @@ class _DraftCardState extends State<DraftCard> {
               ),
               IconButton(
                 onPressed: () {
-
-
                   deleteDraft(widget.snap['postId']);
                   // Navigator.of(context).pop();
-
-
                 },
                 icon: const Icon(
                   Icons.delete_outline,

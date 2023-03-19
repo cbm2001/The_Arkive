@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:first_app/services/crud/post_service.dart';
 import 'package:flutter/material.dart';
 import '/models/user.dart';
 import '/providers/user_provider.dart';
@@ -22,7 +23,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
   void postComment(String uid, String name, String profilePic) async {
     try {
-      String res = await FireStoreMethods().postComment(
+      String res = await PostService().postComment(
         widget.postId,
         commentEditingController.text,
         uid,

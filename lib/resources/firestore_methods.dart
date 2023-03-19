@@ -1,4 +1,4 @@
-import 'dart:core';
+/* import 'dart:core';
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
@@ -315,6 +315,67 @@ class FireStoreMethods {
     }
     return res;
   }
+
+  Future<String> addCommenttoNotif(String postId, String uid, String username,
+      String postUrl, String photoUrl, String text) async {
+    String res = "Some error occurred";
+    bool isNotPostOwner = FirebaseAuth.instance.currentUser.uid != uid;
+    String notifId = const Uuid().v1();
+    if (isNotPostOwner) {
+      try {
+        NotificationItems item = NotificationItems(
+            type: "Comments",
+            notifId: notifId,
+            text: text,
+            username: username, // User who liked the post
+            userId: FirebaseAuth.instance.currentUser.uid, // user id
+            userProfile: photoUrl,
+            postId: postId,
+            postUrl: postUrl,
+            timeStamp: Timestamp.now());
+        _firestore
+            .collection("notifications")
+            .doc(uid)
+            .collection("notifItems")
+            .doc(notifId)
+            .set(item.toJson());
+        //if (FirebaseAuth.instance.currentUser.uid == uid) {}
+      } catch (err) {
+        res = err.toString();
+      }
+    }
+    return res;
+  }
+
+  /*Future<String> deleteComment(String postId, String text, String uid,
+      String name, String profilePic) async {
+    String res = "Some error occurred";
+    try {
+      if (text.isNotEmpty) {
+        // if the likes list contains the user uid, we need to remove it
+        String commentId = const Uuid().v1();
+        _firestore
+            .collection('posts')
+            .doc(postId)
+            .collection('comments')
+            .doc(commentId)
+            .set({
+          'profilePic': profilePic,
+          'name': name,
+          'uid': uid,
+          'text': text,
+          'commentId': commentId,
+          'datePublished': DateTime.now(),
+        });
+        res = 'success';
+      } else {
+        res = "Please enter text";
+      }
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }*/
 
 
   Future<String> addCommenttoNotif(String postId, String uid, String username,
@@ -689,4 +750,4 @@ class FireStoreMethods {
         .get()
         .then((value) => value.data());
   }
-}
+} */
