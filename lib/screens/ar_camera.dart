@@ -97,6 +97,7 @@
 //             var lat = geoLoc.latitude;
 //             var long = geoLoc.longitude;
 
+<<<<<<< HEAD
 //             _arKitController.addArCoreNodeWithAnchor(
 //               ArCoreNode(
 //                 shape: ArCoreSphere(
@@ -118,3 +119,24 @@
 //     });
 //   }
 // }
+=======
+            _arKitController.addArCoreNodeWithAnchor(ArCoreNode(
+              shape: ArCoreSphere(
+                radius: 0.1,
+                materials: [
+                  ArCoreMaterial(
+                    color: Colors.red,
+                    reflectance: 1,
+                  ),
+                ],
+              ),
+              position: vector.Vector3(lat, long, -0.5),
+              rotation: vector.Vector4(0, 0, 0, 0),
+            ));
+          }
+        }
+      }
+    });
+  }
+}
+>>>>>>> 50d3ee39c3b8601e95d6bdd5287a4e224bc9ec91
