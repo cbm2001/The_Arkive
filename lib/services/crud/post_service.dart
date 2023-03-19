@@ -50,7 +50,8 @@ class PostService {
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
       checkDoc();
-      addPost();
+      await addPost();
+      print("heloo");
     } catch (err) {
       res = err.toString();
     }
@@ -149,7 +150,7 @@ class PostService {
       //}
       res = 'success';
       checkDoc();
-      addLike();
+      await addLike();
     } catch (err) {
       res = err.toString();
     }
@@ -201,7 +202,7 @@ class PostService {
         });
         res = 'success';
         checkDoc();
-        addComment();
+        await addComment();
       } else {
         res = "Please enter text";
       }

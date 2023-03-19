@@ -235,13 +235,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               SizedBox(
                                   height: 400,
                                   width: 400,
-                                  child: FutureBuilder(
-                                    future: FirebaseFirestore.instance
+                                  child: StreamBuilder(
+                                    stream: FirebaseFirestore.instance
                                         .collection('posts')
                                         .where('uid',
                                             isEqualTo: userData['uid'])
-                                        .get(),
-                                    builder: (context, snapshot) {
+                                        .snapshots(),
+                                    builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
                                         return const Center(
@@ -251,9 +251,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
                                       return ListView.builder(
                                         shrinkWrap: true,
-                                        itemCount: (snapshot.data as dynamic)
-                                            .docs
-                                            .length,
+                                        itemCount: snapshot.data.docs.length,
                                         itemBuilder: (ctx, index) => PostCard(
                                             snap: snapshot.data.docs[index]
                                                 .data()),
@@ -261,12 +259,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     },
                                   )),
                               Container(
-                                  child: FutureBuilder(
-                                future: FirebaseFirestore.instance
+                                  child: StreamBuilder(
+                                stream: FirebaseFirestore.instance
                                     .collection('folders')
                                     .where('uid', isEqualTo: userData['uid'])
-                                    .get(),
-                                builder: (context, snapshot) {
+                                    .snapshots(),
+                                builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
                                     return const Center(
@@ -277,7 +275,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   return ListView.builder(
                                     shrinkWrap: true,
                                     itemCount:
-                                        (snapshot.data as dynamic).docs.length,
+                                    snapshot.data.docs.length,
                                     itemBuilder: (ctx, index) => FolderCard(
                                         snap: snapshot.data.docs[index].data()),
                                   );

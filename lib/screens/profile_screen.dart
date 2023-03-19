@@ -22,6 +22,7 @@ import '../main.dart';
 import '../resources/firestore_methods.dart';
 import '../resources/storage_methods.dart';
 import '../widgets/folder_card.dart';
+import '../widgets/folder_card.dart';
 import '../widgets/post_card.dart';
 import '../widgets/reusable_widgets.dart';
 import '../utils/utils.dart';
@@ -160,6 +161,8 @@ class _ProfilePageState extends State<ProfilePage> {
               //width: double.infinity,
               //height: double.infinity,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(children: <Widget>[
                     //SizedBox(width: 150, height: 20),

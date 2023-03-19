@@ -50,7 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       });*/
         // navigate to the home screen
         checkDoc();
-        addSignup();
+        await addSignup();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => AgeCheck()),
         );
