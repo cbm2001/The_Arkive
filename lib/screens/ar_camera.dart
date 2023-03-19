@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
-import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
-import 'package:ar_flutter_plugin/models/ar_node.dart';
+// import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
+// import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
+//import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:first_app/screens/post_draft_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -97,21 +97,19 @@ class _ARPageState extends State<ARPage> {
             var lat = geoLoc.latitude;
             var long = geoLoc.longitude;
 
-            _arKitController.addArCoreNodeWithAnchor(
-              ArCoreNode(
-                shape: ArCoreSphere(
-                  radius: 0.1,
-                  materials: [
-                    ArCoreMaterial(
-                      color: Colors.red,
-                      reflectance: 1,
-                    ),
-                  ],
-                ),
-                position: vector.Vector3(lat, long, -0.5),
-                rotation: vector.Vector4(0, 0, 0, 0),
-              )
-            );
+            _arKitController.addArCoreNodeWithAnchor(ArCoreNode(
+              shape: ArCoreSphere(
+                radius: 0.1,
+                materials: [
+                  ArCoreMaterial(
+                    color: Colors.red,
+                    reflectance: 1,
+                  ),
+                ],
+              ),
+              position: vector.Vector3(lat, long, -0.5),
+              rotation: vector.Vector4(0, 0, 0, 0),
+            ));
           }
         }
       }
