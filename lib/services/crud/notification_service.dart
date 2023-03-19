@@ -25,6 +25,7 @@ class NotificationService {
             postId: postId,
             postUrl: postUrl,
             timeStamp: Timestamp.now());
+        _firestore.collection("notifications").doc(uid).set({"dummy": "dummy"});
         _firestore
             .collection("notifications")
             .doc(uid)
@@ -96,6 +97,7 @@ class NotificationService {
             postId: postId,
             postUrl: postUrl,
             timeStamp: Timestamp.now());
+        _firestore.collection("notifications").doc(uid).set({"dummy": "dummy"});
         _firestore
             .collection("notifications")
             .doc(uid)
@@ -110,32 +112,34 @@ class NotificationService {
     return res;
   }
 
-  Future<String> addRequesttoNotif(
-      String folder, String uid, String username, String photoUrl) async {
+  Future<String> addRequesttoNotif(String folder, String folderUrl, String uid,
+      String username, String photoUrl) async {
     String res = "Some error occurred";
     String notifId = const Uuid().v1();
-    bool isNotFolderOwner = _auth.currentUser.uid != uid;
-    if (isNotFolderOwner) {
-      try {
-        NotificationItems item = NotificationItems(
-            type: "folders",
-            folder: folder,
-            notifId: notifId,
-            username: username, // User who requested it
-            userId: _auth.currentUser.uid, // owner id
-            userProfile: photoUrl,
-            timeStamp: Timestamp.now());
-        _firestore
-            .collection("notifications")
-            .doc(uid) // owner id
-            .collection("notifItems")
-            .doc(notifId)
-            .set(item.toJson());
-        //if (FirebaseAuth.instance.currentUser.uid == uid) {}
-      } catch (err) {
-        res = err.toString();
-      }
+    //bool isNotFolderOwner = _auth.currentUser.uid != uid;
+
+    try {
+      NotificationItems item = NotificationItems(
+          type: "folders",
+          folder: folder,
+          folderUrl: folderUrl,
+          notifId: notifId,
+          username: username, // User who requested it
+          userId: _auth.currentUser.uid,
+          userProfile: photoUrl,
+          timeStamp: Timestamp.now());
+      _firestore.collection("notifications").doc(uid).set({"dummy": "dummy"});
+      _firestore
+          .collection("notifications")
+          .doc(uid)
+          .collection("notifItems")
+          .doc(notifId)
+          .set(item.toJson());
+      //if (FirebaseAuth.instance.currentUser.uid == uid) {}
+    } catch (err) {
+      res = err.toString();
     }
+
     return res;
   }
 }

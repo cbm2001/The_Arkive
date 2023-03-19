@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 
 import '../models/user.dart';
 import '../resources/firestore_methods.dart';
+import '../screens/user_profile.dart';
 import '../utils/utils.dart';
 
 class NotifCard extends StatefulWidget {
@@ -55,9 +56,11 @@ class _NotifCardState extends State<NotifCard> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => notifPost(snap: widget.snap),
+              builder: (context) =>
+                  ProfilePage(uid: FirebaseAuth.instance.currentUser.uid),
             ),
           );
+          //  Navigator.pop(context);
         }),
         child: Container(
           height: 50.0,
@@ -75,7 +78,32 @@ class _NotifCardState extends State<NotifCard> {
         ),
       );
     } else {
-      mediaPreview = Text('');
+      mediaPreview = GestureDetector(
+        onTap: (() {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  ProfilePage(uid: FirebaseAuth.instance.currentUser.uid),
+            ),
+          );
+          //Navigator.pop(context);
+        }),
+        child: Container(
+          height: 50.0,
+          width: 50.0,
+          child: AspectRatio(
+            aspectRatio: 16 / 9,
+            child: Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: CachedNetworkImageProvider(
+                          widget.snap['folderUrl']))),
+            ),
+          ),
+        ),
+      );
     }
 
     if (widget.snap['type'] == 'likes') {
@@ -101,7 +129,7 @@ class _NotifCardState extends State<NotifCard> {
         color: Colors.white,
         child: ListTile(
           onTap: (() {
-            widget.snap['type'] == 'folders'
+            /*widget.snap['type'] == 'folders'
                 ? Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -110,17 +138,19 @@ class _NotifCardState extends State<NotifCard> {
                     ),
                   )
                 //Navigator.pop(context);
-                : Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => notifPost(snap: widget.snap),
-                    ),
-                  );
-            // Navigator.pop(context);
+                : */
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ProfilePage(uid: FirebaseAuth.instance.currentUser.uid),
+              ),
+            );
+            //  Navigator.pop(context);
           }),
           title: GestureDetector(
             onTap: (() {
-              if (widget.snap['type'] == 'folders') {
+              /* if (widget.snap['type'] == 'folders') {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -129,15 +159,15 @@ class _NotifCardState extends State<NotifCard> {
                   ),
                 );
                 Navigator.pop(context);
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => notifPost(snap: widget.snap),
-                  ),
-                );
-                Navigator.pop(context);
-              }
+              } else {*/
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ProfilePage(uid: FirebaseAuth.instance.currentUser.uid),
+                ),
+              );
+              //Navigator.pop(context);
             }),
             child: Row(
               children: [

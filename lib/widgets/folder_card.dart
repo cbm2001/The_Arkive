@@ -10,6 +10,7 @@ import 'package:first_app/models/folders.dart';
 import 'package:first_app/providers/user_provider.dart';
 import 'package:first_app/screens/profile_screen.dart';
 import 'package:first_app/services/crud/folder_service.dart';
+import 'package:first_app/services/crud/notification_service.dart';
 import 'package:first_app/widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
 import 'package:first_app/widgets/post_card.dart';
@@ -732,6 +733,20 @@ class FolderCardState extends State<FolderCard> {
                                                   listen: false)
                                               .getUser
                                               .username);
+                                      NotificationService().addRequesttoNotif(
+                                        widget.snap["folderId"],
+                                        widget.snap['cover'].toString(),
+                                        widget.snap['uid'],
+                                        Provider.of<UserProvider>(context,
+                                                listen: false)
+                                            .getUser
+                                            .username,
+                                        Provider.of<UserProvider>(context,
+                                                listen: false)
+                                            .getUser
+                                            .photoUrl
+                                            .toString(),
+                                      );
                                       Navigator.pop(context);
                                     },
                                     style: ElevatedButton.styleFrom(

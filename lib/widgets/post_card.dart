@@ -233,6 +233,10 @@ class _PostCardState extends State<PostCard> {
                             widget.snap['notifId'],
                             widget.snap['uid'],
                           );
+                          /* await FireStoreMethods().removeLikefromNotif(
+                            widget.snap['notifId'],
+                            widget.snap['uid'],
+                          );*/
 
                           // addLikeNotif(widget.snap['postId']);
                         })
@@ -245,6 +249,14 @@ class _PostCardState extends State<PostCard> {
                               user.username,
                               widget.snap['postUrl'],
                               user.photoUrl.toString());
+                          /*await FireStoreMethods().addLiketoNotif(
+                              widget.snap['postId'],
+                              widget.snap['uid'],
+                              user.username,
+                              widget.snap['postUrl'],
+                              user.photoUrl.toString());*/
+
+                          // addLikeNotif(widget.snap['postId']);
 
                           // addLikeNotif(widget.snap['postId']);
                         }),
@@ -259,9 +271,13 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               IconButton(
-                onPressed: (() => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        CommentsScreen(postId: widget.snap['postId'])))),
+                onPressed: (() {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CommentsScreen(
+                          postId: widget.snap['postId'],
+                          postUrl: widget.snap['postUrl'],
+                          uid: widget.snap['uid'])));
+                }),
                 icon: const Icon(
                   Icons.comment_outlined,
                   color: Colors.black,
@@ -296,50 +312,51 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               IconButton(
-                onPressed: (() {
-                  // show list of folders (FirebaseFirestore.instance.collection('folders').where('users', arrayContains: user.uid).get() then use addPostToFolder() to add post to folder)
-                  showDialog(
-                      useRootNavigator: false,
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("Add to folder"),
-                          content: Container(
-                            height: 300,
-                            width: 300,
-                            child: ListView.builder(
-                              itemCount: folderlen,
-                              itemBuilder: (context, index) {
-                                if (folderlist[index]['posts']
-                                    .contains(widget.snap['postId'])) {
+                  onPressed: (() {
+                    // show list of folders (FirebaseFirestore.instance.collection('folders').where('users', arrayContains: user.uid).get() then use addPostToFolder() to add post to folder)
+                    //isSaved = true;
+                    showDialog(
+                        useRootNavigator: false,
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text("Add to folder"),
+                            content: Container(
+                              height: 300,
+                              width: 300,
+                              child: ListView.builder(
+                                itemCount: folderlen,
+                                itemBuilder: (context, index) {
+                                  if (folderlist[index]['posts']
+                                      .contains(widget.snap['postId'])) {
+                                    return ListTile(
+                                      title:
+                                          Text(folderlist[index]['folderName']),
+                                      subtitle: Text('Already in folder'),
+                                    );
+                                  }
                                   return ListTile(
+                                    // check if post is already in folder
+
                                     title:
                                         Text(folderlist[index]['folderName']),
-                                    subtitle: Text('Already in folder'),
+
+                                    onTap: () {
+                                      addpostTF(folderlist[index]['folderId'],
+                                          widget.snap['postId']);
+                                      Navigator.of(context).pop();
+                                    },
                                   );
-                                }
-                                return ListTile(
-                                  // check if post is already in folder
-
-                                  title: Text(folderlist[index]['folderName']),
-
-                                  onTap: () {
-                                    addpostTF(folderlist[index]['folderId'],
-                                        widget.snap['postId']);
-                                    Navigator.of(context).pop();
-                                  },
-                                );
-                              },
+                                },
+                              ),
                             ),
-                          ),
-                        );
-                      });
-                }),
-                icon: const Icon(
-                  Icons.bookmark_border_outlined,
-                  color: Colors.black,
-                ),
-              ),
+                          );
+                        });
+                  }),
+                  icon: Icon(
+                    Icons.bookmark_border_outlined,
+                    color: Colors.black,
+                  )),
             ],
           ),
 

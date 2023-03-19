@@ -11,19 +11,20 @@ class NotificationItems {
   final Timestamp timeStamp;
   final String notifId;
   final String folder;
+  final String folderUrl;
 
-  NotificationItems({
-    this.notifId,
-    this.postId,
-    this.postUrl,
-    this.text,
-    this.timeStamp,
-    this.type,
-    this.userId,
-    this.userProfile,
-    this.username,
-    this.folder,
-  });
+  NotificationItems(
+      {this.notifId,
+      this.postId,
+      this.postUrl,
+      this.text,
+      this.timeStamp,
+      this.type,
+      this.userId,
+      this.userProfile,
+      this.username,
+      this.folder,
+      this.folderUrl});
 
   static NotificationItems fromDocument(DocumentSnapshot doc) {
     var snapshot = doc.data() as Map<String, dynamic>;
@@ -39,6 +40,7 @@ class NotificationItems {
       userProfile: snapshot['userProfile'],
       username: snapshot['username'],
       folder: snapshot['folder'],
+      folderUrl: snapshot['folderUrl'],
     );
   }
 
@@ -53,5 +55,7 @@ class NotificationItems {
         'userProfile': userProfile,
         'username': username,
         'folder': folder,
+        'folderUrl': folderUrl,
       };
 }
+
