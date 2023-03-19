@@ -1,4 +1,5 @@
 import 'package:first_app/screens/map_screen.dart';
+import 'package:first_app/services/crud/post_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -118,10 +119,8 @@ class _scrapbookState extends State<scrapbook> {
                       isAnimating: widget.snap['likes'].contains(user.uid),
                       child: IconButton(
                         onPressed: (() async {
-                          await FireStoreMethods().likePost(
-                              widget.snap['postId'],
-                              user.uid,
-                              widget.snap['likes']);
+                          await PostService().likePost(widget.snap['postId'],
+                              user.uid, widget.snap['likes']);
                         }),
                         icon: widget.snap['likes'].contains(user.uid)
                             ? const Icon(

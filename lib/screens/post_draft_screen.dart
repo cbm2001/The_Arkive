@@ -2,7 +2,11 @@ import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:first_app/screens/profile_screen.dart';
 import 'package:first_app/screens/search_location.dart';
+import 'package:first_app/services/crud/firebase_storage_service.dart';
+import 'package:first_app/services/crud/post_service.dart';
+import 'package:first_app/services/location/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,18 +28,20 @@ class PostDraftPage extends StatefulWidget {
   final String description;
   final String location;
   final GeoPoint geoLoc;
-  const PostDraftPage({
-    Key key,
-    // String postID,
-    @required this.postURL,
-    @required this.category,
-    @required this.description,
-    // String category,
-    // String description,
-    // String location,
-    @required this.location,
-    @required this.geoLoc,
-  }) : super(key: key);
+  final String postID;
+  const PostDraftPage(
+      {Key key,
+      // String postID,
+      @required this.postURL,
+      @required this.category,
+      @required this.description,
+      // String category,
+      // String description,
+      // String location,
+      @required this.location,
+      @required this.geoLoc,
+      @required this.postID})
+      : super(key: key);
 
   @override
   _PostDraftPageState createState() => _PostDraftPageState();
@@ -47,9 +53,6 @@ class _PostDraftPageState extends State<PostDraftPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
-
-
-
 
   _selectImage(BuildContext parentContext) async {
     return showDialog(
@@ -95,11 +98,6 @@ class _PostDraftPageState extends State<PostDraftPage> {
     String uid,
     String username,
     String profImage,
-    // String postID,
-    // String postURL,
-    // String category,
-    // String description,
-    // String location,
   ) async {
     setState(() {
       isLoading = true;
@@ -107,7 +105,7 @@ class _PostDraftPageState extends State<PostDraftPage> {
     // start the loading
     try {
       // upload to storage and db
-      String res = await FireStoreMethods().uploadDraftPost(
+      String res = await PostService().uploadDraftPost(
           (_descriptionController.text == '')
               ? widget.description
               : _descriptionController.text,
@@ -124,8 +122,12 @@ class _PostDraftPageState extends State<PostDraftPage> {
           // latitude ,
           // longitude
           (geoLoc == null) ? widget.geoLoc : geoLoc,
-      false);
+          false);
       if (res == "success") {
+        await FirebaseFirestore.instance
+            .collection("drafts")
+            .doc(widget.postID)
+            .delete();
         setState(() {
           isLoading = false;
         });
@@ -193,21 +195,6 @@ class _PostDraftPageState extends State<PostDraftPage> {
                   fontSize: 16.0),
             ),
           ),
-          // TextButton(
-          //   onPressed: () =>
-          //       draftImage(
-          //         userProvider.getUser.uid,
-          //         userProvider.getUser.username,
-          //         userProvider.getUser.photoUrl,
-          //       ),
-          //   child: const Text(
-          //     "Save as draft",
-          //     style: TextStyle(
-          //         color: Colors.blueAccent,
-          //         fontWeight: FontWeight.bold,
-          //         fontSize: 16.0),
-          //   ),
-          // ),
         ],
       ),
       // POST FORM
@@ -349,7 +336,7 @@ class _PostDraftPageState extends State<PostDraftPage> {
     // start the loading
     try {
       // upload to storage and db
-      String res = await FireStoreMethods().uploadDraft(
+      String res = await PostService().uploadDraft(
           _descriptionController.text,
           _file,
           uid,

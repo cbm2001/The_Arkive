@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:first_app/admin/analytics.dart';
 import 'package:first_app/providers/user_provider.dart';
 import 'package:first_app/screens/profile_screen.dart';
+import 'package:first_app/services/crud/folder_service.dart';
+import 'package:first_app/services/crud/notification_service.dart';
+import 'package:first_app/services/crud/post_service.dart';
 import 'package:first_app/widgets/like_animation.dart';
 import 'package:first_app/screens/comment_screen.dart';
 import 'package:flutter/material.dart';
-
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -37,6 +40,10 @@ class _PostCardState extends State<PostCard> {
   int folderlen = 0;
   List folderlist = [];
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final PostService _postService = PostService();
+  final NotificationService _notificaionService = NotificationService();
+
   @override
   void initState() {
     super.initState();
@@ -45,12 +52,12 @@ class _PostCardState extends State<PostCard> {
 
   fetchCommentLen() async {
     try {
-      QuerySnapshot snap = await FirebaseFirestore.instance
+      QuerySnapshot snap = await _firestore
           .collection('posts')
           .doc(widget.snap['postId'])
           .collection('comments')
           .get();
-      QuerySnapshot folders = await FirebaseFirestore.instance
+      QuerySnapshot folders = await _firestore
           .collection('folders')
           .where('users', arrayContains: userData['uid'])
           .get();
@@ -69,7 +76,7 @@ class _PostCardState extends State<PostCard> {
 
   deletePost(String postId) async {
     try {
-      await FireStoreMethods().deletePost(postId);
+      await _postService.deletePost(postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -80,7 +87,7 @@ class _PostCardState extends State<PostCard> {
 
   addpostTF(String folderId, String postId) async {
     try {
-      await FireStoreMethods().addPostToFolder(folderId, postId);
+      await FolderService().addPostToFolder(folderId, postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -184,11 +191,13 @@ class _PostCardState extends State<PostCard> {
                                               vertical: 12, horizontal: 16),
                                           child: Text('Report Post'),
                                         ),
-                                        onTap: () {
-                                          var x = FirebaseFirestore.instance
+                                        onTap: () async {
+                                          var x = _firestore
                                               .collection("posts")
                                               .doc(widget.snap['postId']);
                                           x.update({"flag": true});
+                                          checkDoc();
+                                          await addReportedPosts();
                                           // remove the dialog box
                                           Navigator.of(context).pop();
                                         }),
@@ -218,11 +227,9 @@ class _PostCardState extends State<PostCard> {
                 child: IconButton(
                   onPressed: widget.snap['likes'].contains(user.uid)
                       ? (() async {
-                          await FireStoreMethods().unlikePost(
-                              widget.snap['postId'],
-                              user.uid,
-                              widget.snap['likes']);
-                          await FireStoreMethods().removeLikefromNotif(
+                          await _postService.unlikePost(widget.snap['postId'],
+                              user.uid, widget.snap['likes']);
+                          await _notificaionService.removeLikefromNotif(
                             widget.snap['notifId'],
                             widget.snap['uid'],
                           );
@@ -230,11 +237,9 @@ class _PostCardState extends State<PostCard> {
                           // addLikeNotif(widget.snap['postId']);
                         })
                       : (() async {
-                          await FireStoreMethods().likePost(
-                              widget.snap['postId'],
-                              user.uid,
-                              widget.snap['likes']);
-                          await FireStoreMethods().addLiketoNotif(
+                          await _postService.likePost(widget.snap['postId'],
+                              user.uid, widget.snap['likes']);
+                          await _notificaionService.addLiketoNotif(
                               widget.snap['postId'],
                               widget.snap['uid'],
                               user.username,
