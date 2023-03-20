@@ -3,6 +3,7 @@ import 'package:first_app/admin/dashboard.dart';
 import 'package:first_app/admin/reported.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
+import 'generateAnalysis.dart';
 
 class panel extends StatefulWidget {
   const panel({Key key}) : super(key: key);
@@ -44,6 +45,7 @@ class _panelState extends State<panel> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text("Welcome back,...",style: TextStyle(decoration: TextDecoration.none,fontSize: 35,color: Colors.grey),),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,12 +62,20 @@ class _panelState extends State<panel> {
                   ),
                   dashboard()),
               tile(
-                  "Reported Posts",
+                  "Reported \nPosts",
                   Icon(
                     Icons.report,
                     size: 150,
                   ),
-                  reportedPosts())
+                  reportedPosts()),
+              tile(
+                  "Generate \nReports",
+                  Icon(
+                    Icons.contact_page_outlined,
+                    size: 150,
+                  ),
+                  generateReports()),
+
             ],
           ),
         ),
@@ -75,27 +85,35 @@ class _panelState extends State<panel> {
 
   Widget tile(String label, Icon Value, Widget page) {
     return SizedBox(
-      width: 250,
+      width: double.infinity,
       height: 250,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextButton(
           child: Container(
-            child: Column(
+            child: Row(
               children: [
-                SizedBox(
-                  height: 10,
+                // SizedBox(
+                //   height: 10,
+                // ),
+                Expanded(
+                  flex: 1,
+                  child: Center(
+                    child: Text(
+                      label,
+                      textAlign: TextAlign.center,
+                      style: kLabelTextStyle,
+                    ),
+                  ),
                 ),
-                Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: kLabelTextStyle,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  child: Value,
+                // SizedBox(
+                //   height: 10,
+                // ),
+                Expanded(
+                  flex: 1,
+                  child: SizedBox(
+                    child: Value,
+                  ),
                 )
               ],
             ),
@@ -103,7 +121,7 @@ class _panelState extends State<panel> {
               color: Color(0xFF1D1E33),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            width: 250,
+            width: double.infinity,
             height: 250,
           ),
           onPressed: () {

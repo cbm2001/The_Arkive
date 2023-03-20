@@ -78,10 +78,7 @@ class _dashboardState extends State<dashboard> {
       // crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-      Container(child: Text("Admin Panel",style: kTitleTextStyle,),alignment: Alignment.center,decoration: BoxDecoration(
-      color: Color(0xFF8D8E98),
-      borderRadius: BorderRadius.circular(10.0),
-      ),),
+
       SizedBox(height: 10,),
       TextButton(onPressed: (){
       getData();
@@ -92,7 +89,7 @@ class _dashboardState extends State<dashboard> {
     Text("Refresh",style: kBodyTextStyle,),
     ],
     )),
-    Text("Today's activity...",),
+    Text("Today's activity...",style: TextStyle(decoration: TextDecoration.none,fontSize: 23,color: Colors.grey),),
     Row(mainAxisAlignment: MainAxisAlignment.center,children: [tile("Posts\n",analyticsSnapData['posts']),
     tile("Likes\n",analyticsSnapData['likes']),],),
     Row(mainAxisAlignment: MainAxisAlignment.center,children: [tile("Logins\n",analyticsSnapData['login']),
