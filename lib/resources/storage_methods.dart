@@ -1,4 +1,4 @@
-/* import 'dart:typed_data';
+import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -35,4 +35,3 @@ class StorageMethods {
   Future shiftDraftToPost(
       String childName, String PostURL, bool isPost) async {}
 }
- */

@@ -1,32 +1,45 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:first_app/resources/auth_methods.dart';
+
 import 'package:first_app/screens/explore_screen.dart';
+
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
+
 import '../models/side_nav_bar.dart';
+
 import '../models/nav_bar.dart';
+
 import '../models/user.dart' as model;
+
 import '../providers/user_provider.dart';
+
 import '../main.dart';
+
 import '../widgets/folder_card.dart';
+
 import '../widgets/post_card.dart';
+
 import '../utils/utils.dart';
 
 class UserProfilePage extends StatefulWidget {
   final String uid;
+
   const UserProfilePage({Key key, @required this.uid}) : super(key: key);
 
   @override
   _UserProfilePageState createState() => _UserProfilePageState();
 }
 
-
-
 class _UserProfilePageState extends State<UserProfilePage> {
   //const SearchPage({Key key}) : super(key: key);
 
   var userData = {};
+
   var upperTab;
 
   bool isLoading = false;
@@ -34,6 +47,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   @override
   void initState() {
     super.initState();
+
     getData();
   }
 
@@ -41,6 +55,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     setState(() {
       isLoading = true;
     });
+
     try {
       var userSnap = await FirebaseFirestore.instance
           .collection('Users')
@@ -50,6 +65,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       // get post lENGTH
 
       userData = userSnap.data();
+
       setState(() {});
     } catch (e) {
       showSnackBar(
@@ -57,72 +73,99 @@ class _UserProfilePageState extends State<UserProfilePage> {
         e.toString(),
       );
     }
+
     setState(() {
       isLoading = false;
     });
   }
 
-  /*void initState() {
-    super.initState();
-    addData();
-  }
+  /*void initState() { 
 
-  addData() async {
-    UserProvider _userProvider =
-        Provider.of<UserProvider>(context, listen: false);
-    await _userProvider.refreshUser();
+    super.initState(); 
+
+    addData(); 
+
+  } 
+
+ 
+
+  addData() async { 
+
+    UserProvider _userProvider = 
+
+        Provider.of<UserProvider>(context, listen: false); 
+
+    await _userProvider.refreshUser(); 
+
   }*/
 
   @override
   Widget build(BuildContext context) {
     model.User user = Provider.of<UserProvider>(context).getUser;
+
     upperTab = TabBar(tabs: [
       //if (FirebaseAuth.instance.currentUser.uid == user.uid)
+
       Tab(
         icon: new Icon(
-          Icons.post_add,
+          Icons.dashboard_outlined,
           color: Colors.black,
         ),
-        child: Text('posts',
+        child: Text('Boards',
             textAlign: TextAlign.center,
             style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
       ),
+
       Tab(
         icon: new Icon(
-          Icons.folder_copy_sharp,
+          Icons.book_outlined,
           color: Colors.black,
         ),
-        child: Text('folders',
+        child: Text('Scrap Books',
             textAlign: TextAlign.center,
             style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
       ),
 
       //else(FirebaseAuth.instance.currentUser.uid == user.uid)
     ]);
+
     return isLoading
         ? const Center(
             child: CircularProgressIndicator(),
           )
         : Scaffold(
             //extendBodyBehindAppBar: false,
+
             //extendBody: false,
-            /*appBar: PreferredSize(
-          child: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            iconTheme: IconThemeData.fallback(),
-          ),
+
+            /*appBar: PreferredSize( 
+
+          child: AppBar( 
+
+            backgroundColor: Colors.white, 
+
+            elevation: 0, 
+
+            iconTheme: IconThemeData.fallback(), 
+
+          ), 
+
           preferredSize: Size.fromHeight(50.0)),*/
 
             backgroundColor: Colors.white,
+
             body: Container(
               //Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) => new ProfilePage()));
+
               //width: double.infinity,
+
               //height: double.infinity,
+
               child: Column(
                 children: [
                   Row(children: <Widget>[
                     //SizedBox(width: 150, height: 20),
+
                     IconButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -132,6 +175,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           Icons.arrow_back,
                           color: Colors.black,
                         )),
+
                     Padding(
                       padding: EdgeInsets.only(left: 110, top: 50.0),
                       child: CircleAvatar(
@@ -139,6 +183,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         radius: 40.0,
                       ),
                     ),
+
                     Padding(
                       padding: EdgeInsets.only(left: 100),
                       child: IconButton(
@@ -159,6 +204,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                           ),
                                           onTap: () {
                                             // remove the dialog box
+
                                             Navigator.of(context).pop();
                                           }),
                                       InkWell(
@@ -178,20 +224,27 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   SizedBox(height: 5.0),
                   Text(
                     //'Barbie Slayer',
+
                     userData['name'],
+
                     //user.name,
+
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                       fontSize: 15.0,
                     ),
+
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 5.0),
                   Text(
                     //'@urgalbarbz \n Only slays and sandwiches',
+
                     '@${userData['username']}',
+
                     style: TextStyle(color: Colors.black, fontSize: 14.0),
+
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
@@ -199,10 +252,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   ),
                   Text(
                     //'@urgalbarbz \n Only slays and sandwiches',
+
                     userData['bio'],
+
                     style: TextStyle(
                         color: Color.fromRGBO(139, 134, 134, 1),
                         fontSize: 14.0),
+
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
@@ -216,6 +272,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           extendBodyBehindAppBar: true,
 
                           //backgroundColor: Colors.lightGreen,
+
                           appBar: PreferredSize(
                             preferredSize: Size.fromHeight(80),
                             child: AppBar(
@@ -223,6 +280,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 preferredSize: upperTab.preferredSize,
                                 child: Material(
                                   color: Colors.white, //<-- SEE HERE
+
                                   child: upperTab,
                                 ),
                               ),
@@ -235,13 +293,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               SizedBox(
                                   height: 400,
                                   width: 400,
-                                  child: StreamBuilder(
-                                    stream: FirebaseFirestore.instance
+                                  child: FutureBuilder(
+                                    future: FirebaseFirestore.instance
                                         .collection('posts')
                                         .where('uid',
                                             isEqualTo: userData['uid'])
-                                        .snapshots(),
-                                    builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                                        .get(),
+                                    builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
                                         return const Center(
@@ -251,7 +309,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
                                       return ListView.builder(
                                         shrinkWrap: true,
-                                        itemCount: snapshot.data.docs.length,
+                                        itemCount: (snapshot.data as dynamic)
+                                            .docs
+                                            .length,
                                         itemBuilder: (ctx, index) => PostCard(
                                             snap: snapshot.data.docs[index]
                                                 .data()),
@@ -259,12 +319,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     },
                                   )),
                               Container(
-                                  child: StreamBuilder(
-                                stream: FirebaseFirestore.instance
+                                  child: FutureBuilder(
+                                future: FirebaseFirestore.instance
                                     .collection('folders')
                                     .where('uid', isEqualTo: userData['uid'])
-                                    .snapshots(),
-                                builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                                    .get(),
+                                builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
                                     return const Center(
@@ -275,7 +335,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   return ListView.builder(
                                     shrinkWrap: true,
                                     itemCount:
-                                    snapshot.data.docs.length,
+                                        (snapshot.data as dynamic).docs.length,
                                     itemBuilder: (ctx, index) => FolderCard(
                                         snap: snapshot.data.docs[index].data()),
                                   );

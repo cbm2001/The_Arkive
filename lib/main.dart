@@ -5,7 +5,7 @@ import 'package:first_app/admin/admin_login.dart';
 import 'package:first_app/admin/panel.dart';
 
 import 'admin/dashboard.dart';
-import 'resources/firebase_options.dart';
+//import 'resources/firebase_options.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

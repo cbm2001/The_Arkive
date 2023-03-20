@@ -61,21 +61,25 @@ class CommentCard extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ))),
-                      RichText(
+                      Expanded(
+                          child: RichText(
                         text: TextSpan(
                           children: [
                             /*TextSpan(
-                                text: snap.data()['name'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  colo
-                                )),*/
+                                    text: snap.data()['name'],
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      colo
+                                    )),*/
+
                             TextSpan(
                                 text: ' ${snap.data()['text']}',
-                                style: TextStyle(color: Colors.black)),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                )),
                           ],
                         ),
-                      ),
+                      )),
                     ],
                   ),
                   Padding(

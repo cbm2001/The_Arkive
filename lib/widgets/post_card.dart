@@ -211,13 +211,13 @@ class _PostCardState extends State<PostCard> {
             //image section
           ),
           SizedBox(
-              //height: MediaQuery.of(context).size.height,
-              //width: double.infinity,
+              height: 400,
+              width: MediaQuery.of(context).size.width * 0.95,
               child: Image.network(
-            //'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfw8zy3G7-GYrDilkANhTaVIKEwEuVycOGsj7k4wtXsrasmJ03ZV9AUMsntAOugN26NLg&usqp=CAU',
-            widget.snap['postUrl'],
-            fit: BoxFit.cover,
-          )),
+                //'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfw8zy3G7-GYrDilkANhTaVIKEwEuVycOGsj7k4wtXsrasmJ03ZV9AUMsntAOugN26NLg&usqp=CAU',
+                widget.snap['postUrl'],
+                fit: BoxFit.cover,
+              )),
 
           //LIKE COMMENT SECTION
           Row(
@@ -302,7 +302,7 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               SizedBox(
-                width: 140,
+                width: MediaQuery.of(context).size.width - 250,
               ),
               IconButton(
                 onPressed: (() {}),
@@ -320,26 +320,29 @@ class _PostCardState extends State<PostCard> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
-                            title: Text("Add to folder"),
+                            title: Center(child: Text("Add to folder")),
                             content: Container(
-                              height: 300,
-                              width: 300,
+                              height: 150,
+                              width: 200,
                               child: ListView.builder(
                                 itemCount: folderlen,
                                 itemBuilder: (context, index) {
                                   if (folderlist[index]['posts']
                                       .contains(widget.snap['postId'])) {
                                     return ListTile(
-                                      title:
-                                          Text(folderlist[index]['folderName']),
-                                      subtitle: Text('Already in folder'),
+                                      title: Center(
+                                          child: Text(
+                                              folderlist[index]['folderName'])),
+                                      subtitle: Center(
+                                          child: Text('Already in folder')),
                                     );
                                   }
                                   return ListTile(
                                     // check if post is already in folder
 
-                                    title:
-                                        Text(folderlist[index]['folderName']),
+                                    title: Center(
+                                        child: Text(
+                                            folderlist[index]['folderName'])),
 
                                     onTap: () {
                                       addpostTF(folderlist[index]['folderId'],

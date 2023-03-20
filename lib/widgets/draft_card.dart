@@ -82,13 +82,13 @@ class _DraftCardState extends State<DraftCard> {
           Padding(
             padding: const EdgeInsets.all(6.0),
             child: SizedBox(
-                //height: MediaQuery.of(context).size.height,
-                //width: double.infinity,
+                height: 400,
+                width: MediaQuery.of(context).size.width * 0.95,
                 child: Image.network(
-              //'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfw8zy3G7-GYrDilkANhTaVIKEwEuVycOGsj7k4wtXsrasmJ03ZV9AUMsntAOugN26NLg&usqp=CAU',
-              widget.snap['postUrl'],
-              fit: BoxFit.cover,
-            )),
+                  //'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfw8zy3G7-GYrDilkANhTaVIKEwEuVycOGsj7k4wtXsrasmJ03ZV9AUMsntAOugN26NLg&usqp=CAU',
+                  widget.snap['postUrl'],
+                  fit: BoxFit.cover,
+                )),
           ),
 
           //SECTION

@@ -1,45 +1,68 @@
 import 'dart:core';
+
 import 'dart:core';
+
 import 'dart:io';
+
 import 'dart:typed_data';
+
 import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:file_picker/file_picker.dart';
+
 import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:first_app/models/folders.dart';
+
 import 'package:first_app/providers/user_provider.dart';
+
 import 'package:first_app/screens/profile_screen.dart';
-import 'package:first_app/services/crud/folder_service.dart';
-import 'package:first_app/services/crud/notification_service.dart';
+
 import 'package:first_app/widgets/like_animation.dart';
+
 import 'package:first_app/screens/comment_screen.dart';
+
 import 'package:first_app/widgets/post_card.dart';
+
 import 'package:flutter/material.dart';
+
 import 'package:image_picker/image_picker.dart';
+
 import 'package:intl/intl.dart';
+
 import 'package:provider/provider.dart';
+
 import 'package:vector_math/vector_math.dart' as prefix;
+
 import '../models/user.dart';
+
 import '../resources/firestore_methods.dart';
+
+import '../services/crud/notification_service.dart';
 import '../utils/utils.dart';
 
 class FolderCard extends StatefulWidget {
   final snap;
+
   const FolderCard({
     Key key,
     @required this.snap,
   }) : super(key: key);
+
   @override
   State<FolderCard> createState() => FolderCardState();
 }
 
 class FolderCardState extends State<FolderCard> {
   Image cover;
-  Uint8List filee;
-  bool coverSet;
-  List<Image> covers = [];
 
-  final FolderService _folderService = FolderService();
+  Uint8List filee;
+
+  bool coverSet;
+
+  List<Image> covers = [];
 
   @override
   void initState() {
@@ -48,7 +71,7 @@ class FolderCardState extends State<FolderCard> {
 
   addpost(String folderId, String postId) async {
     try {
-      await _folderService.addPostToFolder(folderId, postId);
+      await FireStoreMethods().addPostToFolder(folderId, postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -58,7 +81,7 @@ class FolderCardState extends State<FolderCard> {
   }
 
   addCover() {
-    _folderService.uploadCover(
+    FireStoreMethods().UploadCover(
       widget.snap["folderId"],
     );
   }
@@ -71,16 +94,20 @@ class FolderCardState extends State<FolderCard> {
           context,
           "You can't add yourself to a folder",
         );
+
         return;
       }
+
       if (widget.snap["users"].contains(uid)) {
         showSnackBar(
           context,
           "This user is already in the folder",
         );
+
         return;
       }
-      await _folderService.addUserToFolder(folderId, uid, username);
+
+      await FireStoreMethods().addUserToFolder(folderId, uid, username);
     } catch (err) {
       showSnackBar(
         context,
@@ -91,7 +118,7 @@ class FolderCardState extends State<FolderCard> {
 
   deletepost(String folderId, String postId) {
     try {
-      _folderService.removePostFromFolder(folderId, postId);
+      FireStoreMethods().removePostFromFolder(folderId, postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -102,7 +129,7 @@ class FolderCardState extends State<FolderCard> {
 
   deleteuser(String folderId, String uid, String username) {
     try {
-      _folderService.removeUserFromFolder(folderId, uid, username);
+      FireStoreMethods().removeUserFromFolder(folderId, uid, username);
     } catch (err) {
       showSnackBar(
         context,
@@ -120,14 +147,21 @@ class FolderCardState extends State<FolderCard> {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(35, 5, 35, 0),
+
           // child: Column(
+
           //   // decoration: BoxDecoration(
+
           //   //   color: Colors.yellow[100],
+
           //   // ),
 
           //   children: [
+
           //     Image.network(
+
           //       widget.snap['cover'],
+
           //       fit: BoxFit.cover,),
 
           //     ],
@@ -154,14 +188,21 @@ class FolderCardState extends State<FolderCard> {
                   ),
                   Container(
                     // padding: const EdgeInsets.fromLTRB(7, 5, 7, 5),
+
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromRGBO(192, 234, 240, 1),
+
                         foregroundColor: Colors.grey.shade700,
+
                         elevation: 0.0,
+
                         shadowColor: Colors.transparent,
+
                         minimumSize: Size.zero, // Set this
+
                         padding: const EdgeInsets.fromLTRB(35, 10, 35, 10),
+
                         // textStyle:
                       ),
                       child: Text(
@@ -184,11 +225,13 @@ class FolderCardState extends State<FolderCard> {
                       },
                       onLongPress: () {
                         // if (widget.snap["users"] is in Provider.of<UserProvider>(context, listen: false).getUser.username then show delete button)
+
                         if (widget.snap["users"].contains(
                             Provider.of<UserProvider>(context, listen: false)
                                 .getUser
                                 .uid)) {
                           // show 3 options: delete folder, add user, remove user
+
                           showDialog(
                             context: context,
                             builder: (context) {
@@ -196,15 +239,19 @@ class FolderCardState extends State<FolderCard> {
                                 title: Center(
                                   child: Text("Folder options"),
                                 ),
+
                                 // content: Center(child:Text("What would you like to do?"),),
+
                                 // Text("What would you like to do?"),
+
                                 actions: <Widget>[
                                   Center(
                                     child: ElevatedButton(
                                         child: Text("Delete folder"),
                                         onPressed: () {
-                                          _folderService.deleteFolder(
+                                          FireStoreMethods().deleteFolder(
                                               widget.snap["folderId"]);
+
                                           Navigator.pop(context);
                                         },
                                         style: ElevatedButton.styleFrom(
@@ -223,6 +270,7 @@ class FolderCardState extends State<FolderCard> {
                                               Color.fromRGBO(139, 134, 134, 1),
                                         )),
                                   ),
+
                                   Center(
                                     child: ElevatedButton(
                                       child: Text("Add user"),
@@ -239,9 +287,11 @@ class FolderCardState extends State<FolderCard> {
                                       ),
                                       onPressed: () {
                                         Navigator.pop(context);
+
                                         if (widget.snap["requests"].length >
                                             0) {
                                           // show list of requests with a checkbox next to each one and a button to add them
+
                                           List<bool> _checkboxStates =
                                               List.generate(
                                                   widget
@@ -264,7 +314,7 @@ class FolderCardState extends State<FolderCard> {
                                                     itemBuilder:
                                                         (context, index) {
                                                       return FutureBuilder(
-                                                        future: _folderService
+                                                        future: FireStoreMethods()
                                                             .getUser(widget
                                                                         .snap[
                                                                     "requests"]
@@ -283,7 +333,7 @@ class FolderCardState extends State<FolderCard> {
                                                                           "Add"),
                                                                       onPressed:
                                                                           () {
-                                                                        _folderService
+                                                                        FireStoreMethods()
                                                                             .addUserToFolder(
                                                                           widget
                                                                               .snap["folderId"],
@@ -292,6 +342,7 @@ class FolderCardState extends State<FolderCard> {
                                                                           snapshot
                                                                               .data["username"],
                                                                         );
+
                                                                         Navigator.pop(
                                                                             context);
                                                                       },
@@ -406,6 +457,7 @@ class FolderCardState extends State<FolderCard> {
                                       },
                                     ),
                                   ),
+
                                   // remove user
 
                                   Center(
@@ -413,8 +465,10 @@ class FolderCardState extends State<FolderCard> {
                                         child: Text("Remove user"),
                                         onPressed: () {
                                           Navigator.pop(context);
+
                                           if (widget.snap["users"].length > 0) {
                                             // show list of users with a checkbox next to each one and a button to remove them
+
                                             showDialog(
                                               context: context,
                                               builder: (context) {
@@ -431,7 +485,7 @@ class FolderCardState extends State<FolderCard> {
                                                       itemBuilder:
                                                           (context, index) {
                                                         return FutureBuilder(
-                                                          future: _folderService
+                                                          future: FireStoreMethods()
                                                               .getUser(widget
                                                                           .snap[
                                                                       "users"]
@@ -450,7 +504,7 @@ class FolderCardState extends State<FolderCard> {
                                                                       "Remove"),
                                                                   onPressed:
                                                                       () {
-                                                                    _folderService
+                                                                    FireStoreMethods()
                                                                         .removeUserFromFolder(
                                                                       widget.snap[
                                                                           "folderId"],
@@ -459,6 +513,7 @@ class FolderCardState extends State<FolderCard> {
                                                                       snapshot.data[
                                                                           "username"],
                                                                     );
+
                                                                     Navigator.pop(
                                                                         context);
                                                                   },
@@ -602,37 +657,65 @@ class FolderCardState extends State<FolderCard> {
                                         child: Text("Change Cover"),
                                         onPressed: () async {
                                           coverSet = true;
+
                                           Navigator.of(context).pop();
-                                          _folderService.uploadCover(
+
+                                          FireStoreMethods().UploadCover(
                                             widget.snap["folderId"],
                                           );
 
                                           // final ImagePicker _imagePicker = ImagePicker();
+
                                           // XFile _file = await _imagePicker.pickImage(
+
                                           //     source: ImageSource.gallery);
+
                                           // if (_file == null) return;
+
                                           // print('hi${_file?.path}');
+
                                           // Reference referenceRoot =
+
                                           //     FirebaseStorage.instance.ref();
+
                                           // Reference referenceDirImages =
+
                                           //     referenceRoot.child('images');
+
                                           // String uniqueFileName = DateTime.now()
+
                                           //     .millisecondsSinceEpoch
+
                                           //     .toString();
+
                                           // Reference referenceImageToUpload =
+
                                           //     referenceDirImages.child(uniqueFileName);
+
                                           // // try {
+
                                           //   await referenceImageToUpload
+
                                           //       .putFile(File(_file.path));
+
                                           //   imageURL = await referenceImageToUpload
+
                                           //       .getDownloadURL();
+
                                           //   print('vobjectobjectobjectobjectobjectobjectobjectobjectobject   ');
+
                                           //   print(imageURL);
+
                                           // } catch (error) {}
+
                                           // setState(() {
+
                                           //   coverSet = true;
+
                                           //   // cover = Image.memory(file);
+
                                           //   // covers.add(cover);
+
                                           // });
                                         },
                                         style: ElevatedButton.styleFrom(
@@ -651,6 +734,7 @@ class FolderCardState extends State<FolderCard> {
                                               Color.fromRGBO(139, 134, 134, 1),
                                         )),
                                   ),
+
                                   Center(
                                     child: ElevatedButton(
                                         child: Text("Cancel"),
@@ -678,7 +762,9 @@ class FolderCardState extends State<FolderCard> {
                             },
                           );
                         }
+
                         // else show request to join button if not already requested
+
                         else if (widget.snap["requests"].contains(
                             Provider.of<UserProvider>(context, listen: false)
                                 .getUser
@@ -687,26 +773,32 @@ class FolderCardState extends State<FolderCard> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: Text("Request to join"),
+                                title: Center(child: Text("Request to join")),
                                 content: Text(
                                     "You have already requested to join this folder"),
                                 actions: <Widget>[
-                                  ElevatedButton(
-                                      child: Text("Ok"),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        fixedSize: Size(
-                                            MediaQuery.of(context).size.width *
-                                                0.40,
-                                            MediaQuery.of(context).size.height *
-                                                0.04),
-                                        backgroundColor:
-                                            Color.fromRGBO(192, 234, 240, 1),
-                                        foregroundColor:
-                                            Color.fromRGBO(139, 134, 134, 1),
-                                      )),
+                                  Center(
+                                    child: ElevatedButton(
+                                        child: Text("Ok"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          fixedSize: Size(
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.40,
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.04),
+                                          backgroundColor:
+                                              Color.fromRGBO(192, 234, 240, 1),
+                                          foregroundColor:
+                                              Color.fromRGBO(139, 134, 134, 1),
+                                        )),
+                                  ),
                                 ],
                               );
                             },
@@ -716,54 +808,39 @@ class FolderCardState extends State<FolderCard> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: Text("Request to join"),
+                                title: Center(child: Text("Request to join")),
                                 content: Text(
                                     "Are you sure you want to request to join this folder?"),
                                 actions: <Widget>[
-                                  ElevatedButton(
-                                    child: Text("Yes"),
-                                    onPressed: () {
-                                      _folderService.requestToJoinFolder(
-                                          widget.snap["folderId"],
-                                          Provider.of<UserProvider>(context,
-                                                  listen: false)
-                                              .getUser
-                                              .uid,
-                                          Provider.of<UserProvider>(context,
-                                                  listen: false)
-                                              .getUser
-                                              .username);
-                                      NotificationService().addRequesttoNotif(
-                                        widget.snap["folderId"],
-                                        widget.snap['cover'].toString(),
-                                        widget.snap['uid'],
-                                        Provider.of<UserProvider>(context,
-                                                listen: false)
-                                            .getUser
-                                            .username,
-                                        Provider.of<UserProvider>(context,
-                                                listen: false)
-                                            .getUser
-                                            .photoUrl
-                                            .toString(),
-                                      );
-                                      Navigator.pop(context);
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      fixedSize: Size(
-                                          MediaQuery.of(context).size.width *
-                                              0.40,
-                                          MediaQuery.of(context).size.height *
-                                              0.04),
-                                      backgroundColor:
-                                          Color.fromRGBO(192, 234, 240, 1),
-                                      foregroundColor:
-                                          Color.fromRGBO(139, 134, 134, 1),
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                      child: Text("No"),
+                                  Center(
+                                    child: ElevatedButton(
+                                      child: Text("Yes"),
                                       onPressed: () {
+                                        FireStoreMethods().requestToJoinFolder(
+                                            widget.snap["folderId"],
+                                            Provider.of<UserProvider>(context,
+                                                    listen: false)
+                                                .getUser
+                                                .uid,
+                                            Provider.of<UserProvider>(context,
+                                                    listen: false)
+                                                .getUser
+                                                .username);
+
+                                        NotificationService().addRequesttoNotif(
+                                          widget.snap["folderId"],
+                                          widget.snap['cover'].toString(),
+                                          widget.snap['uid'],
+                                          Provider.of<UserProvider>(context,
+                                                  listen: false)
+                                              .getUser
+                                              .username,
+                                          Provider.of<UserProvider>(context,
+                                                  listen: false)
+                                              .getUser
+                                              .photoUrl
+                                              .toString(),
+                                        );
                                         Navigator.pop(context);
                                       },
                                       style: ElevatedButton.styleFrom(
@@ -776,7 +853,31 @@ class FolderCardState extends State<FolderCard> {
                                             Color.fromRGBO(192, 234, 240, 1),
                                         foregroundColor:
                                             Color.fromRGBO(139, 134, 134, 1),
-                                      )),
+                                      ),
+                                    ),
+                                  ),
+                                  Center(
+                                    child: ElevatedButton(
+                                        child: Text("No"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          fixedSize: Size(
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.40,
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.04),
+                                          backgroundColor:
+                                              Color.fromRGBO(192, 234, 240, 1),
+                                          foregroundColor:
+                                              Color.fromRGBO(139, 134, 134, 1),
+                                        )),
+                                  ),
                                 ],
                               );
                             },
@@ -789,26 +890,36 @@ class FolderCardState extends State<FolderCard> {
               ),
             ),
           ),
+
           // ),
         ),
       ],
     );
 
     // ignore: dead_code
+
     //   height: 100;
+
     //   width: 100;
+
     // );
   }
 
   // folder screen has a list of all posts in the folder
+
   folderScreen({folderId, folderName, posts}) {
     // append '' to posts to avoid error
+
     posts.add('');
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
+
           foregroundColor: Colors.black,
+
           title: Text(folderName),
+
           // list all posts in the folder using postCard widget
         ),
         body: FutureBuilder(
@@ -822,6 +933,7 @@ class FolderCardState extends State<FolderCard> {
                 child: CircularProgressIndicator(),
               );
             }
+
             if (snapshot.data.docs.isEmpty) {
               return const Center(
                 child: Text('No posts found'),

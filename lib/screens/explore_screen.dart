@@ -10,7 +10,6 @@ import '../widgets/post_card.dart';
 import '../providers/user_provider.dart';
 import 'notification.dart';
 
-
 class ExplorePage extends StatefulWidget {
   @override
   State<ExplorePage> createState() => _ExplorePageState();

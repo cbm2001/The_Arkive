@@ -1,35 +1,54 @@
 import 'dart:typed_data';
+
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:first_app/models/folders.dart';
+
 import 'package:first_app/screens/post_screen.dart';
+
 import 'package:first_app/resources/auth_methods.dart';
+
 import 'package:first_app/screens/explore_screen.dart';
-import 'package:first_app/services/crud/firebase_storage_service.dart';
-import 'package:first_app/services/crud/folder_service.dart';
-import 'package:first_app/services/crud/user_service.dart';
+
 import 'package:first_app/widgets/folder_card.dart';
+
 import 'package:flutter/material.dart';
+
 import 'package:image_picker/image_picker.dart';
+
 import 'package:provider/provider.dart';
+
 import '../models/side_nav_bar.dart';
+
 import '../models/nav_bar.dart';
+
 import '../models/user.dart' as model;
+
 import '../providers/user_provider.dart';
+
 import '../main.dart';
+
 import '../resources/firestore_methods.dart';
+
 import '../resources/storage_methods.dart';
+
 import '../widgets/folder_card.dart';
-import '../widgets/folder_card.dart';
+
 import '../widgets/post_card.dart';
+
 import '../widgets/reusable_widgets.dart';
+
 import '../utils/utils.dart';
+
 import 'package:first_app/widgets/draft_card.dart';
 
 class ProfilePage extends StatefulWidget {
   final String uid;
+
   const ProfilePage({Key key, @required this.uid}) : super(key: key);
 
   @override
@@ -37,6 +56,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 final TextEditingController _textController = TextEditingController();
+
 var userData = {};
 
 class _ProfilePageState extends State<ProfilePage> {
@@ -49,6 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+
     getData();
   }
 
@@ -56,6 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       isLoading = true;
     });
+
     try {
       var userSnap = await FirebaseFirestore.instance
           .collection('Users')
@@ -65,6 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
       // get post lENGTH
 
       userData = userSnap.data();
+
       setState(() {});
     } catch (e) {
       showSnackBar(
@@ -72,23 +95,32 @@ class _ProfilePageState extends State<ProfilePage> {
         e.toString(),
       );
     }
+
     setState(() {
       isLoading = false;
     });
   }
 
-  TabBar get _tabBar => TabBar(
-        tabs: [
-          Tab(icon: Icon(Icons.call)),
-          Tab(icon: Icon(Icons.message)),
-        ],
-      );
+  // TabBar get _tabBar => TabBar(
+
+  //       tabs: [
+
+  //         Tab(icon: Icon(Icons.call)),
+
+  //         Tab(icon: Icon(Icons.message)),
+
+  //       ],
+
+  //     );
 
   @override
   Widget build(BuildContext context) {
     String folderName;
+
     model.User user = Provider.of<UserProvider>(context).getUser;
+
     upperTab = //FirebaseAuth.instance.currentUser.uid == userData['uid']
+
         TabBar(
             indicator: UnderlineTabIndicator(
               borderSide: BorderSide(width: 1.5),
@@ -96,16 +128,20 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             tabs: [
           //if (FirebaseAuth.instance.currentUser.uid == user.uid)
+
           Tab(
             icon: new Icon(
               Icons.dashboard_outlined,
+
               // Icons.developer_board ,
+
               color: Colors.black,
             ),
             child: Text('Boards',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
           ),
+
           Tab(
             icon: new Icon(
               Icons.book_outlined,
@@ -115,10 +151,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
           ),
+
           Tab(
             icon: new Icon(
               // Icons.drive_file_rename_outline_sharp,
+
               Icons.create_outlined,
+
               color: Colors.black,
             ),
             child: Text('Drafts',
@@ -127,354 +166,491 @@ class _ProfilePageState extends State<ProfilePage> {
           )
         ]);
 
-    /*: TabBar(tabs: [
-            //if (FirebaseAuth.instance.currentUser.uid == user.uid)
-            Tab(
-              icon: new Icon(
-                Icons.post_add,
-                color: Colors.black,
-              ),
-              child: Text('posts',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
-            ),
-            Tab(
-              icon: new Icon(
-                Icons.folder_copy_sharp,
-                color: Colors.black,
-              ),
-              child: Text('folders',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))),
-            ),
+    /*: TabBar(tabs: [ 
 
-            //else(FirebaseAuth.instance.currentUser.uid == user.uid)
+            //if (FirebaseAuth.instance.currentUser.uid == user.uid) 
+
+            Tab( 
+
+              icon: new Icon( 
+
+                Icons.post_add, 
+
+                color: Colors.black, 
+
+              ), 
+
+              child: Text('posts', 
+
+                  textAlign: TextAlign.center, 
+
+                  style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))), 
+
+            ), 
+
+            Tab( 
+
+              icon: new Icon( 
+
+                Icons.folder_copy_sharp, 
+
+                color: Colors.black, 
+
+              ), 
+
+              child: Text('folders', 
+
+                  textAlign: TextAlign.center, 
+
+                  style: TextStyle(color: Color.fromRGBO(139, 134, 134, 1))), 
+
+            ), 
+
+ 
+
+            //else(FirebaseAuth.instance.currentUser.uid == user.uid) 
+
           ]);*/
+
     return isLoading
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : Scaffold(
-            backgroundColor: Colors.white,
-            body: Container(
-              //Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) => new ProfilePage()));
-              //width: double.infinity,
-              //height: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 155, top: 40.0),
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(userData['photoUrl']),
-                        radius: 40.0,
+        : SafeArea(
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              body: Container(
+                //Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) => new ProfilePage()));
+
+                //width: double.infinity,
+
+                //height: double.infinity,
+
+                child: Column(
+                  children: [
+                    Row(children: <Widget>[
+                      //SizedBox(width: 150, height: 20),
+
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: (MediaQuery.of(context).size.width - 80) / 2,
+                            top: 0.0),
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(userData['photoUrl']),
+                          radius: 40.0,
+                        ),
+                      ),
+
+                      SizedBox(
+                        width: (MediaQuery.of(context).size.width - 200) / 2,
+                      ),
+
+                      IconButton(
+                        icon: new Icon(
+                          Icons.menu,
+                        ),
+                        iconSize: 40,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => menuBar(context)),
+                          );
+                        },
+                      ),
+                    ]),
+
+                    SizedBox(height: 5.0),
+
+                    Center(
+                      child: Text(
+                        //'Barbie Slayer',
+
+                        userData['name'],
+
+                        //user.name,
+
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontSize: 15.0,
+                        ),
+
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                    IconButton(
-                      icon: new Icon(
-                        Icons.menu,
-                      ),
-                      iconSize: 40,
-                      padding: EdgeInsets.only(left: 110, bottom: 1.5),
-                      alignment: Alignment.topLeft,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => menuBar(context)),
-                        );
-                      },
-                    )
-                  ]),
-                  SizedBox(height: 5.0),
-                  Center(
-                    child: Text(
-                      //'Barbie Slayer',
-                      userData['name'],
-                      //user.name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 15.0,
-                      ),
+
+                    SizedBox(height: 5.0),
+
+                    Text(
+                      //'@urgalbarbz \n Only slays and sandwiches',
+
+                      '@${userData['username']}',
+
+                      style: TextStyle(color: Colors.black, fontSize: 13.0),
+
                       textAlign: TextAlign.center,
                     ),
-                  ),
-                  SizedBox(height: 5.0),
-                  Text(
-                    //'@urgalbarbz \n Only slays and sandwiches',
-                    '@${userData['username']}',
-                    style: TextStyle(color: Colors.black, fontSize: 13.0),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Text(
-                    //'@urgalbarbz \n Only slays and sandwiches',
-                    userData['bio'],
-                    style: TextStyle(
-                        color: Color.fromRGBO(139, 134, 134, 1),
-                        fontSize: 13.0),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                    height: 551,
-                    child: DefaultTabController(
-                      length: upperTab.tabs.length,
-                      child: Scaffold(
-                          extendBodyBehindAppBar: true,
-                          // backgroundColor: Colors.pink.shade100,
-                          appBar: PreferredSize(
-                            preferredSize: Size.fromHeight(74),
-                            child: AppBar(
-                              bottom: PreferredSize(
-                                preferredSize: upperTab.preferredSize,
-                                child: Material(
-                                  color: Colors.white, //<-- SEE HERE
-                                  child: upperTab,
-                                ),
-                              ),
-                              backgroundColor: Colors.white,
-                              iconTheme: IconThemeData(color: Colors.white),
-                            ),
-                          ),
-                          body: TabBarView(
-                            children: [
-                              SizedBox(
-                                  // height: 300,
-                                  // width: 600,
-                                  child: FutureBuilder(
-                                future: FirebaseFirestore.instance
-                                    .collection('posts')
-                                    .where('uid', isEqualTo: userData['uid'])
-                                    .get(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
 
-                                  return ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount:
-                                        (snapshot.data as dynamic).docs.length,
-                                    itemBuilder: (ctx, index) => Card(
-                                      elevation: 10,
-                                      child: PostCard(
-                                          snap:
-                                              snapshot.data.docs[index].data()),
-                                    ),
-                                    /*return Container(
-                                child: Image(
-                                  image: NetworkImage(snap['postUrl']),
-                                  fit: BoxFit.cover,
-                                ),
-                              );*/
-                                  );
-                                },
-                              )),
-                              SizedBox(
-                                // height: 400,
-                                // width: 400,
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: FutureBuilder(
-                                        future: FirebaseFirestore.instance
-                                            .collection('folders')
-                                            .where('users',
-                                                arrayContains: userData['uid'])
-                                            .get(),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            );
-                                          }
-                                          // show all folders as grid view
-                                          return ListView.builder(
-                                            shrinkWrap: true,
-                                            itemCount:
-                                                (snapshot.data as dynamic)
-                                                    .docs
-                                                    .length,
-                                            itemBuilder: (ctx, index) =>
-                                                FolderCard(
-                                              snap: snapshot.data.docs[index]
-                                                  .data(),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        fixedSize: Size(
-                                            MediaQuery.of(context).size.width *
-                                                0.40,
-                                            MediaQuery.of(context).size.height *
-                                                0.04),
-                                        backgroundColor:
-                                            Color.fromRGBO(192, 234, 240, 1),
-                                        foregroundColor:
-                                            Color.fromRGBO(139, 134, 134, 1),
-                                      ),
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title:
-                                                    Text("Create a new folder"),
-                                                content: TextField(
-                                                  decoration: InputDecoration(
-                                                      hintText: "Folder name"),
-                                                  onChanged: (value) {
-                                                    folderName = value;
-                                                  },
-                                                ),
-                                                actions: <Widget>[
-                                                  Center(
-                                                    child: ElevatedButton(
-                                                        child: Text("Create"),
-                                                        onPressed: () {
-                                                          FolderService()
-                                                              .createFolder(
-                                                            folderName,
-                                                            Provider.of<UserProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .getUser
-                                                                .uid,
-                                                            Provider.of<UserProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .getUser
-                                                                .username,
-                                                            // create an empty list for posts
-                                                            [],
-                                                            // create an list with uid
-                                                            [
-                                                              Provider.of<UserProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .getUser
-                                                                  .uid
-                                                            ],
-                                                            1,
-                                                            //empty string for cover
-                                                            'https://cdn-icons-png.flaticon.com/512/9967/9967298.png',
-                                                            // create an empty list for requests
-                                                            [],
-                                                          );
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                          fixedSize: Size(
-                                                              MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.40,
-                                                              MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .height *
-                                                                  0.04),
-                                                          backgroundColor:
-                                                              Color.fromRGBO(
-                                                                  192,
-                                                                  234,
-                                                                  240,
-                                                                  1),
-                                                          foregroundColor:
-                                                              Color.fromRGBO(
-                                                                  139,
-                                                                  134,
-                                                                  134,
-                                                                  1),
-                                                        )),
-                                                  ),
-                                                  // Center(
-                                                  //   child: ElevatedButton(
-                                                  //     child: Text("Pick Cover"),
-                                                  //     onPressed: () async {
-                                                  //       FolderCardState().addCover();
-                                                  //     },
-                                                  //     style: ElevatedButton
-                                                  //           .styleFrom(
-                                                  //         fixedSize: Size(
-                                                  //             MediaQuery.of( context)  .size .width *  0.40,
-                                                  //             MediaQuery.of( context)  .size .height *  0.04),
-                                                  //         backgroundColor:  Color.fromRGBO(192, 234, 240, 1),
-                                                  //         foregroundColor:  Color.fromRGBO( 139, 134, 134, 1),
-                                                  //       )
-                                                  //   ),
-                                                  // ),
-                                                ],
-                                              );
-                                            });
-                                      },
-                                      child: Text('Create Folder'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                  // height: 400,
-                                  // width: 400,
-                                  child: FutureBuilder(
-                                future: FirebaseFirestore.instance
-                                    .collection('drafts')
-                                    .where('uid', isEqualTo: userData['uid'])
-                                    .get(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-
-                                  return ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount:
-                                        (snapshot.data as dynamic).docs.length,
-                                    itemBuilder: (ctx, index) => Card(
-                                      elevation: 10,
-                                      child: DraftCard(
-                                          snap:
-                                              snapshot.data.docs[index].data()),
-                                    ),
-                                    /*return Container(
-                                  child: Image(
-                                    image: NetworkImage(snap['postUrl']),
-                                    fit: BoxFit.cover,
-                                  ),
-                                );*/
-                                  );
-                                },
-                              )),
-                            ],
-                          )),
+                    SizedBox(
+                      height: 5.0,
                     ),
-                  )
-                ],
+
+                    Text(
+                      //'@urgalbarbz \n Only slays and sandwiches',
+
+                      userData['bio'],
+
+                      style: TextStyle(
+                          color: Color.fromRGBO(139, 134, 134, 1),
+                          fontSize: 13.0),
+
+                      textAlign: TextAlign.center,
+                    ),
+
+                    // SizedBox(
+
+                    //   height: 10,
+
+                    // ),
+
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height - 286,
+                      child: DefaultTabController(
+                        length: upperTab.tabs.length,
+                        child: SafeArea(
+                          child: Scaffold(
+                              extendBodyBehindAppBar: true,
+
+                              // backgroundColor: Colors.pink.shade100,
+
+                              appBar: PreferredSize(
+                                preferredSize: Size.fromHeight(74),
+                                child: AppBar(
+                                  bottom:
+
+                                      // PreferredSize(
+
+                                      //   preferredSize: upperTab.preferredSize,
+
+                                      // child:
+
+                                      // Material(
+
+                                      // color: Colors.green, //<-- SEE HERE
+
+                                      // child:
+
+                                      upperTab,
+
+                                  // ),
+
+                                  // ),
+
+                                  backgroundColor: Colors.white,
+
+                                  iconTheme: IconThemeData(color: Colors.white),
+                                ),
+                              ),
+                              body: TabBarView(
+                                children: [
+                                  SizedBox(
+
+                                      // height: 300,
+
+                                      // width: 600,
+
+                                      child: FutureBuilder(
+                                    future: FirebaseFirestore.instance
+                                        .collection('posts')
+                                        .where('uid',
+                                            isEqualTo: userData['uid'])
+                                        .get(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+
+                                      return ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: (snapshot.data as dynamic)
+                                            .docs
+                                            .length,
+                                        itemBuilder: (ctx, index) => Card(
+                                          elevation: 10,
+                                          child: PostCard(
+                                              snap: snapshot.data.docs[index]
+                                                  .data()),
+                                        ),
+
+                                        /*return Container( 
+
+                                    child: Image( 
+
+                                      image: NetworkImage(snap['postUrl']), 
+
+                                      fit: BoxFit.cover, 
+
+                                    ), 
+
+                                  );*/
+                                      );
+                                    },
+                                  )),
+                                  SizedBox(
+                                    // height: 400,
+
+                                    // width: 400,
+
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: FutureBuilder(
+                                            future: FirebaseFirestore.instance
+                                                .collection('folders')
+                                                .where('users',
+                                                    arrayContains:
+                                                        userData['uid'])
+                                                .get(),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return const Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                );
+                                              }
+
+                                              // show all folders as grid view
+
+                                              return ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount:
+                                                    (snapshot.data as dynamic)
+                                                        .docs
+                                                        .length,
+                                                itemBuilder: (ctx, index) =>
+                                                    FolderCard(
+                                                  snap: snapshot
+                                                      .data.docs[index]
+                                                      .data(),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            fixedSize: Size(
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.40,
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.04),
+                                            backgroundColor: Color.fromRGBO(
+                                                192, 234, 240, 1),
+                                            foregroundColor: Color.fromRGBO(
+                                                139, 134, 134, 1),
+                                          ),
+                                          onPressed: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: Text(
+                                                        "Create a new folder"),
+                                                    content: TextField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                              hintText:
+                                                                  "Folder name"),
+                                                      onChanged: (value) {
+                                                        folderName = value;
+                                                      },
+                                                    ),
+                                                    actions: <Widget>[
+                                                      Center(
+                                                        child: ElevatedButton(
+                                                            child:
+                                                                Text("Create"),
+                                                            onPressed: () {
+                                                              FireStoreMethods()
+                                                                  .createFolder(
+                                                                folderName,
+
+                                                                Provider.of<UserProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .getUser
+                                                                    .uid,
+
+                                                                Provider.of<UserProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .getUser
+                                                                    .username,
+
+                                                                // create an empty list for posts
+
+                                                                [],
+
+                                                                // create an list with uid
+
+                                                                [
+                                                                  Provider.of<UserProvider>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .getUser
+                                                                      .uid
+                                                                ],
+
+                                                                1,
+
+                                                                //empty string for cover
+
+                                                                'https://cdn-icons-png.flaticon.com/512/9967/9967298.png',
+
+                                                                // create an empty list for requests
+
+                                                                [],
+                                                              );
+
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            style:
+                                                                ElevatedButton
+                                                                    .styleFrom(
+                                                              fixedSize: Size(
+                                                                  MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.40,
+                                                                  MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .height *
+                                                                      0.04),
+                                                              backgroundColor:
+                                                                  Color
+                                                                      .fromRGBO(
+                                                                          192,
+                                                                          234,
+                                                                          240,
+                                                                          1),
+                                                              foregroundColor:
+                                                                  Color
+                                                                      .fromRGBO(
+                                                                          139,
+                                                                          134,
+                                                                          134,
+                                                                          1),
+                                                            )),
+                                                      ),
+
+                                                      // Center(
+
+                                                      //   child: ElevatedButton(
+
+                                                      //     child: Text("Pick Cover"),
+
+                                                      //     onPressed: () async {
+
+                                                      //       FolderCardState().addCover();
+
+                                                      //     },
+
+                                                      //     style: ElevatedButton
+
+                                                      //           .styleFrom(
+
+                                                      //         fixedSize: Size(
+
+                                                      //             MediaQuery.of( context)  .size .width *  0.40,
+
+                                                      //             MediaQuery.of( context)  .size .height *  0.04),
+
+                                                      //         backgroundColor:  Color.fromRGBO(192, 234, 240, 1),
+
+                                                      //         foregroundColor:  Color.fromRGBO( 139, 134, 134, 1),
+
+                                                      //       )
+
+                                                      //   ),
+
+                                                      // ),
+                                                    ],
+                                                  );
+                                                });
+                                          },
+                                          child: Text('Create Folder'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+
+                                      // height: 400,
+
+                                      // width: 400,
+
+                                      child: FutureBuilder(
+                                    future: FirebaseFirestore.instance
+                                        .collection('drafts')
+                                        .where('uid',
+                                            isEqualTo: userData['uid'])
+                                        .get(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+
+                                      return ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: (snapshot.data as dynamic)
+                                            .docs
+                                            .length,
+                                        itemBuilder: (ctx, index) => Card(
+                                          elevation: 10,
+                                          child: DraftCard(
+                                              snap: snapshot.data.docs[index]
+                                                  .data()),
+                                        ),
+
+                                        /*return Container( 
+
+                                      child: Image( 
+
+                                        image: NetworkImage(snap['postUrl']), 
+
+                                        fit: BoxFit.cover, 
+
+                                      ), 
+
+                                    );*/
+                                      );
+                                    },
+                                  )),
+                                ],
+                              )),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           );
@@ -493,17 +669,24 @@ class _ProfilePageState extends State<ProfilePage> {
             preferredSize: Size.fromHeight(90.0)),
         body: Container(
           margin: EdgeInsets.fromLTRB(20, 80, 20, 0),
+
           width: 390,
+
           //width: double.infinity,
+
           height: 600,
+
           //padding: EdgeInsets.only(left: 20),
+
           color: Color.fromRGBO(213, 245, 208, 1),
+
           child: Column(
             children: <Widget>[
               SizedBox(height: 150),
               ElevatedButton(
                 onPressed: () async {
-                  await UserService().signOut();
+                  await AuthMethods().signOut();
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => MyHomePage()),
@@ -563,11 +746,17 @@ Widget accountSettings(BuildContext context) {
           preferredSize: Size.fromHeight(90.0)),
       body: Container(
         margin: EdgeInsets.fromLTRB(20, 80, 20, 0),
+
         width: 390,
+
         //width: double.infinity,
+
         height: 600,
+
         //padding: EdgeInsets.only(left: 20),
+
         color: Color.fromRGBO(192, 234, 240, 1),
+
         child: Column(
           children: <Widget>[
             SizedBox(height: 150),
@@ -705,9 +894,13 @@ Widget accountSettings(BuildContext context) {
 
 Widget updatePfp(BuildContext context) {
   final UserProvider userProvider = Provider.of<UserProvider>(context);
+
   final x = FirebaseFirestore.instance.collection("Users").doc(userData["uid"]);
+
   final y = FirebaseFirestore.instance.collection("Users").doc(x.id);
+
   final pfp = userProvider.getUser.photoUrl;
+
   return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData.fallback(),
@@ -737,12 +930,15 @@ Widget updatePfp(BuildContext context) {
                 children: <Widget>[
                   SizedBox(
                     height: 180,
+
                     width: 180,
+
                     child: CircleAvatar(
                       radius: 350,
                       backgroundImage: NetworkImage(pfp),
                       backgroundColor: Colors.red,
                     ),
+
                     //maxLines: 8,
                   ),
                   SizedBox(
@@ -751,9 +947,12 @@ Widget updatePfp(BuildContext context) {
                   ElevatedButton(
                       onPressed: () async {
                         Uint8List im = await pickImage(ImageSource.gallery);
+
                         // set state because we need to display the image we selected on the circle avatar
-                        String photoUrl = await StorageService()
+
+                        String photoUrl = await StorageMethods()
                             .uploadImageToStorage('profilePics', im, false);
+
                         y.update({
                           "photoUrl": "$photoUrl",
                         });
@@ -762,6 +961,7 @@ Widget updatePfp(BuildContext context) {
                           context,
                           'Profile Picture Updated!',
                         );
+
                         Navigator.pop(context);
                       },
                       child: Text(
@@ -827,12 +1027,17 @@ Widget updateBio(BuildContext context) {
                 ),
                 child: Text(
                   //'@urgalbarbz \n Only slays and sandwiches',
+
                   userData['bio'],
+
                   style: TextStyle(
                     color: Color.fromRGBO(93, 90, 90, 1),
+
                     fontSize: 13.0,
+
                     // fontStyle: FontStyle.italic,
                   ),
+
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -847,41 +1052,56 @@ Widget updateBio(BuildContext context) {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 // Padding(
+
                 // padding: const EdgeInsets.only(right: 200.0),
+
                 Center(
                   child: Text(
                     "Edit current bio",
                     style: TextStyle(color: Colors.black, fontSize: 20),
                   ),
                 ),
+
                 // ),
+
                 SizedBox(height: 20),
+
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.90,
+
                   height: MediaQuery.of(context).size.height * 0.06,
+
                   child: reusableTextField(
                       "Write a bio", Icons.edit, false, _textController),
+
                   //maxLines: 8,
                 ),
+
                 SizedBox(height: 20),
+
                 ElevatedButton(
                   onPressed: () {
                     final x = FirebaseFirestore.instance
                         .collection("Users")
                         .doc(userData["uid"]);
+
                     final y = FirebaseFirestore.instance
                         .collection("Users")
                         .doc(x.id);
 
                     String ss = _textController.text;
+
                     y.update({
                       "bio": "$ss",
                     });
+
                     _textController.clear();
+
                     showSnackBar(
                       context,
                       'Bio Updated!',
                     );
+
                     Navigator.pop(context);
                   },
                   child: Text(
@@ -952,11 +1172,14 @@ Widget updateUsername(BuildContext context) {
                 ),
                 child: Text(
                   //'@urgalbarbz \n Only slays and sandwiches',
+
                   '@${userData['username']}',
+
                   style: TextStyle(
                     color: Color.fromRGBO(139, 134, 134, 1),
                     fontSize: 13.0,
                   ),
+
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -984,7 +1207,9 @@ Widget updateUsername(BuildContext context) {
                 ),
                 SizedBox(
                   height: 40,
+
                   width: 350,
+
                   child: reusableTextField(
                       "Enter new username", Icons.edit, false, _textController),
 
@@ -1002,14 +1227,18 @@ Widget updateUsername(BuildContext context) {
                         .doc(x.id);
 
                     String ss = _textController.text;
+
                     y.update({
                       "username": "$ss",
                     });
+
                     _textController.clear();
+
                     showSnackBar(
                       context,
                       'username Updated!',
                     );
+
                     Navigator.pop(context);
                   },
                   child: Text(
@@ -1072,7 +1301,9 @@ Widget updatePassword(BuildContext context) {
                 ),
                 SizedBox(
                   height: 40,
+
                   width: 350,
+
                   child: reusableTextField(
                       "Enter new password", Icons.edit, true, _textController),
 
@@ -1084,17 +1315,23 @@ Widget updatePassword(BuildContext context) {
                 ElevatedButton(
                   onPressed: () async {
                     final currUser = FirebaseAuth.instance.currentUser;
+
                     try {
                       await currUser.updatePassword(_textController.text);
                     } catch (e) {
                       // TODO
+
                     }
+
                     showSnackBar(
                       context,
                       'Password Updated!',
                     );
+
                     _textController.clear();
+
                     FirebaseAuth.instance.signOut();
+
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => MyHomePage()));
                   },
@@ -1166,11 +1403,14 @@ Widget updateEmail(BuildContext context) {
                 ),
                 child: Text(
                   //'@urgalbarbz \n Only slays and sandwiches',
+
                   userData['email'],
+
                   style: TextStyle(
                     color: Color.fromRGBO(139, 134, 134, 1),
                     fontSize: 13.0,
                   ),
+
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -1196,7 +1436,9 @@ Widget updateEmail(BuildContext context) {
                 ),
                 SizedBox(
                   height: 40,
+
                   width: 350,
+
                   child: reusableTextField("Enter a new email address",
                       Icons.edit, false, _textController),
 
@@ -1214,21 +1456,28 @@ Widget updateEmail(BuildContext context) {
                     final y = FirebaseFirestore.instance
                         .collection("Users")
                         .doc(x.id);
+
                     final Curruser = FirebaseAuth.instance.currentUser;
+
                     _textController.text;
+
                     try {
                       await Curruser.updateEmail(_textController.text);
                     } catch (error) {}
+
                     y.update({
                       "email": "$_textController.text",
                     });
 
                     _textController.clear();
+
                     showSnackBar(
                       context,
                       'Email Updated!',
                     );
+
                     FirebaseAuth.instance.signOut();
+
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => MyHomePage()));
                   },

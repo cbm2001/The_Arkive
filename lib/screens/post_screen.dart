@@ -1,430 +1,821 @@
 // import 'dart:typed_data';
 
 // import 'package:cloud_firestore/cloud_firestore.dart';
+
 // import 'package:first_app/screens/map_screen.dart';
+
 // import 'package:first_app/screens/search_location.dart';
+
 // import 'package:flutter/material.dart';
+
 // import 'package:geolocator/geolocator.dart';
+
 // import 'package:image_picker/image_picker.dart';
+
 // import '../providers/user_provider.dart';
+
 // import '../resources/firestore_methods.dart';
+
 // import '../widgets/reusable_widgets.dart';
+
 // import '../utils/utils.dart';
+
 // import 'package:provider/provider.dart';
+
 // import 'package:first_app/resources/locationMethods.dart';
 
 // class PostPage extends StatefulWidget {
+
 //   const PostPage({Key key}) : super(key: key);
 
 //   @override
+
 //   _PostPageState createState() => _PostPageState();
+
 // }
 
 // class _PostPageState extends State<PostPage> {
+
 //   Uint8List _file;
+
 //   bool isLoading = false;
+
 //   final TextEditingController _descriptionController = TextEditingController();
+
 //   final TextEditingController _locationController = TextEditingController();
+
 //   final TextEditingController _categoryController = TextEditingController();
+
 //   // double latitude;
+
 //   // double longitude;
+
 //   GeoPoint geoLoc;
+
 //   String category = '';
 
 //   _selectImage(BuildContext parentContext) async {
+
 //     return showDialog(
+
 //       context: parentContext,
+
 //       builder: (BuildContext context) {
+
 //         return SimpleDialog(
+
 //           title: const Text('Create a Post'),
+
 //           children: <Widget>[
+
 //             SimpleDialogOption(
+
 //                 padding: const EdgeInsets.all(20),
+
 //                 child: const Text('Take a photo'),
+
 //                 onPressed: () async {
+
 //                   Navigator.pop(context);
+
 //                   Uint8List file = await pickImage(ImageSource.camera);
+
 //                   setState(() {
+
 //                     _file = file;
+
 //                   });
+
 //                 }),
+
 //             SimpleDialogOption(
+
 //                 padding: const EdgeInsets.all(20),
+
 //                 child: const Text('Choose from Gallery'),
+
 //                 onPressed: () async {
+
 //                   Navigator.of(context).pop();
+
 //                   Uint8List file = await pickImage(ImageSource.gallery);
+
 //                   setState(() {
+
 //                     _file = file;
+
 //                   });
+
 //                 }),
+
 //             SimpleDialogOption(
+
 //               padding: const EdgeInsets.all(20),
+
 //               child: const Text("Cancel"),
+
 //               onPressed: () {
+
 //                 Navigator.pop(context);
+
 //               },
+
 //             )
+
 //           ],
+
 //         );
+
 //       },
+
 //     );
+
 //   }
 
 //   Future<bool> postImage(String uid, String username, String profImage) async {
+
 //     setState(() {
+
 //       isLoading = true;
+
 //     });
+
 //     // start the loading
+
 //     try {
+
 //       // upload to storage and db
+
 //       String res = await FireStoreMethods().uploadPost(
+
 //           _descriptionController.text,
+
 //           _file,
+
 //           uid,
+
 //           username,
+
 //           _locationController.text,
+
 //           category,
+
 //           profImage,
+
 //           // latitude,
+
 //           // longitude
+
 //           geoLoc);
+
 //       if (res == "success") {
+
 //         setState(() {
+
 //           isLoading = false;
+
 //         });
+
 //         showSnackBar(
+
 //           context,
+
 //           'Posted!',
+
 //         );
+
 //         clearImage();
+
 //       } else {
+
 //         setState(() {
+
 //           isLoading = false;
+
 //         });
+
 //         showSnackBar(context, res);
+
 //       }
+
 //     } catch (err) {
+
 //       showSnackBar(
+
 //         context,
+
 //         err.toString(),
+
 //       );
+
 //     }
+
 //     return true;
+
 //   }
 
 //   void clearImage() {
+
 //     setState(() {
+
 //       _file = null;
+
 //     });
+
 //   }
 
 //   @override
+
 //   void dispose() {
+
 //     super.dispose();
+
 //     _descriptionController.dispose();
+
 //   }
 
 //   @override
+
 //   Widget build(BuildContext context) {
+
 //     final UserProvider userProvider = Provider.of<UserProvider>(context);
 
 //     return _file == null
+
 //         ? Column(
+
 //             children: [
+
 //               SizedBox(height: 300),
+
 //               Center(
+
 //                 child: IconButton(
+
 //                   icon: const Icon(
+
 //                     Icons.upload,
+
 //                   ),
+
 //                   iconSize: 45,
+
 //                   onPressed: () => _selectImage(context),
+
 //                 ),
+
 //               ),
+
 //               SizedBox(
+
 //                 height: 5,
+
 //               ),
+
 //               ElevatedButton(
+
 //                 onPressed: () => _selectImage(context),
+
 //                 child: Text(
+
 //                   'Upload ScrapBook',
+
 //                   textAlign: TextAlign.center,
+
 //                   style: TextStyle(
+
 //                       color: Color.fromRGBO(139, 134, 134, 1), fontSize: 14),
+
 //                 ),
+
 //                 style: ElevatedButton.styleFrom(
+
 //                   backgroundColor: Color.fromRGBO(192, 234, 240, 1),
+
 //                   fixedSize: Size(150, 40),
+
 //                   alignment: Alignment.center,
+
 //                   shape: RoundedRectangleBorder(
+
 //                       borderRadius: BorderRadius.circular(7.0)),
+
 //                 ),
+
 //               ),
+
 //             ],
+
 //           )
+
 //         : Scaffold(
+
 //             appBar: AppBar(
+
 //               backgroundColor: Colors.white,
+
 //               leading: IconButton(
+
 //                 icon: const Icon(Icons.arrow_back),
+
 //                 onPressed: clearImage,
+
 //               ),
+
 //               title: const Text(
+
 //                 'Post to',
+
 //               ),
+
 //               centerTitle: false,
+
 //               actions: <Widget>[
+
 //                 TextButton(
+
 //                   onPressed: () => postImage(
+
 //                     userProvider.getUser.uid,
+
 //                     userProvider.getUser.username,
+
 //                     userProvider.getUser.photoUrl,
+
 //                   ),
+
 //                   child: const Text(
+
 //                     "Post",
+
 //                     style: TextStyle(color: Colors.black, fontSize: 16.0),
+
 //                   ),
+
 //                 ),
+
 //                 TextButton(
+
 //                   onPressed: () => draftImage(
+
 //                     userProvider.getUser.uid,
+
 //                     userProvider.getUser.username,
+
 //                     userProvider.getUser.photoUrl,
+
 //                   ),
+
 //                   child: const Text(
+
 //                     "Save as draft",
+
 //                     style: TextStyle(color: Colors.black, fontSize: 16.0),
+
 //                   ),
+
 //                 ),
+
 //               ],
+
 //             ),
+
 //             // POST FORM
+
 //             body: SingleChildScrollView(
+
 //               child: Column(
+
 //                 children: <Widget>[
+
 //                   isLoading
+
 //                       ? const LinearProgressIndicator()
+
 //                       : const Padding(padding: EdgeInsets.only(top: 0.0)),
+
 //                   const Divider(),
+
 //                   /*Row(
+
 //                       //mainAxisAlignment: MainAxisAlignment.spaceAround,
+
 //                       //crossAxisAlignment: CrossAxisAlignment.start,
+
 //                       children: <Widget>[
+
 //                         Container(
+
 //                             padding: EdgeInsets.only(left: 20.0),
+
 //                             alignment: Alignment.topLeft,
+
 //                             child: CircleAvatar(
+
 //                               backgroundImage: NetworkImage(
+
 //                                   // 'https://i.stack.imgur.com/l60Hf.png'
+
 //                                   userProvider.getUser.photoUrl),
+
 //                               radius: 30,
+
 //                             ),
+
 //                             height: 80),
+
 //                       ]),*/
+
 //                   SizedBox(
+
 //                     height: 200,
+
 //                     width: 200,
+
 //                     child: AspectRatio(
+
 //                       aspectRatio: 687 / 651,
+
 //                       child: Container(
+
 //                         alignment: Alignment.topCenter,
+
 //                         decoration: BoxDecoration(
+
 //                             image: DecorationImage(
+
 //                           fit: BoxFit.fill,
+
 //                           alignment: FractionalOffset.topCenter,
+
 //                           image: MemoryImage(_file),
+
 //                         )),
+
 //                       ),
+
 //                     ),
+
 //                   ),
+
 //                   const Divider(),
+
 //                   SizedBox(
+
 //                     height: 40,
+
 //                     width: 350,
+
 //                     child: reusableTextField("Write a caption",
+
 //                         Icons.description, false, _descriptionController),
+
 //                     //maxLines: 8,
+
 //                   ),
+
 //                   SizedBox(
+
 //                     height: 5,
+
 //                   ),
+
 //                   Container(
+
 //                     height: 40,
+
 //                     width: 350,
+
 //                     child: Row(
+
 //                       children: [
+
 //                         Text(
+
 //                           "Select Category :   ",
+
 //                           style: TextStyle(
+
 //                             color: Colors.black,
+
 //                           ),
+
 //                         ),
+
 //                         DropdownButton<String>(
+
 //                           value: category,
+
 //                           items: [
+
 //                             '',
+
 //                             'travel',
+
 //                             'sports',
+
 //                             'food',
+
 //                             'art',
+
 //                             'lifestyle'
+
 //                           ].map<DropdownMenuItem<String>>((String value) {
+
 //                             return DropdownMenuItem<String>(
+
 //                               value: value,
+
 //                               child: Text(
+
 //                                 value,
+
 //                                 style: TextStyle(fontSize: 18),
+
 //                               ),
+
 //                             );
+
 //                           }).toList(),
+
 //                           onChanged: (String newValue) {
+
 //                             setState(() {
+
 //                               category = newValue;
+
 //                             });
+
 //                           },
+
 //                         ),
+
 //                       ],
+
 //                     ),
+
 //                   ),
+
 //                   SizedBox(
+
 //                     height: 5,
+
 //                   ),
+
 //                   /*SizedBox(
+
 //                     height: 40,
+
 //                     width: 350,
+
 //                     child: reusableTextField("Tag location(s)",
+
 //                         Icons.share_location, false, _locationController),
+
 //                     //maxLines: 8,
+
 //                   ),*/
+
 //                   ElevatedButton(
+
 //                       onPressed: () {
+
 //                         print("here");
+
 //                         Navigator.push(
+
 //                           context,
+
 //                           MaterialPageRoute(
+
 //                             builder: (context) => MapSearchPage(gpVal: (value) {
+
 //                               print("and here");
+
 //                               setState(() {
+
 //                                 geoLoc = value;
+
 //                               });
+
 //                             }),
+
 //                           ),
+
 //                         );
+
 //                       },
+
 //                       child: Text("Search for location"),
+
 //                       style: ElevatedButton.styleFrom(
+
 //                         fixedSize: Size(200, 50),
+
 //                         backgroundColor: Color.fromRGBO(255, 248, 185, 1),
+
 //                         foregroundColor: Color.fromRGBO(139, 134, 134, 1),
+
 //                       )),
+
 //                   SizedBox(
+
 //                     height: 5,
+
 //                   ),
+
 //                   Center(child: Text("Or")),
+
 //                   SizedBox(
+
 //                     height: 5,
+
 //                   ),
+
 //                   ElevatedButton(
+
 //                       onPressed: () async {
+
 //                         setState(() {
+
 //                           isLoading = true;
+
 //                         });
 
 //                         GeoPoint pos = await determinePosition();
 
 //                         setState(() {
+
 //                           isLoading = false;
+
 //                           String x = '123';
 
 //                           geoLoc = pos;
+
 //                           if (!isLoading) {
+
 //                             showSnackBar(context, "location received!");
+
 //                           }
+
 //                         });
+
 //                       },
+
 //                       child: Text("Get Current location"),
+
 //                       style: ElevatedButton.styleFrom(
+
 //                         fixedSize: Size(200, 50),
+
 //                         backgroundColor: Color.fromRGBO(192, 234, 240, 1),
+
 //                         foregroundColor: Color.fromRGBO(139, 134, 134, 1),
+
 //                       )),
+
 //                   SizedBox(
+
 //                     height: 5,
+
 //                   ),
+
 //                 ],
+
 //               ),
+
 //             ),
+
 //           );
+
 //   }
 
 //   Future<bool> draftImage(String uid, String username, String profImage) async {
+
 //     setState(() {
+
 //       isLoading = true;
+
 //     });
+
 //     // start the loading
+
 //     try {
+
 //       // upload to storage and db
+
 //       String res = await FireStoreMethods().uploadDraft(
+
 //           _descriptionController.text,
+
 //           _file,
+
 //           uid,
+
 //           username,
+
 //           _locationController.text,
+
 //           category,
+
 //           profImage,
+
 //           // latitude ,
+
 //           // longitude
+
 //           geoLoc);
+
 //       if (res == "success") {
+
 //         setState(() {
+
 //           isLoading = false;
+
 //         });
+
 //         showSnackBar(
+
 //           context,
+
 //           'drafted!',
+
 //         );
+
 //         clearImage();
+
 //       } else {
+
 //         setState(() {
+
 //           isLoading = false;
+
 //         });
+
 //         showSnackBar(context, res);
+
 //       }
+
 //     } catch (err) {
+
 //       showSnackBar(
+
 //         context,
+
 //         err.toString(),
+
 //       );
+
 //     }
+
 //     return true;
+
 //   }
+
 // }
 
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:first_app/screens/map_screen.dart';
+
 import 'package:first_app/screens/search_location.dart';
-import 'package:first_app/services/crud/post_service.dart';
-import 'package:first_app/services/location/location_service.dart';
+
 import 'package:flutter/material.dart';
+
 import 'package:flutter_mentions/flutter_mentions.dart';
+
 import 'package:geolocator/geolocator.dart';
+
 import 'package:get/route_manager.dart';
+
 import 'package:image_picker/image_picker.dart';
+
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
+
 import 'package:screenshot/screenshot.dart';
+
 import '../providers/user_provider.dart';
+
 import '../resources/firestore_methods.dart';
+
 import '../widgets/reusable_widgets.dart';
+
 import '../utils/utils.dart';
+
 import 'package:provider/provider.dart';
+
 import 'package:first_app/resources/locationMethods.dart';
+import 'package:first_app/services/location/location_service.dart';
 import '../models/text_info.dart';
+
 import '../widgets/image_text.dart';
+
 import 'package:zoom_widget/zoom_widget.dart';
+
 // import '../models/edit_add_image.dart';
+
 import '../widgets/overlayedWidget.dart';
 
 class PostPage extends StatefulWidget {
@@ -436,32 +827,51 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> {
   GlobalKey<FlutterMentionsState> key = GlobalKey<FlutterMentionsState>();
+
   Uint8List _file;
+
   Uint8List _scndFile;
+
   Image _scndImg;
+
   bool isLoading = false;
+
   final TextEditingController _descriptionController = TextEditingController();
+
   final TextEditingController _locationController = TextEditingController();
+
   final TextEditingController _categoryController = TextEditingController();
 
   // double latitude;
+
   // double longitude;
+
   GeoPoint geoLoc;
+
   String category = '';
 
   // controller used to add text to photo
+
   TextEditingController textEditingController = TextEditingController();
+
   TextEditingController creatorText = TextEditingController();
+
   ScreenshotController screenshotController = ScreenshotController();
+
   int currentIndex = 0;
+
   List<TextInfo> texts = [];
+
   List<Widget> _addedWidgets = [];
+
   final ValueNotifier<Matrix4> notifier = ValueNotifier(Matrix4.identity());
+
   final ValueNotifier<Matrix4> notifierr = ValueNotifier(Matrix4.identity());
 
   saveToGallery(BuildContext context) {
     screenshotController.capture().then((Uint8List image) {
       _file = image;
+
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Scapboard Edit Saved')));
     }).catchError((err) => print(err));
@@ -471,6 +881,7 @@ class _PostPageState extends State<PostPage> {
     setState(() {
       currentIndex = index;
     });
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
@@ -543,6 +954,7 @@ class _PostPageState extends State<PostPage> {
     setState(() {
       texts.removeAt(currentIndex);
     });
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
@@ -567,11 +979,13 @@ class _PostPageState extends State<PostPage> {
         fontSize: 20,
         textAlign: TextAlign.left,
       ));
+
       Navigator.of(context).pop();
     });
   }
 
   //dialog box to enter text
+
   addNewDialog(context) {
     showDialog(
       context: context,
@@ -648,14 +1062,19 @@ class _PostPageState extends State<PostPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     //SizedBox(width: 30),
+
                     Builder(builder: (context) {
                       return ElevatedButton(
                         onPressed: () async {
                           Navigator.of(context).pop();
+
                           Uint8List file = await pickImage(ImageSource.gallery);
+
                           setState(() {
                             _scndFile = file;
+
                             //_scndImg = Image.memory(_scndFile);
+
                             _addedWidgets.add(
                               OverlayedWidget(
                                 child: Image.memory(_scndFile),
@@ -681,6 +1100,7 @@ class _PostPageState extends State<PostPage> {
                         ),
                       );
                     }),
+
                     Builder(builder: (context) {
                       return ElevatedButton(
                         onPressed: () => Navigator.of(context).pop(),
@@ -720,7 +1140,9 @@ class _PostPageState extends State<PostPage> {
                 child: const Text('Take a photo'),
                 onPressed: () async {
                   Navigator.pop(context);
+
                   Uint8List file = await pickImage(ImageSource.camera);
+
                   setState(() {
                     _file = file;
                   });
@@ -730,7 +1152,9 @@ class _PostPageState extends State<PostPage> {
                 child: const Text('Choose from Gallery'),
                 onPressed: () async {
                   Navigator.of(context).pop();
+
                   Uint8List file = await pickImage(ImageSource.gallery);
+
                   setState(() {
                     _file = file;
                   });
@@ -750,14 +1174,19 @@ class _PostPageState extends State<PostPage> {
 
   Future<bool> postImage(String uid, String username, String profImage) async {
     saveToGallery(context);
+
     setState(() {
       isLoading = true;
     });
+
     await Future.delayed(const Duration(milliseconds: 2500));
+
     // start the loading
+
     try {
       // upload to storage and db
-      String res = await PostService().uploadPost(
+
+      String res = await FireStoreMethods().uploadPost(
           _descriptionController.text,
           _file,
           uid,
@@ -765,22 +1194,29 @@ class _PostPageState extends State<PostPage> {
           _locationController.text,
           category,
           profImage,
+
           // latitude,
+
           // longitude
+
           geoLoc);
+
       if (res == "success") {
         setState(() {
           isLoading = false;
         });
+
         showSnackBar(
           context,
           'Posted!',
         );
+
         clearImage();
       } else {
         setState(() {
           isLoading = false;
         });
+
         showSnackBar(context, res);
       }
     } catch (err) {
@@ -789,6 +1225,7 @@ class _PostPageState extends State<PostPage> {
         err.toString(),
       );
     }
+
     return true;
   }
 
@@ -801,6 +1238,7 @@ class _PostPageState extends State<PostPage> {
   @override
   void dispose() {
     super.dispose();
+
     _descriptionController.dispose();
   }
 
@@ -809,8 +1247,11 @@ class _PostPageState extends State<PostPage> {
   Future<void> getData() async {
     var querySnapshot = await FirebaseFirestore.instance
         .collection('Users')
-        .where('username',)
+        .where(
+          'username',
+        )
         .get();
+
     var docs = querySnapshot.docs;
 
     for (var doc in docs) {
@@ -821,10 +1262,9 @@ class _PostPageState extends State<PostPage> {
   @override
   void initState() {
     super.initState();
+
     getData();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -867,14 +1307,19 @@ class _PostPageState extends State<PostPage> {
         : Scaffold(
             appBar: AppBar(
               centerTitle: true,
+
               backgroundColor: Colors.white,
+
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
                 color: Colors.amber,
                 onPressed: clearImage,
               ),
+
               // title: const Text(
+
               //   'Post to',
+
               // ),
 
               actions: <Widget>[
@@ -905,50 +1350,86 @@ class _PostPageState extends State<PostPage> {
                 ),
               ],
             ),
+
             // POST FORM
+
             body: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
                   isLoading
                       ? const LinearProgressIndicator()
                       : const Padding(padding: EdgeInsets.only(top: 0.0)),
+
                   const Divider(),
-                  /*Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      //crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                            padding: EdgeInsets.only(left: 20.0),
-                            alignment: Alignment.topLeft,
-                            child: CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  // 'https://i.stack.imgur.com/l60Hf.png'
-                                  userProvider.getUser.photoUrl),
-                              radius: 30,
-                            ),
-                            height: 80),
+
+                  /*Row( 
+
+                      //mainAxisAlignment: MainAxisAlignment.spaceAround, 
+
+                      //crossAxisAlignment: CrossAxisAlignment.start, 
+
+                      children: <Widget>[ 
+
+                        Container( 
+
+                            padding: EdgeInsets.only(left: 20.0), 
+
+                            alignment: Alignment.topLeft, 
+
+                            child: CircleAvatar( 
+
+                              backgroundImage: NetworkImage( 
+
+                                  // 'https://i.stack.imgur.com/l60Hf.png' 
+
+                                  userProvider.getUser.photoUrl), 
+
+                              radius: 30, 
+
+                            ), 
+
+                            height: 80), 
+
                       ]),*/
+
                   // SizedBox(
+
                   //   height: MediaQuery.of(context).size.height *0.4,
+
                   //   width: MediaQuery.of(context).size.width * 0.9,
+
                   //   child: AspectRatio(
+
                   //     aspectRatio: 687 / 651,
+
                   //     child: Container(
+
                   //       alignment: Alignment.topCenter,
+
                   //       decoration: BoxDecoration(
+
                   //           image: DecorationImage(
+
                   //           fit: BoxFit.fill,
+
                   //           alignment: FractionalOffset.topCenter,
+
                   //           image: MemoryImage(_file),
+
                   //         )
+
                   //       ),
+
                   //     ),
+
                   //   ),
+
                   // ),
+
                   Screenshot(
                     controller: screenshotController,
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.4,
+                      // height: MediaQuery.of(context).size.height * 0.4,
                       width: MediaQuery.of(context).size.width * 0.9,
                       child: Stack(
                         children: [
@@ -978,10 +1459,13 @@ class _PostPageState extends State<PostPage> {
                                   onDragEnd: (drag) {
                                     final renderBox =
                                         context.findRenderObject() as RenderBox;
+
                                     Offset off =
                                         renderBox.globalToLocal(drag.offset);
+
                                     setState(() {
                                       texts[i].top = off.dy - 120;
+
                                       texts[i].left = off.dx - 20;
                                     });
                                   },
@@ -1007,45 +1491,16 @@ class _PostPageState extends State<PostPage> {
                             SizedBox(
                               height:
                                   MediaQuery.of(context).size.height * 0.395,
+
                               width: MediaQuery.of(context).size.width * 0.9,
+
                               //child: _scndImg,
+
                               child: _addedWidgets[z],
                             ),
                         ],
                       ),
                     ),
-                  ),
-
-                  Portal(
-                    child: SizedBox(
-                      height: 96,
-                      width: 350,
-                      child: Column(
-                        children: [
-                          reusableTextField("Write a caption",
-                              Icons.description, false, _descriptionController),
-                          FlutterMentions(
-                            decoration: InputDecoration(
-                              hintText: "Tag someone",
-                            ),
-                            mentions: [
-                              Mention(
-                                trigger: "@",
-                                data: data,
-                                style: const TextStyle(
-                                  color: Colors.pink,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: 55,
-                    //floatingActionButton: _addTextToPost,
                   ),
 
                   Container(
@@ -1084,23 +1539,36 @@ class _PostPageState extends State<PostPage> {
                                 ),
                                 TextButton(
                                   onPressed: () => saveToGallery(context),
+
                                   // style: TextButton.styleFrom(
+
                                   //   padding: EdgeInsets.zero,),
+
                                   style: TextButton.styleFrom(
                                     padding: EdgeInsets.zero,
                                   ),
+
                                   child: Text(
                                     "Save Edits",
                                     style: TextStyle(
                                       color: Color.fromARGB(255, 148, 79, 74),
+
                                       fontSize: 12.0,
+
                                       fontStyle: FontStyle.italic,
+
                                       // shadows: [
+
                                       //   Shadow(
+
                                       //     blurRadius:2.0,  // shadow blur
+
                                       //     color: Colors.grey.shade300, // shadow color
+
                                       //     offset: Offset(0.8,0.8), // how much shadow will be shown
+
                                       //   ),
+
                                       // ],
                                     ),
                                   ),
@@ -1152,14 +1620,23 @@ class _PostPageState extends State<PostPage> {
                               scrollDirection: Axis.horizontal,
                               children: [
                                 // IconButton(
+
                                 //   onPressed: () => saveToGallery(context),
+
                                 //   icon: const Icon(
+
                                 //     Icons.check_box,
+
                                 //     size: 30,
+
                                 //     color: Colors.grey,
+
                                 //   ),
+
                                 //   tooltip: 'Save Image',
+
                                 // ),
+
                                 IconButton(
                                   onPressed: () {
                                     setState(() {
@@ -1183,6 +1660,7 @@ class _PostPageState extends State<PostPage> {
                                   ),
                                   tooltip: 'Increase font Size',
                                 ),
+
                                 IconButton(
                                   onPressed: () => decreaseFontSize(),
                                   icon: const Icon(
@@ -1192,6 +1670,7 @@ class _PostPageState extends State<PostPage> {
                                   ),
                                   tooltip: 'Decrease Font Size',
                                 ),
+
                                 IconButton(
                                   onPressed: () => boldText(),
                                   icon: const Icon(
@@ -1201,6 +1680,7 @@ class _PostPageState extends State<PostPage> {
                                   ),
                                   tooltip: 'Bold',
                                 ),
+
                                 IconButton(
                                   onPressed: () => italicText(),
                                   icon: const Icon(
@@ -1210,6 +1690,7 @@ class _PostPageState extends State<PostPage> {
                                   ),
                                   tooltip: 'Italic',
                                 ),
+
                                 Tooltip(
                                     message: 'Red',
                                     child: GestureDetector(
@@ -1221,9 +1702,11 @@ class _PostPageState extends State<PostPage> {
                                         backgroundColor: Colors.red,
                                       ),
                                     )),
+
                                 const SizedBox(
                                   width: 2,
                                 ),
+
                                 Tooltip(
                                     message: 'White',
                                     child: GestureDetector(
@@ -1235,9 +1718,11 @@ class _PostPageState extends State<PostPage> {
                                         backgroundColor: Colors.white,
                                       ),
                                     )),
+
                                 const SizedBox(
                                   width: 2,
                                 ),
+
                                 Tooltip(
                                     message: 'Black',
                                     child: GestureDetector(
@@ -1249,9 +1734,11 @@ class _PostPageState extends State<PostPage> {
                                         radius: 30,
                                       ),
                                     )),
+
                                 const SizedBox(
                                   width: 2,
                                 ),
+
                                 Tooltip(
                                     message: 'Blue',
                                     child: GestureDetector(
@@ -1263,9 +1750,11 @@ class _PostPageState extends State<PostPage> {
                                         radius: 30,
                                       ),
                                     )),
+
                                 const SizedBox(
                                   width: 2,
                                 ),
+
                                 Tooltip(
                                     message: 'Yellow',
                                     child: GestureDetector(
@@ -1277,9 +1766,11 @@ class _PostPageState extends State<PostPage> {
                                         radius: 30,
                                       ),
                                     )),
+
                                 const SizedBox(
                                   width: 2,
                                 ),
+
                                 Tooltip(
                                     message: 'Green',
                                     child: GestureDetector(
@@ -1291,9 +1782,11 @@ class _PostPageState extends State<PostPage> {
                                         radius: 30,
                                       ),
                                     )),
+
                                 const SizedBox(
                                   width: 2,
                                 ),
+
                                 Tooltip(
                                     message: 'Orange',
                                     child: GestureDetector(
@@ -1305,9 +1798,11 @@ class _PostPageState extends State<PostPage> {
                                         radius: 30,
                                       ),
                                     )),
+
                                 const SizedBox(
                                   width: 2,
                                 ),
+
                                 Tooltip(
                                     message: 'Pink',
                                     child: GestureDetector(
@@ -1331,20 +1826,31 @@ class _PostPageState extends State<PostPage> {
                   ),
 
                   // ElevatedButton(
+
                   //     onPressed: () => addNewDialog(context),
+
                   //     child: Text("Add Text to Image"),
+
                   //     style: ElevatedButton.styleFrom(
+
                   //       fixedSize: Size(200, 40),
+
                   //       backgroundColor: Color.fromRGBO(255, 248, 185, 1),
+
                   //       foregroundColor: Color.fromRGBO(139, 134, 134, 1),
+
                   //     )),
+
                   // SizedBox(
+
                   //   height: 5,
+
                   // ),
 
                   SizedBox(
                     height: 5,
                   ),
+
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(
@@ -1390,16 +1896,25 @@ class _PostPageState extends State<PostPage> {
                       ],
                     ),
                   ),
+
                   SizedBox(
                     height: 5,
                   ),
-                  /*SizedBox(
-                    height: 40,
-                    width: 350,
-                    child: reusableTextField("Tag location(s)",
-                        Icons.share_location, false, _locationController),
-                    //maxLines: 8,
+
+                  /*SizedBox( 
+
+                    height: 40, 
+
+                    width: 350, 
+
+                    child: reusableTextField("Tag location(s)", 
+
+                        Icons.share_location, false, _locationController), 
+
+                    //maxLines: 8, 
+
                   ),*/
+
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                     child: Container(
@@ -1430,12 +1945,14 @@ class _PostPageState extends State<PostPage> {
                               ElevatedButton(
                                   onPressed: () {
                                     print("here");
+
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             MapSearchPage(gpVal: (value) {
                                           print("and here");
+
                                           setState(() {
                                             geoLoc = value;
                                           });
@@ -1468,9 +1985,11 @@ class _PostPageState extends State<PostPage> {
 
                                     setState(() {
                                       isLoading = false;
+
                                       String x = '123';
 
                                       geoLoc = pos;
+
                                       if (!isLoading) {
                                         showSnackBar(
                                             context, "location received!");
@@ -1498,6 +2017,63 @@ class _PostPageState extends State<PostPage> {
                       ),
                     ),
                   ),
+
+                  Portal(
+                    child: SizedBox(
+                      height: 96,
+                      width: 350,
+                      child: Column(
+                        children: [
+                          reusableTextField("Write a caption",
+                              Icons.description, false, _descriptionController),
+                          FlutterMentions(
+                            decoration: InputDecoration(
+                              hintText: "Tag someone",
+                            ),
+                            mentions: [
+                              Mention(
+                                  trigger: "@",
+                                  data: data,
+                                  style: const TextStyle(
+                                    color: Colors.pink,
+                                  ),
+                                  suggestionBuilder: (data) {
+                                    return Container(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            color: Color.fromARGB(
+                                                255, 237, 237, 237),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                    padding: EdgeInsets.all(10),
+                                                    child:
+                                                        Text(data['display'])),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: 300,
+
+                    //floatingActionButton: _addTextToPost,
+                  ),
                 ],
               ),
             ),
@@ -1505,16 +2081,16 @@ class _PostPageState extends State<PostPage> {
   }
 
   Future<bool> draftImage(String uid, String username, String profImage) async {
-    saveToGallery(context);
     setState(() {
       isLoading = true;
     });
-    await Future.delayed(const Duration(milliseconds: 2500));
 
     // start the loading
+
     try {
       // upload to storage and db
-      String res = await PostService().uploadDraft(
+
+      String res = await FireStoreMethods().uploadDraft(
           _descriptionController.text,
           _file,
           uid,
@@ -1522,22 +2098,29 @@ class _PostPageState extends State<PostPage> {
           _locationController.text,
           category,
           profImage,
+
           // latitude ,
+
           // longitude
+
           geoLoc);
+
       if (res == "success") {
         setState(() {
           isLoading = false;
         });
+
         showSnackBar(
           context,
           'drafted!',
         );
+
         clearImage();
       } else {
         setState(() {
           isLoading = false;
         });
+
         showSnackBar(context, res);
       }
     } catch (err) {
@@ -1546,6 +2129,7 @@ class _PostPageState extends State<PostPage> {
         err.toString(),
       );
     }
+
     return true;
   }
 }

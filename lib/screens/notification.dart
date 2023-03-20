@@ -72,7 +72,6 @@ class _NewNotificationState extends State<NewNotification> {
               child: CircularProgressIndicator(),
             );
           }
-
           return ListView.builder(
             shrinkWrap: true,
             itemCount: (snapshot.data as dynamic).docs.length,
