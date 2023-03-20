@@ -268,6 +268,8 @@ class PostService {
           flag: false);
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
+      checkDoc();
+      await addPost();
     } catch (err) {
       res = err.toString();
     }

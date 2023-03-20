@@ -37,20 +37,20 @@ class _DraftCardState extends State<DraftCard> {
     super.initState();
   }
 
-  Widget EditDraft(String postId) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: (() {
-                Navigator.of(context).pop();
-              }),
-              icon: Icon(Icons.arrow_back))
-        ],
-      ),
-      body: PostDraftPage(),
-    );
-  }
+  // Widget EditDraft(String postId) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       actions: [
+  //         IconButton(
+  //             onPressed: (() {
+  //               Navigator.of(context).pop();
+  //             }),
+  //             icon: Icon(Icons.arrow_back))
+  //       ],
+  //     ),
+  //     body: PostDraftPage(),
+  //   );
+  // }
 
   deleteDraft(String postId) async {
     try {
