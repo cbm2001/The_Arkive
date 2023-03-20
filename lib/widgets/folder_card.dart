@@ -350,7 +350,7 @@ class FolderCardState extends State<FolderCard> {
                                                                           .styleFrom(
                                                                         fixedSize: Size(
                                                                             MediaQuery.of(context).size.width *
-                                                                                0.40,
+                                                                                0.20,
                                                                             MediaQuery.of(context).size.height *
                                                                                 0.04),
                                                                         backgroundColor: Color.fromRGBO(
